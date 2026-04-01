@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新竹攻城獅 2025-26 賽季數據分析</title>
+  <style>
+    /* ===== 基礎重置 ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===== 全站配色與字型 ===== */
+    :root {
+      --purple-900: #1a0a2e;
+      --purple-800: #240f40;
+      --purple-700: #3b1a6e;
+      --purple-600: #5a2d9a;
+      --purple-500: #7b3fc4;
+      --purple-400: #9d5fd6;
+      --purple-300: #c49ae8;
+      --gold:       #f0c040;
+      --gold-light: #f5d675;
+      --white:      #ffffff;
+      --gray-100:   #f0eaf8;
+      --gray-300:   #c5b8dc;
+      --gray-500:   #8a7aa0;
+      --card-bg:    rgba(59, 26, 110, 0.45);
+      --card-border: rgba(157, 95, 214, 0.35);
+    }
+
+    body {
+      background-color: var(--purple-900);
+      color: var(--white);
+      font-family: 'Segoe UI', '微軟正黑體', 'Microsoft JhengHei', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ===== 頂部導覽列 ===== */
+    header {
+      background: linear-gradient(135deg, var(--purple-800) 0%, var(--purple-900) 100%);
+      border-bottom: 2px solid var(--purple-600);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--purple-500), var(--gold));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .logo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.05em;
+    }
+
+    .logo-text span {
+      color: var(--gold);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    nav a {
+      color: var(--gray-300);
+      text-decoration: none;
+      padding: 0.5rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    nav a:hover, nav a.active {
+      color: var(--white);
+      background: var(--purple-700);
+    }
+
+    /* ===== 英雄區塊 (Hero) ===== */
+    .hero {
+      background: linear-gradient(160deg, var(--purple-800) 0%, var(--purple-900) 60%);
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 背景裝飾光暈 */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(122, 63, 196, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(240, 192, 64, 0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      padding: 0.35rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: 0.02em;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--gray-300);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple-500), var(--purple-700));
+      color: var(--white);
+      box-shadow: 0 4px 15px rgba(122, 63, 196, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(122, 63, 196, 0.6);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--gray-300);
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--purple-400);
+      color: var(--white);
+      background: var(--card-bg);
+    }
+
+    /* ===== 統計數字快覽 ===== */
+    .stats-bar {
+      background: var(--purple-800);
+      border-top: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+      padding: 1.5rem 2rem;
+    }
+
+    .stats-bar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .stat-item .number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .stat-item .label {
+      font-size: 0.8rem;
+      color: var(--gray-500);
+      margin-top: 0.3rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== 主要內容區 ===== */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--card-border);
+    }
+
+    .section-title .icon {
+      color: var(--gold);
+    }
+
+    /* ===== 卡片格狀 ===== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.25s;
+      backdrop-filter: blur(6px);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--purple-400);
+      box-shadow: 0 8px 30px rgba(122, 63, 196, 0.25);
+    }
+
+    .card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--white);
+    }
+
+    .card p {
+      font-size: 0.88rem;
+      color: var(--gray-500);
+      line-height: 1.55;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 1rem;
+      font-size: 0.83rem;
+      color: var(--purple-300);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .card-link:hover {
+      color: var(--gold);
+    }
+
+    /* ===== 最新動態區 ===== */
+    .updates-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+    }
+
+    .update-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .update-date {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      white-space: nowrap;
+      min-width: 70px;
+    }
+
+    .update-tag {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tag-data   { background: rgba(122, 63, 196, 0.3); color: var(--purple-300); }
+    .tag-game   { background: rgba(240, 192, 64, 0.2); color: var(--gold); }
+    .tag-player { background: rgba(60, 180, 120, 0.2); color: #6ee7b7; }
+
+    .update-text {
+      font-size: 0.9rem;
+      color: var(--gray-100);
+    }
+
+    /* ===== 佔位圖表區 ===== */
+    .chart-placeholder {
+      background: var(--card-bg);
+      border: 1px dashed var(--card-border);
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+      color: var(--gray-500);
+      margin-bottom: 3rem;
+    }
+
+    .chart-placeholder .ph-icon {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.5;
+    }
+
+    .chart-placeholder p {
+      font-size: 0.9rem;
+    }
+
+    /* ===== 頁尾 ===== */
+    footer {
+      background: var(--purple-800);
+      border-top: 1px solid var(--card-border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 0.82rem;
+    }
+
+    footer a {
+      color: var(--purple-300);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: var(--gold);
+    }
+
+    /* ===== 手機響應 ===== */
+    @media (max-width: 640px) {
+      nav ul { display: none; }
+      .hero { padding: 3rem 1.25rem; }
+      main { padding: 2rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部導覽列 -->
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <div class="logo-icon">&#127944;</div>
+        <div class="logo-text">新竹<span>攻城獅</span> Stats</div>
+      </a>
+      <ul>
+        <li><a href="index.html" class="active">首頁</a></li>
+        <li><a href="#">球員數據</a></li>
+        <li><a href="#">比賽紀錄</a></li>
+        <li><a href="#">進階分析</a></li>
+        <li><a href="#">關於</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- 英雄主視覺 -->
+  <section class="hero">
+    <div class="hero-badge">2025–26 PLG 賽季</div>
+    <h1>新竹攻城獅<br><em>數據分析中心</em></h1>
+    <p>深入解讀攻城獅本季每場比賽、每位球員的數據表現，用數字說球隊的故事。</p>
+    <div class="hero-buttons">
+      <a href="#" class="btn btn-primary">&#128202; 查看球員數據</a>
+      <a href="#" class="btn btn-outline">&#128196; 賽程與戰績</a>
+    </div>
+  </section>
+
+  <!-- 統計數字快覽 -->
+  <div class="stats-bar">
+    <div class="stats-bar-inner">
+      <div class="stat-item">
+        <div class="number">—</div>
+        <div class="label">本季勝場</div>
+      </div>
+      <div class="stat-item">
+        <div class="number">—</div>
+        <div class="label">本季敗場</div>
+      </div>
+      <div class="stat-item">
+        <div class="number">—</div>
+        <div class="label">隊均得分</div>
+      </div>
+      <div class="stat-item">
+        <div class="number">—</div>
+        <div class="label">隊均籃板</div>
+      </div>
+      <div class="stat-item">
+        <div class="number">—</div>
+        <div class="label">隊均助攻</div>
+      </div>
+      <div class="stat-item">
+        <div class="number">—</div>
+        <div class="label">目前排名</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主要內容 -->
+  <main>
+
+    <!-- 分析模組卡片 -->
+    <h2 class="section-title"><span class="icon">&#9889;</span> 分析模組</h2>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-icon">&#128100;</div>
+        <h3>球員個人數據</h3>
+        <p>每位球員的得分、籃板、助攻、效率值（EFF）等完整數據，並附趨勢走向圖。</p>
+        <a href="#" class="card-link">查看更多 &#8594;</a>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">&#127944;</div>
+        <h3>逐場比賽分析</h3>
+        <p>按賽程瀏覽每場對戰數據，包含得分分布、關鍵時刻表現與勝負關鍵因素。</p>
+        <a href="#" class="card-link">查看更多 &#8594;</a>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">&#128202;</div>
+        <h3>進階效率指標</h3>
+        <p>TS%、USG%、PER、淨效率值等進階指標，深入了解球員真實貢獻。</p>
+        <a href="#" class="card-link">查看更多 &#8594;</a>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">&#127951;</div>
+        <h3>陣容組合分析</h3>
+        <p>分析不同五人小組上場時的攻守效率，找出最強與最弱的陣容搭配。</p>
+        <a href="#" class="card-link">查看更多 &#8594;</a>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">&#128205;</div>
+        <h3>投射熱區圖</h3>
+        <p>視覺化呈現球員與球隊的出手位置分布，識別高效熱點與低效區域。</p>
+        <a href="#" class="card-link">查看更多 &#8594;</a>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">&#128197;</div>
+        <h3>賽季趨勢追蹤</h3>
+        <p>以折線圖追蹤全季表現起伏，對照傷病與陣容異動，解讀背後脈絡。</p>
+        <a href="#" class="card-link">查看更多 &#8594;</a>
+      </div>
+
+    </div>
+
+    <!-- 圖表佔位 -->
+    <h2 class="section-title"><span class="icon">&#128200;</span> 本季得分趨勢</h2>
+    <div class="chart-placeholder">
+      <div class="ph-icon">&#128200;</div>
+      <p>圖表載入中⋯⋯<br>數據填入後將在此顯示本季逐場得分折線圖</p>
+    </div>
+
+    <!-- 最新動態 -->
+    <h2 class="section-title"><span class="icon">&#128276;</span> 最新動態</h2>
+    <div class="updates-list">
+      <div class="update-item">
+        <span class="update-date">2026/04/01</span>
+        <span class="update-tag tag-data">數據更新</span>
+        <span class="update-text">網站正式上線，2025-26 賽季數據分析開始建置。</span>
+      </div>
+      <div class="update-item">
+        <span class="update-date">待更新</span>
+        <span class="update-tag tag-game">比賽結果</span>
+        <span class="update-text">下一場比賽數據將在賽後 24 小時內更新。</span>
+      </div>
+      <div class="update-item">
+        <span class="update-date">待更新</span>
+        <span class="update-tag tag-player">球員焦點</span>
+        <span class="update-text">本週明星球員深度數據分析即將登場。</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 頁尾 -->
+  <footer>
+    <p>新竹攻城獅數據分析站 &nbsp;|&nbsp; 資料來源：PLG 官網 &nbsp;|&nbsp; 非官方粉絲製作</p>
+    <p style="margin-top:0.5rem;">
+      <a href="#">GitHub</a> &nbsp;·&nbsp;
+      <a href="#">回報問題</a>
+    </p>
+  </footer>
+
+</body>
+</html>
