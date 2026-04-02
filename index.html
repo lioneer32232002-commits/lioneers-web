@@ -529,15 +529,16 @@
 
   <!-- ④ 逐場得分趨勢（全寬） -->
   <div class="full">
-    <h2 class="section-title"><span class="icon">📈</span> 本季逐場得分趨勢</h2>
+    <h2 class="section-title"><span class="icon">📈</span> 本季逐場得分差</h2>
     <div class="card">
-      <div class="chart-panel">
-        <div class="chart-panel-bg">
-          <canvas id="chart-score" style="max-height:300px"></canvas>
+      <div class="chart-panel chart-panel-dark">
+        <div class="chart-panel-bg chart-panel-dark-bg">
+          <canvas id="chart-score" style="max-height:280px"></canvas>
         </div>
       </div>
       <p style="font-size:.75rem;color:var(--site-gray);margin-top:.7rem;">
-        紫色圓點 = 勝場；深灰圓點 = 敗場。虛線為對手得分。
+        <span style="display:inline-block;width:10px;height:10px;background:#7b3fc4;border-radius:2px;vertical-align:middle;margin-right:.3rem;"></span>正值 = 勝場
+        <span style="display:inline-block;width:10px;height:10px;background:#d73027;border-radius:2px;vertical-align:middle;margin:.0 .3rem 0 .8rem;"></span>負值 = 敗場
       </p>
     </div>
   </div>
@@ -776,81 +777,56 @@ function renderSimulation(sim) {
   }, 300);
 }
 
-// ⑤ 得分趨勢（依規範：得分深紫、失分深灰、勝場淡紫背景、敗場淡灰）
+// ⑤ 逐場得分差長條圖（正值=勝/紫，負值=敗/珊瑚）
 function renderScoreChart(games) {
-  const labels     = games.map(g => g.date.slice(4,6) + '/' + g.date.slice(6,8));
-  const lionScores = games.map(g => g.lion_score);
-  const oppScores  = games.map(g => g.opp_score);
+  const labels = games.map(g => g.date.slice(4,6) + '/' + g.date.slice(6,8));
+  const diffs  = games.map(g => g.lion_score - g.opp_score);
 
-  // 背景色段（勝=淡紫，敗=淡灰）
-  const bgPlugin = {
-    id: 'bgBands',
-    beforeDraw(chart) {
-      const { ctx, chartArea: { left, right, top, bottom }, scales } = chart;
-      if (!chartArea) return;
-      games.forEach((g, i) => {
-        if (i >= games.length - 1) return;
-        const x0 = scales.x.getPixelForValue(i)   - (scales.x.getPixelForValue(1) - scales.x.getPixelForValue(0)) / 2;
-        const x1 = scales.x.getPixelForValue(i+1) - (scales.x.getPixelForValue(1) - scales.x.getPixelForValue(0)) / 2;
-        ctx.fillStyle = g.won ? 'rgba(94,45,140,.07)' : 'rgba(102,102,102,.06)';
-        ctx.fillRect(x0, top, x1-x0, bottom-top);
-      });
-    }
-  };
+  const axisColor = '#c5b8dc';
+  const gridColor = 'rgba(255,255,255,0.08)';
 
   new Chart(document.getElementById('chart-score'), {
-    type: 'line',
+    type: 'bar',
     data: {
       labels,
-      datasets: [
-        {
-          label: '攻城獅得分',
-          data: lionScores,
-          borderColor: C.dark,
-          backgroundColor: 'rgba(94,45,140,.15)',
-          pointBackgroundColor: games.map(g => g.won ? C.mid : C.gdark),
-          pointRadius: 5, tension: 0.3, fill: true, borderWidth: 2
-        },
-        {
-          label: '對手得分',
-          data: oppScores,
-          borderColor: C.gdark,
-          backgroundColor: 'transparent',
-          pointBackgroundColor: C.gdark,
-          pointRadius: 3, tension: 0.3, fill: false,
-          borderDash: [5, 3], borderWidth: 1.5
-        }
-      ]
+      datasets: [{
+        label: '得分差',
+        data: diffs,
+        backgroundColor: diffs.map(d => d >= 0 ? 'rgba(123,63,196,.8)' : 'rgba(215,48,39,.72)'),
+        borderColor:     diffs.map(d => d >= 0 ? '#9d5fd6'             : '#e05040'),
+        borderWidth: 1,
+        borderRadius: 3,
+      }]
     },
     options: {
       responsive: true,
       plugins: {
-        legend: { labels: { color: C.dgray, font: { size: 12, weight: '700' } } },
+        legend: { display: false },
         tooltip: {
           callbacks: {
             title: items => {
               const g = games[items[0].dataIndex];
               return `${g.date.slice(4,6)}/${g.date.slice(6,8)} vs ${TEAM_SHORT[g.opp] || g.opp}`;
             },
-            afterBody: items => games[items[0].dataIndex].won ? '✅ Win' : '❌ Loss'
+            label: items => {
+              const g = games[items[0].dataIndex];
+              const d = g.lion_score - g.opp_score;
+              return `攻 ${g.lion_score} − 對 ${g.opp_score}　(${d > 0 ? '+' : ''}${d})　${g.won ? '✅ W' : '❌ L'}`;
+            }
           }
         }
       },
       scales: {
         x: {
-          ticks: {
-            color: C.dgray,
-            maxRotation: 55,
-            font: { size: 9, weight: '700' },
-            maxTicksLimit: window.innerWidth < 640 ? 8 : 28,
-            autoSkip: true
-          },
-          grid: { color: C.lgray, lineWidth: .8 }
+          ticks: { color: axisColor, font: { size: 9, weight: '700' },
+                   maxRotation: 50, autoSkip: true,
+                   maxTicksLimit: window.innerWidth < 640 ? 8 : 28 },
+          grid: { color: gridColor, lineWidth: .8 }
         },
         y: {
-          ticks: { color: C.dgray, font: { size: 10, weight: '700' } },
-          grid:  { color: C.lgray, lineWidth: .8 },
-          min: 60, max: 130
+          title: { display: true, text: '得分差', color: axisColor, font: { size: 11, weight: '700' } },
+          ticks: { color: axisColor, font: { size: 10 } },
+          grid:  { color: gridColor, lineWidth: .8 }
         }
       }
     }
