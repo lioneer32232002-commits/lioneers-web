@@ -486,7 +486,12 @@
       <div class="f-label">🏆 奪冠機率</div>
     </div>
   </div>
-  <div class="forecast-note" id="f-note">Monte Carlo 模擬 300,000 次｜Pythagorean 勝率 ^13.91｜依各隊效率差推算剩餘賽程｜季後賽採 TPBL 正式賽制</div>
+  <div class="forecast-note" id="f-note" style="display:flex;flex-wrap:wrap;justify-content:center;gap:.1rem .2rem;">
+    <span style="white-space:nowrap">Monte Carlo 模擬 300,000 次</span><span>｜</span>
+    <span style="white-space:nowrap">Pythagorean 勝率 ^13.91</span><span>｜</span>
+    <span style="white-space:nowrap">依各隊效率差推算剩餘賽程</span><span>｜</span>
+    <span style="white-space:nowrap">季後賽採 TPBL 正式賽制</span>
+  </div>
 </div>
 
 <main>
@@ -535,8 +540,9 @@
         <thead><tr><th>#</th><th>球隊</th><th>勝</th><th>敗</th><th>勝率</th></tr></thead>
         <tbody id="standings-body"></tbody>
       </table>
-      <p style="font-size:.72rem;color:var(--site-gray);margin-top:.75rem;">
-        ·&thinsp;紫色虛線上方（前3名）直接進季後賽　·&thinsp;第4、5名打挑戰賽（第4名先獲1勝）
+      <p style="font-size:.72rem;color:var(--site-gray);margin-top:.75rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
+        <span style="white-space:nowrap">·&thinsp;紫色虛線上方（前 3 名）直接進季後賽</span>
+        <span style="white-space:nowrap">·&thinsp;第 4、5 名打挑戰賽（第 4 名先獲 1 勝）</span>
       </p>
     </div>
   </div>
@@ -545,8 +551,10 @@
   <div class="full" id="league-rtg">
     <h2 class="section-title"><span class="icon">📊</span> 聯盟每百回合攻守效率</h2>
     <div class="card">
-      <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;">
-        <strong style="color:var(--site-white)">ORtg</strong> 進攻效率（每百回合得分）　<strong style="color:var(--site-white)">DRtg</strong> 防守效率（每百回合失分，越低越好）　<strong style="color:var(--site-gold)">Net</strong> 差值
+      <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.25rem .9rem;">
+        <span style="white-space:nowrap"><strong style="color:var(--site-white)">ORtg</strong> 進攻效率（每百回合得分）</span>
+        <span style="white-space:nowrap"><strong style="color:var(--site-white)">DRtg</strong> 防守效率（每百回合失分，越低越好）</span>
+        <span style="white-space:nowrap"><strong style="color:var(--site-gold)">Net</strong> 差值</span>
       </p>
       <div class="player-wrap">
         <table class="standings-table" id="rtg-table">
@@ -574,8 +582,10 @@
   <div class="full" id="heatmap" style="margin-top:2.25rem">
     <h2 class="section-title"><span class="icon">🌡️</span> 球員 vs 各對手 Plus/Minus 均值</h2>
     <div class="card">
-      <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;">
-        深紫 → 中紫 → 淺紫 = 正向（上場時球隊淨得分高）；深灰 → 珊瑚紅 = 負向（強負向）。顯示上場 ≥ 3 場球員。
+      <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
+        <span style="white-space:nowrap">深紫 → 中紫 → 淺紫 = 正向（上場時球隊淨得分高）</span>
+        <span style="white-space:nowrap">深灰 → 珊瑚紅 = 負向（強負向）</span>
+        <span style="white-space:nowrap">顯示上場 ≥ 3 場球員</span>
       </p>
       <div class="heatmap-wrap">
         <table class="heatmap-table" id="heatmap-table"></table>
@@ -613,9 +623,10 @@
       </div>
       <!-- 圖例：橫式排列在下方 -->
       <div id="roc-legend" style="margin-top:1rem;"></div>
-      <div class="roc-meta" style="margin-top:.85rem;">
-        依變數：勝 / 敗（Win / Loss）。圓點 = Youden's J 最佳切點（TPR − FPR 最大處）。<br>
-        n = 28 場，樣本數不足 30，p 值與 Cohen's d 僅供參考，不作顯著性判斷。
+      <div class="roc-meta" style="margin-top:.85rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
+        <span style="white-space:nowrap">依變數：勝 / 敗（Win / Loss）。</span>
+        <span style="white-space:nowrap">圓點 = Youden's J 最佳切點（TPR − FPR 最大處）。</span>
+        <span style="white-space:nowrap">n = 28 場，樣本數不足 30，p 值與 Cohen's d 僅供參考，不作顯著性判斷。</span>
       </div>
     </div>
   </div>
@@ -624,16 +635,15 @@
   <div class="full" id="mwu-section">
     <h2 class="section-title"><span class="icon">🔬</span> 勝負關鍵指標分析（Mann-Whitney U）</h2>
     <div class="card">
-      <p style="font-size:.78rem;color:var(--site-gray2);margin-bottom:1rem;">
-        僅顯示顯著差異指標（p &lt; 0.05）。
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#9d5fd6;vertical-align:middle;margin-right:.2rem;"></span><span style="color:var(--site-gray2)">紫點 = 勝場</span>
-        &nbsp;&nbsp;
-        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#e05040;vertical-align:middle;margin-right:.2rem;"></span><span style="color:var(--site-gray2)">紅點 = 敗場</span>
-        &nbsp;&nbsp;橫線 = 中位數
+      <p style="font-size:.78rem;color:var(--site-gray2);margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
+        <span style="white-space:nowrap">僅顯示顯著差異指標（p &lt; 0.05）。</span>
+        <span style="white-space:nowrap">橫線 = 中位數</span>
       </p>
       <div id="mwu-charts" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.1rem;"></div>
-      <div style="font-size:.72rem;color:var(--site-gray);margin-top:.85rem;line-height:1.7;">
-        Mann-Whitney U 雙尾檢定。效應量 r = 秩雙序列相關係數（|r| ≥ 0.3 中等效應；|r| ≥ 0.5 大效應）。n = 28 場，僅供參考。
+      <div style="font-size:.72rem;color:var(--site-gray);margin-top:.85rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
+        <span style="white-space:nowrap">Mann-Whitney U 雙尾檢定。</span>
+        <span style="white-space:nowrap">效應量 r = 秩雙序列相關係數（|r| ≥ 0.3 中等效應；|r| ≥ 0.5 大效應）。</span>
+        <span style="white-space:nowrap">n = 28 場，僅供參考。</span>
       </div>
     </div>
   </div>
@@ -978,7 +988,7 @@ function renderRoc(roc) {
     const d = roc[p.key];
     if (!d) return;
     datasets.push({
-      label: `${p.labelEn} (AUC=${d.auc.toFixed(3)})`,
+      label: `${p.labelEn} (AUC = ${d.auc.toFixed(3)})`,
       data:  d.curve.map(pt => ({ x: pt.fpr, y: pt.tpr })),
       borderColor: p.color, backgroundColor: 'transparent',
       showLine: true, tension: 0,
@@ -1015,8 +1025,8 @@ function renderRoc(roc) {
             label: item => {
               const ds = item.dataset;
               if (ds._threshold !== undefined)
-                return `${ds._key} 切點=${ds._threshold}${ds._unitCh}  TPR=${item.parsed.y.toFixed(2)}  FPR=${item.parsed.x.toFixed(2)}`;
-              return `TPR=${item.parsed.y.toFixed(2)}  FPR=${item.parsed.x.toFixed(2)}`;
+                return `${ds._key} 切點 = ${ds._threshold}${ds._unitCh}  TPR = ${item.parsed.y.toFixed(2)}  FPR = ${item.parsed.x.toFixed(2)}`;
+              return `TPR = ${item.parsed.y.toFixed(2)}  FPR = ${item.parsed.x.toFixed(2)}`;
             }
           }
         }
@@ -1052,10 +1062,10 @@ function renderRoc(roc) {
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;">
           <span style="display:inline-block;width:24px;height:3px;background:${p.color};border-radius:2px;flex-shrink:0;"></span>
           <span style="font-size:.8rem;font-weight:700;color:${p.color};">${p.labelEn}</span>
-          <span style="font-size:.78rem;color:#7a6a8a;">AUC=${d.auc.toFixed(3)}</span>
+          <span style="font-size:.78rem;color:#7a6a8a;">AUC = ${d.auc.toFixed(3)}</span>
         </div>
         <div style="font-size:.73rem;color:#5a4a6a;margin-left:32px;margin-bottom:.25rem;">
-          切點 ${d.threshold}${p.unitCh}（J=${(d.best.tpr-d.best.fpr).toFixed(3)}）
+          切點 ${d.threshold}${p.unitCh}（J = ${(d.best.tpr-d.best.fpr).toFixed(3)}）
         </div>`;
     });
     return html + `</div>`;
@@ -1069,7 +1079,7 @@ function renderRoc(roc) {
       return `<span style="display:inline-flex;align-items:center;gap:.35rem;margin-right:.9rem;white-space:nowrap;">
         <span style="display:inline-block;width:20px;height:3px;background:${p.color};border-radius:2px;flex-shrink:0;"></span>
         <span style="font-size:.78rem;font-weight:700;color:${p.color};">${p.labelEn}</span>
-        <span style="font-size:.72rem;color:#7a6a8a;">AUC=${d.auc.toFixed(3)}</span>
+        <span style="font-size:.72rem;color:#7a6a8a;">AUC = ${d.auc.toFixed(3)}</span>
         <span style="font-size:.7rem;color:#5a4a6a;">切點${d.threshold}${p.unitCh}</span>
       </span>`;
     }).join('');
@@ -1232,7 +1242,7 @@ function renderMannWhitney(mwResults) {
     const rSign = item.effect_r >= 0 ? '+' : '';
     const title = document.createElement('div');
     title.style.cssText = `font-size:.8rem;font-weight:700;color:#c5b8dc;margin-bottom:.4rem;text-align:center;line-height:1.5;`;
-    title.innerHTML = `<div>${item.stat}</div><div style="font-size:.72rem;font-weight:400;color:var(--site-gray);">p=${item.p_value.toFixed(3)} &nbsp; r=${rSign}${item.effect_r.toFixed(2)}</div>`;
+    title.innerHTML = `<div>${item.stat}</div><div style="font-size:.72rem;font-weight:400;color:var(--site-gray);">p = ${item.p_value.toFixed(3)} &nbsp; r = ${rSign}${item.effect_r.toFixed(2)}</div>`;
 
     const bg = document.createElement('div');
     bg.className = 'chart-panel-bg chart-panel-dark-bg';
