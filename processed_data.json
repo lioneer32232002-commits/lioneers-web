@@ -948,11 +948,11 @@
     }
   },
   "simulation": {
-    "prob_play_in": 0.3361,
-    "prob_playoff": 0.8989,
-    "prob_semif": 0.3886,
-    "prob_final": 0.3886,
-    "prob_champ": 0.1849,
+    "prob_play_in": 0.1919,
+    "prob_playoff": 0.9384,
+    "prob_semif": 0.4146,
+    "prob_final": 0.4146,
+    "prob_champ": 0.1962,
     "n_simulations": 100000,
     "rules": {
       "regular_season": "36場（18主18客），前3直接進季後賽",

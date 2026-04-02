@@ -13,7 +13,8 @@ LION     = '新竹御嵿攻城獅'
 DEPARTED = {'克雷格', '李漢昇'}   # 已離隊球員（保留數據但標記）
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 EXCLUDE_FILES = {'lioneer_player.txt', 'lioneer.basic.txt',
-                 '20260330_allteam.txt', '20260402_allgame.txt'}
+                 '20260330_allteam.txt', '20260402_allgame.txt',
+                 '20260402_allteam_update.txt'}
 game_files = sorted([
     f for f in os.listdir(DATA_DIR)
     if f.endswith('.txt') and f not in EXCLUDE_FILES
@@ -70,34 +71,17 @@ for fname in game_files:
 def mean(x): return round(sum(x)/len(x), 2) if x else 0
 
 # ================================================================
-# 2. 聯盟排名（從 allgame 檔案計算最新戰績）
+# 2. 聯盟排名（從最新 allteam 檔案）
 # ================================================================
-with open(os.path.join(DATA_DIR, '20260402_allgame.txt'), encoding='utf-8') as f:
-    allgames_data = json.load(f)
-
-from collections import Counter
-_rec = defaultdict(lambda: {'wins': 0, 'losses': 0, 'gp': 0})
-for _g in allgames_data:
-    # 排除季後賽（code 含英文字母，如 G2、G5）
-    _code = str(_g.get('code', ''))
-    if not _code.lstrip('-').isdigit():
-        continue
-    _ht, _at = _g.get('home_team', {}), _g.get('away_team', {})
-    _hs, _as = _ht.get('won_score', 0), _at.get('won_score', 0)
-    if _hs == 0 and _as == 0:
-        continue   # 尚未舉行的比賽
-    _hn, _an = _ht.get('name', ''), _at.get('name', '')
-    if not _hn or not _an:
-        continue
-    _rec[_hn]['gp'] += 1;  _rec[_an]['gp'] += 1
-    if _hs > _as:
-        _rec[_hn]['wins'] += 1;  _rec[_an]['losses'] += 1
-    else:
-        _rec[_hn]['losses'] += 1;  _rec[_an]['wins'] += 1
+with open(os.path.join(DATA_DIR, '20260402_allteam_update.txt'), encoding='utf-8') as f:
+    allteams = json.load(f)
 
 standings_raw = [
-    {'name': name, 'wins': r['wins'], 'losses': r['losses'], 'gp': r['gp']}
-    for name, r in _rec.items()
+    {'name': t['team']['name'],
+     'wins': t['won_game_count'],
+     'losses': t['lost_game_count'],
+     'gp': t['game_count']}
+    for t in allteams
 ]
 standings_sorted = sorted(
     standings_raw,
@@ -115,11 +99,11 @@ for i, t in enumerate(standings_sorted):
 wins            = sum(g['won'] for g in games)
 losses          = len(games) - wins
 gp              = len(games)
-# 以最新全隊比賽檔取得攻城獅實際累積場次（更準確）
-_lion_ag         = _rec.get(LION, {})
-lion_allgame_gp  = _lion_ag.get('gp', gp)
-lion_total_wins  = _lion_ag.get('wins', wins)
-lion_total_losses= _lion_ag.get('losses', losses)
+# 以最新 allteam 檔取得攻城獅實際累積場次（更準確）
+_lion_row        = next((t for t in standings_raw if t['name'] == LION), None)
+lion_allgame_gp  = _lion_row['gp']   if _lion_row else gp
+lion_total_wins  = _lion_row['wins'] if _lion_row else wins
+lion_total_losses= _lion_row['losses'] if _lion_row else losses
 games_remaining  = 36 - lion_allgame_gp
 win_rate         = lion_total_wins / lion_allgame_gp if lion_allgame_gp > 0 else wins / gp
 avg_pts          = mean([g['lion_score'] for g in games])
