@@ -1,60 +1,60 @@
 {
   "meta": {
     "generated": "2026-04-02",
-    "total_games": 30,
-    "games_remaining": 6
+    "total_games": 28,
+    "games_remaining": 8
   },
   "team_stats": {
-    "wins": 17,
-    "losses": 13,
-    "games_played": 30,
-    "games_remaining": 6,
+    "wins": 16,
+    "losses": 12,
+    "games_played": 28,
+    "games_remaining": 8,
     "avg_pts": 95.57,
     "avg_opp_pts": 92.79,
-    "win_rate": 0.5667
+    "win_rate": 0.5714
   },
   "standings": [
     {
-      "name": "福爾摩沙夢想家",
-      "wins": 21,
-      "losses": 11,
-      "gp": 32
-    },
-    {
       "name": "桃園台啤永豐雲豹",
       "wins": 19,
-      "losses": 12,
-      "gp": 31
+      "losses": 10,
+      "gp": 29
     },
     {
-      "name": "新竹御嵿攻城獅",
-      "wins": 17,
-      "losses": 13,
+      "name": "福爾摩沙夢想家",
+      "wins": 19,
+      "losses": 11,
       "gp": 30
     },
     {
+      "name": "新竹御嵿攻城獅",
+      "wins": 16,
+      "losses": 12,
+      "gp": 28
+    },
+    {
       "name": "新北國王",
-      "wins": 17,
-      "losses": 15,
-      "gp": 32
+      "wins": 16,
+      "losses": 14,
+      "gp": 30
     },
     {
       "name": "新北中信特攻",
-      "wins": 15,
-      "losses": 16,
-      "gp": 31
+      "wins": 14,
+      "losses": 15,
+      "gp": 29
     },
     {
       "name": "臺北台新戰神",
-      "wins": 11,
-      "losses": 21,
-      "gp": 32
+      "wins": 10,
+      "losses": 20,
+      "gp": 30
     },
     {
       "name": "高雄全家海神",
-      "wins": 10,
-      "losses": 22,
-      "gp": 32
+      "wins": 9,
+      "losses": 21,
+      "gp": 30
     }
   ],
   "games": [
@@ -948,11 +948,11 @@
     }
   },
   "simulation": {
-    "prob_play_in": 0.3215,
-    "prob_playoff": 0.9058,
-    "prob_semif": 0.3983,
-    "prob_final": 0.3983,
-    "prob_champ": 0.1873,
+    "prob_play_in": 0.3361,
+    "prob_playoff": 0.8989,
+    "prob_semif": 0.3886,
+    "prob_final": 0.3886,
+    "prob_champ": 0.1849,
     "n_simulations": 100000,
     "rules": {
       "regular_season": "36場（18主18客），前3直接進季後賽",
@@ -1771,8 +1771,8 @@
   ],
   "next_game": {
     "opponent": "新北中信特攻",
-    "win_prob_model": 0.5394,
-    "win_prob_adjusted": 0.5636,
+    "win_prob_model": 0.5421,
+    "win_prob_adjusted": 0.5652,
     "historical_w": 3,
     "historical_l": 2
   }

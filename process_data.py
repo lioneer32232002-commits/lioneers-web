@@ -78,10 +78,14 @@ with open(os.path.join(DATA_DIR, '20260402_allgame.txt'), encoding='utf-8') as f
 from collections import Counter
 _rec = defaultdict(lambda: {'wins': 0, 'losses': 0, 'gp': 0})
 for _g in allgames_data:
+    # 排除季後賽（code 含英文字母，如 G2、G5）
+    _code = str(_g.get('code', ''))
+    if not _code.lstrip('-').isdigit():
+        continue
     _ht, _at = _g.get('home_team', {}), _g.get('away_team', {})
     _hs, _as = _ht.get('won_score', 0), _at.get('won_score', 0)
     if _hs == 0 and _as == 0:
-        continue
+        continue   # 尚未舉行的比賽
     _hn, _an = _ht.get('name', ''), _at.get('name', '')
     if not _hn or not _an:
         continue
