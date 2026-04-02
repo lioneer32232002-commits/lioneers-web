@@ -436,7 +436,7 @@
 <section class="hero">
   <div class="hero-badge">2025–26 TPBL 賽季</div>
   <h1>新竹攻城獅<br><em>數據分析中心</em></h1>
-  <p>30 場賽季數據全解析。季後賽模擬、球員熱力圖、下場勝率預測。</p>
+  <p>本季已出賽 <span id="hero-gp">—</span> 場 · 季後賽模擬 · 進階統計分析</p>
 </section>
 
 <!-- 統計快覽（第一行：勝場｜敗場｜排名 / 第二行：均得分｜均失分｜剩餘） -->
@@ -690,6 +690,7 @@ function renderStatsBar(ts) {
   document.getElementById('s-pts').textContent    = ts.avg_pts;
   document.getElementById('s-opp').textContent    = ts.avg_opp_pts;
   document.getElementById('s-rem').textContent    = ts.games_remaining;
+  document.getElementById('hero-gp').textContent  = ts.games_played;
 }
 
 // ① 預測摘要欄
