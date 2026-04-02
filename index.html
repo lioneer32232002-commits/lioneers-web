@@ -513,28 +513,17 @@
     </div>
   </div>
 
-  <!-- ② 積分榜 + ③ 季後賽模擬 -->
-  <div class="grid-2">
-    <!-- 積分榜 -->
-    <div class="card" id="standings">
-      <h3>🏆 聯盟積分榜（<span id="gp-label">—</span> 輪後）</h3>
+  <!-- ② 積分榜 -->
+  <div class="full" id="standings">
+    <h2 class="section-title"><span class="icon">🏆</span> 聯盟積分榜（<span id="gp-label">—</span> 輪後）</h2>
+    <div class="card">
       <table class="standings-table">
         <thead><tr><th>#</th><th>球隊</th><th>勝</th><th>敗</th><th>勝率</th></tr></thead>
         <tbody id="standings-body"></tbody>
       </table>
       <p style="font-size:.72rem;color:var(--site-gray);margin-top:.75rem;">
-        ·&thinsp;紫色虛線上方（前3名）直接進季後賽<br>
-        ·&thinsp;第4、5名打挑戰賽（第4名先獲1勝）
+        ·&thinsp;紫色虛線上方（前3名）直接進季後賽　·&thinsp;第4、5名打挑戰賽（第4名先獲1勝）
       </p>
-    </div>
-
-    <!-- 季後賽模擬 -->
-    <div class="card" id="simulation">
-      <h3>🎲 季後賽晉級機率（Monte Carlo 10 萬次）</h3>
-      <div class="prob-section" id="prob-bars"></div>
-      <div class="rules-note">
-        賽制：例行賽前3直接晉級│挑戰賽（4v5）Bo3，4th先獲1勝│季後賽 Bo5（2-2-1）│總冠軍賽 Bo7（2-2-1-1-1）｜主場加成 +5%
-      </div>
     </div>
   </div>
 
@@ -683,7 +672,6 @@ fetch('processed_data.json', { cache: 'no-store' })
     renderForecastBar(data.team_stats, data.simulation);
     renderNextGame(data.next_game);
     renderStandings(data.standings);
-    renderSimulation(data.simulation);
     renderScoreChart(data.games);
     renderVsCards(data.vs_summary);
     renderHeatmap(data.heatmap, data.heatmap_teams);
