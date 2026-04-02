@@ -185,13 +185,13 @@
     .ng-method { font-size: .75rem; color: var(--site-gray); margin-top: .75rem; line-height: 1.5; }
 
     /* ===== 積分榜 ===== */
-    .standings-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    .standings-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
     .standings-table th {
-      padding: .55rem .7rem; color: var(--site-gray); font-weight: 700;
+      padding: .58rem .75rem; color: var(--site-gray); font-weight: 700;
       border-bottom: 1px solid var(--site-border); text-align: center;
     }
     .standings-table th:first-child { text-align: left; }
-    .standings-table td { padding: .5rem .7rem; border-bottom: 1px solid rgba(59,26,110,.4); text-align: center; }
+    .standings-table td { padding: .54rem .75rem; border-bottom: 1px solid rgba(59,26,110,.4); text-align: center; }
     .standings-table td:first-child { text-align: left; }
     .standings-table tr.lion-row { background: rgba(240,192,64,.07); }
     .standings-table tr.lion-row td { color: #f5d675; font-weight: 700; }
@@ -231,14 +231,14 @@
 
     /* ===== 熱力圖 ===== */
     .heatmap-wrap { overflow-x: auto; }
-    .heatmap-table { border-collapse: separate; border-spacing: 3px; font-size: .8rem; width: 100%; }
+    .heatmap-table { border-collapse: separate; border-spacing: 3px; font-size: .88rem; }
     .heatmap-table th {
-      padding: .4rem .5rem; color: var(--site-gray2); font-weight: 700;
+      padding: .45rem .6rem; color: var(--site-gray2); font-weight: 700;
       background: rgba(59,26,110,.6); border-radius: 4px; white-space: nowrap; text-align: center;
     }
     .heatmap-table th:first-child { text-align: left; }
-    .hm-name { padding: .4rem .6rem; color: var(--site-gray2); font-weight: 700; background: rgba(59,26,110,.5); border-radius: 4px; white-space: nowrap; }
-    .hm-cell { width: 74px; height: 36px; border-radius: 5px; text-align: center; font-weight: 700; font-size: .85rem; vertical-align: middle; }
+    .hm-name { padding: .4rem .75rem; color: var(--site-gray2); font-weight: 700; background: rgba(59,26,110,.5); border-radius: 4px; white-space: nowrap; width: 1%; }
+    .hm-cell { width: 78px; height: 38px; border-radius: 5px; text-align: center; font-weight: 700; font-size: .88rem; vertical-align: middle; }
     /* 正值：深紫→中紫→淺紫 */
     .hm-p3 { background: var(--c-dark);  color: white; }
     .hm-p2 { background: var(--c-mid);   color: white; }
@@ -253,13 +253,13 @@
 
     /* ===== 球員數據表 ===== */
     .player-wrap { overflow-x: auto; }
-    .player-table { width: 100%; border-collapse: collapse; font-size: .83rem; }
+    .player-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
     .player-table th {
-      padding: .5rem .65rem; color: var(--site-gray); font-weight: 700;
+      padding: .55rem .7rem; color: var(--site-gray); font-weight: 700;
       border-bottom: 1px solid var(--site-border); text-align: center; white-space: nowrap;
     }
     .player-table th:first-child { text-align: left; }
-    .player-table td { padding: .48rem .65rem; border-bottom: 1px solid rgba(59,26,110,.35); text-align: center; }
+    .player-table td { padding: .52rem .7rem; border-bottom: 1px solid rgba(59,26,110,.35); text-align: center; }
     .player-table td:first-child { text-align: left; font-weight: 700; color: var(--site-gray2); }
     .player-table tr:last-child td { border-bottom: none; }
     .player-table tr:hover td { background: rgba(94,45,140,.12); }
@@ -346,8 +346,13 @@
       /* RTG 表格橫向捲動 */
       #rtg-table { min-width: 480px; }
 
-      /* MWU 格：單欄 */
+      /* MWU 格：兩欄 */
       #mwu-charts { grid-template-columns: 1fr 1fr !important; gap: .7rem !important; }
+
+      /* 情境標籤：手機版兩欄 */
+      #scenario-legend { grid-template-columns: 1fr 1fr !important; }
+      .scenario-tag { font-size: .76rem; padding: .45rem .6rem; }
+      .scenario-tag strong { font-size: .85rem; }
 
       /* 對各隊戰績：確保格線正確 */
       .grid-3 { grid-template-columns: 1fr; }
@@ -396,12 +401,13 @@
 
     /* ===== 四情境圖 ===== */
     .scenario-tag {
-      display: inline-flex; align-items: center; gap: .4rem;
+      display: flex; align-items: flex-start; flex-direction: column; gap: .25rem;
       background: rgba(59,26,110,.4); border: 1px solid var(--site-border);
-      padding: .28rem .65rem; border-radius: 6px; font-size: .74rem;
+      padding: .6rem .9rem; border-radius: 8px; font-size: .82rem; flex: 1; min-width: 140px;
     }
-    .scenario-tag strong { color: var(--site-gold); }
+    .scenario-tag strong { color: var(--site-gold); font-size: .95rem; }
     .scenario-tag span   { color: var(--site-gray2); }
+    #scenario-legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: .65rem; margin-top: 1rem; }
 
     /* ===== MWU 點圖格 ===== */
     #mwu-charts .chart-panel {
@@ -515,7 +521,7 @@
           <canvas id="chart-scenario" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
         </div>
       </div>
-      <div id="scenario-legend" style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.85rem;"></div>
+      <div id="scenario-legend"></div>
     </div>
   </div>
 
@@ -1155,7 +1161,9 @@ function renderScenarioChart(scenarios) {
         y: {
           title: { display: true, text: '得分', color: '#c5b8dc', font: { weight: '700' } },
           ticks: { color: '#c5b8dc', font: { size: 10 } },
-          grid:  { color: 'rgba(255,255,255,0.08)', lineWidth: .8 }, min: 60
+          grid:  { color: 'rgba(255,255,255,0.08)', lineWidth: .8 },
+          min: Math.max(55, Math.floor((Math.min(...scenarios.map(s => Math.min(s.lion_mean - s.lion_std, s.opp_mean - s.opp_std))) - 5) / 5) * 5),
+          max: Math.ceil((Math.max(...scenarios.map(s => Math.max(s.lion_mean + s.lion_std, s.opp_mean + s.opp_std))) + 5) / 5) * 5
         }
       }
     }
@@ -1167,7 +1175,8 @@ function renderScenarioChart(scenarios) {
     <div class="scenario-tag">
       <strong>${s.label}</strong>
       <span>勝率 ${Math.round(s.win_rate*100)}%（n=${s.n}）</span>
-      <span style="color:var(--site-gray);font-size:.68rem;">3P% ${s.stats['3P%']} · TO ${s.stats['TO']} · AST ${s.stats['AST']} · FG% ${s.stats['FG%']}</span>
+      <span style="color:var(--site-gray);font-size:.75rem;">3P% ${s.stats['3P%']} · TO ${s.stats['TO']}</span>
+      <span style="color:var(--site-gray);font-size:.75rem;">AST ${s.stats['AST']} · FG% ${s.stats['FG%']}</span>
     </div>`).join('');
 }
 
