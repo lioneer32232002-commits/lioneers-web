@@ -523,15 +523,15 @@
   <div class="full">
     <h2 class="section-title"><span class="icon">📉</span> ROC 曲線分析</h2>
     <div class="card">
-      <!-- 圖表 + 圖例並排 -->
-      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;">
-        <div class="chart-panel" style="flex:1;min-width:280px;">
-          <div class="chart-panel-bg">
-            <canvas id="chart-roc" style="max-height:380px;"></canvas>
+      <!-- 圖表 + 圖例並排，高度對齊 -->
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:stretch;">
+        <div class="chart-panel" style="flex:1;min-width:280px;display:flex;flex-direction:column;">
+          <div class="chart-panel-bg" style="flex:1;display:flex;align-items:stretch;">
+            <canvas id="chart-roc"></canvas>
           </div>
         </div>
         <!-- 圖例說明 -->
-        <div id="roc-legend" style="min-width:220px;flex-shrink:0;"></div>
+        <div id="roc-legend" style="min-width:220px;max-width:240px;flex-shrink:0;align-self:stretch;"></div>
       </div>
       <div class="roc-meta" style="margin-top:.85rem;">
         依變數：勝 / 敗（Win / Loss）。圓點 = Youden's J 最佳切點（TPR − FPR 最大處）。<br>
@@ -952,6 +952,7 @@ function renderRoc(roc) {
     data: { datasets },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           display: false   // 用自訂圖例
@@ -1015,7 +1016,7 @@ function renderRoc(roc) {
   }
 
   legendEl.innerHTML = `
-    <div style="background:var(--c-bg);border-radius:8px;padding:.85rem 1rem;font-family:'Noto Sans JP',sans-serif;">
+    <div style="background:var(--c-bg);border-radius:8px;padding:.85rem 1rem;font-family:'Noto Sans JP',sans-serif;height:100%;">
       <div style="font-size:.82rem;font-weight:900;color:${C.dgray};margin-bottom:.75rem;border-bottom:1px solid ${C.lgray};padding-bottom:.4rem;">
         新竹攻城獅 2025-26｜ROC
       </div>
@@ -1029,6 +1030,20 @@ function renderRoc(roc) {
         </div>
       </div>
     </div>`;
+
+  // 讓圖表 canvas 高度 = 圖例高度，實現左右等高
+  requestAnimationFrame(() => {
+    const legend  = document.getElementById('roc-legend');
+    const chartBg = document.getElementById('chart-roc')?.parentElement;
+    if (legend && chartBg) {
+      const h = legend.offsetHeight;
+      if (h > 200) {
+        chartBg.style.height = h + 'px';
+        // 通知 Chart.js 重新計算尺寸
+        Chart.getChart('chart-roc')?.resize();
+      }
+    }
+  });
 }
 
 // ⑩ 最新動態
