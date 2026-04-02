@@ -5,15 +5,18 @@
 import json, sys, os
 from collections import defaultdict
 import numpy as np
+from scipy import stats as sp_stats
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-LION = '新竹御嵿攻城獅'
+LION     = '新竹御嵿攻城獅'
+DEPARTED = {'克雷格', '李漢昇'}   # 已離隊球員（保留數據但標記）
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
+EXCLUDE_FILES = {'lioneer_player.txt', 'lioneer.basic.txt',
+                 '20260330_allteam.txt', '20260402_allgame.txt'}
 game_files = sorted([
     f for f in os.listdir(DATA_DIR)
-    if f.endswith('.txt') and f not in
-    ['lioneer_player.txt', 'lioneer.basic.txt', '20260330_allteam.txt']
+    if f.endswith('.txt') and f not in EXCLUDE_FILES
 ])
 
 # ================================================================
@@ -67,17 +70,30 @@ for fname in game_files:
 def mean(x): return round(sum(x)/len(x), 2) if x else 0
 
 # ================================================================
-# 2. 聯盟排名（從 allteam 檔案）
+# 2. 聯盟排名（從 allgame 檔案計算最新戰績）
 # ================================================================
-with open(os.path.join(DATA_DIR, '20260330_allteam.txt'), encoding='utf-8') as f:
-    allteams = json.load(f)
+with open(os.path.join(DATA_DIR, '20260402_allgame.txt'), encoding='utf-8') as f:
+    allgames_data = json.load(f)
+
+from collections import Counter
+_rec = defaultdict(lambda: {'wins': 0, 'losses': 0, 'gp': 0})
+for _g in allgames_data:
+    _ht, _at = _g.get('home_team', {}), _g.get('away_team', {})
+    _hs, _as = _ht.get('won_score', 0), _at.get('won_score', 0)
+    if _hs == 0 and _as == 0:
+        continue
+    _hn, _an = _ht.get('name', ''), _at.get('name', '')
+    if not _hn or not _an:
+        continue
+    _rec[_hn]['gp'] += 1;  _rec[_an]['gp'] += 1
+    if _hs > _as:
+        _rec[_hn]['wins'] += 1;  _rec[_an]['losses'] += 1
+    else:
+        _rec[_hn]['losses'] += 1;  _rec[_an]['wins'] += 1
 
 standings_raw = [
-    {'name': t['team']['name'],
-     'wins': t['won_game_count'],
-     'losses': t['lost_game_count'],
-     'gp': t['game_count']}
-    for t in allteams
+    {'name': name, 'wins': r['wins'], 'losses': r['losses'], 'gp': r['gp']}
+    for name, r in _rec.items()
 ]
 standings_sorted = sorted(
     standings_raw,
@@ -95,12 +111,17 @@ for i, t in enumerate(standings_sorted):
 wins            = sum(g['won'] for g in games)
 losses          = len(games) - wins
 gp              = len(games)
-games_remaining = 36 - gp
-win_rate        = wins / gp
-avg_pts         = mean([g['lion_score'] for g in games])
-avg_opp_pts     = mean([g['opp_score']  for g in games])
+# 以最新全隊比賽檔取得攻城獅實際累積場次（更準確）
+_lion_ag         = _rec.get(LION, {})
+lion_allgame_gp  = _lion_ag.get('gp', gp)
+lion_total_wins  = _lion_ag.get('wins', wins)
+lion_total_losses= _lion_ag.get('losses', losses)
+games_remaining  = 36 - lion_allgame_gp
+win_rate         = lion_total_wins / lion_allgame_gp if lion_allgame_gp > 0 else wins / gp
+avg_pts          = mean([g['lion_score'] for g in games])
+avg_opp_pts      = mean([g['opp_score']  for g in games])
 
-print(f'\n=== 攻城獅 {wins}W {losses}L, 剩 {games_remaining} 場 ===')
+print(f'\n=== 攻城獅 {lion_total_wins}W {lion_total_losses}L ({lion_allgame_gp} gp, 剩 {games_remaining} 場) ===')
 
 # ================================================================
 # 4. 對各隊戰績
@@ -125,7 +146,8 @@ teams_order = ['高雄全家海神', '臺北台新戰神', '新北國王',
                '新北中信特攻', '福爾摩沙夢想家', '桃園台啤永豐雲豹']
 
 key_players = [p for p, od in player_vs_opp_pm.items()
-               if sum(len(v) for v in od.values()) >= 3]
+               if sum(len(v) for v in od.values()) >= 3
+               and p not in DEPARTED]
 key_players_sorted = sorted(
     key_players,
     key=lambda p: -mean([x for vs in player_vs_opp_pm[p].values() for x in vs])
@@ -152,7 +174,8 @@ for pname, stats in player_stats.items():
         player_season_avg[pname] = {
             sk: mean(stats[sk]) for sk in important_stats if stats.get(sk)
         }
-        player_season_avg[pname]['games'] = n
+        player_season_avg[pname]['games']    = n
+        player_season_avg[pname]['departed'] = pname in DEPARTED
 
 # ================================================================
 # 7. TPBL 正確賽制 Monte Carlo 模擬（10萬次，NumPy 向量化）
@@ -371,11 +394,15 @@ for g in games:
     game_team_stats.append({
         'won':        int(g['won']),
         '得分':       lt['won_score'],
+        '失分':       lt['lost_score'],
         '三分命中率': round(three_pct * 100, 1),
         '三分命中數': lt.get('three_pointers_made', 0),
         '整體命中率': round(fg_pct * 100, 1),
         '助攻':       lt.get('assists', 0),
         '失誤數':     lt.get('turnovers', 0),
+        '籃板':       lt.get('rebounds', 0),
+        '抄截':       lt.get('steals', 0),
+        '阻攻':       lt.get('blocks', 0),
     })
 
 labels_arr = np.array([s['won'] for s in game_team_stats])
@@ -463,15 +490,119 @@ next_prob_adj = 0.6 * next_prob_model + 0.4 * hist_wr
 print(f'\n下一場 vs {next_opp}: 模型 {next_prob_model:.1%} / 加權 {next_prob_adj:.1%}')
 
 # ================================================================
+# 11. 四情境得分預測（依攻城獅綜合表現分四組）
+# ================================================================
+# 關鍵指標矩陣：3P%, TO, AST, FG%
+feat_mat = np.array([
+    [s['三分命中率'], s['失誤數'], s['助攻'], s['整體命中率']]
+    for s in game_team_stats
+], dtype=float)
+
+lion_sc_arr = np.array([g['lion_score'] for g in games], dtype=float)
+opp_sc_arr  = np.array([g['opp_score']  for g in games], dtype=float)
+won_arr_all = np.array([g['won']         for g in games])
+
+# Z-score 標準化（TO 取反：失誤越少越好）
+mu_f  = feat_mat.mean(axis=0)
+std_f = feat_mat.std(axis=0);  std_f[std_f < 1e-9] = 1e-9
+z_f   = (feat_mat - mu_f) / std_f
+z_f[:, 1] *= -1           # TO inverted
+composite = z_f.mean(axis=1)
+
+q25, q50, q75 = np.percentile(composite, [25, 50, 75])
+
+# 每個分位數群的指標均值（作為情境說明）
+def grp_stat_summary(mask, col, fmt=''):
+    vals = feat_mat[mask, col]
+    return f'{vals.mean():.{fmt}f}' if len(vals) else '—'
+
+scenario_defs = [
+    ('Best',  composite >= q75),
+    ('Ideal', (composite >= q50) & (composite < q75)),
+    ('Fair',  (composite >= q25) & (composite < q50)),
+    ('Low',   composite < q25),
+]
+
+scenario_results = []
+print('\n=== 四情境得分預測 ===')
+for label, mask in scenario_defs:
+    n = int(mask.sum())
+    ls, os_ = lion_sc_arr[mask], opp_sc_arr[mask]
+    wr = float(won_arr_all[mask].mean()) if n > 0 else 0
+    grp = feat_mat[mask]
+    stats_summary = {
+        '3P%':  round(float(grp[:,0].mean()), 1) if n else 0,
+        'TO':   round(float(grp[:,1].mean()), 1) if n else 0,
+        'AST':  round(float(grp[:,2].mean()), 1) if n else 0,
+        'FG%':  round(float(grp[:,3].mean()), 1) if n else 0,
+    }
+    print(f'  {label} (n={n}, WR={wr:.0%}): Lion {ls.mean():.1f}±{ls.std():.1f} '
+          f'Opp {os_.mean():.1f}±{os_.std():.1f}  {stats_summary}')
+    scenario_results.append({
+        'label':      label,
+        'n':          n,
+        'win_rate':   round(wr, 3),
+        'lion_mean':  round(float(ls.mean()), 1) if n else 0,
+        'lion_std':   round(float(ls.std()),  1) if n else 0,
+        'opp_mean':   round(float(os_.mean()), 1) if n else 0,
+        'opp_std':    round(float(os_.std()),  1) if n else 0,
+        'stats':      stats_summary,
+    })
+
+# ================================================================
+# 12. Mann-Whitney U 顯著差異分析（勝 vs 敗）
+# ================================================================
+won_mw  = np.array([g['won'] for g in games])
+mw_stats = {
+    '得分':       np.array([s['得分']       for s in game_team_stats], dtype=float),
+    '失分':       np.array([s['失分']       for s in game_team_stats], dtype=float),
+    '三分命中率': np.array([s['三分命中率'] for s in game_team_stats], dtype=float),
+    '三分命中數': np.array([s['三分命中數'] for s in game_team_stats], dtype=float),
+    '整體命中率': np.array([s['整體命中率'] for s in game_team_stats], dtype=float),
+    '失誤數':     np.array([s['失誤數']     for s in game_team_stats], dtype=float),
+    '助攻':       np.array([s['助攻']       for s in game_team_stats], dtype=float),
+    '籃板':       np.array([s['籃板']       for s in game_team_stats], dtype=float),
+    '抄截':       np.array([s['抄截']       for s in game_team_stats], dtype=float),
+    '阻攻':       np.array([s['阻攻']       for s in game_team_stats], dtype=float),
+}
+
+mann_results = []
+print('\n=== Mann-Whitney U 顯著差異分析 ===')
+for stat_name, values in mw_stats.items():
+    w_vals = values[won_mw]
+    l_vals = values[~won_mw]
+    u_stat, p_val = sp_stats.mannwhitneyu(w_vals, l_vals, alternative='two-sided')
+    n1, n2 = len(w_vals), len(l_vals)
+    r = float(1 - 2 * u_stat / (n1 * n2))   # rank-biserial correlation
+    sig = bool(p_val < 0.05)
+    direction = 'W>L' if w_vals.mean() > l_vals.mean() else 'W<L'
+    print(f'  {stat_name}: p={p_val:.4f}  r={r:+.3f}  {direction}  {"✓ 顯著" if sig else "ns"}')
+    mann_results.append({
+        'stat':          stat_name,
+        'p_value':       round(float(p_val), 4),
+        'effect_r':      round(r, 3),
+        'significant':   sig,
+        'wins_median':   round(float(np.median(w_vals)), 1),
+        'losses_median': round(float(np.median(l_vals)), 1),
+        'wins_mean':     round(float(w_vals.mean()), 1),
+        'losses_mean':   round(float(l_vals.mean()), 1),
+        'wins':          [round(float(v), 1) for v in w_vals],
+        'losses':        [round(float(v), 1) for v in l_vals],
+    })
+
+sig_list = [r['stat'] for r in mann_results if r['significant']]
+print(f'\n顯著指標（p<0.05）: {sig_list}')
+
+# ================================================================
 # 10. 輸出 JSON
 # ================================================================
 output = {
-    'meta': {'generated': '2026-04-01', 'total_games': gp, 'games_remaining': games_remaining},
+    'meta': {'generated': '2026-04-02', 'total_games': lion_allgame_gp, 'games_remaining': games_remaining},
     'team_stats': {
-        'wins': int(wins), 'losses': int(losses),
-        'games_played': gp, 'games_remaining': games_remaining,
+        'wins': int(lion_total_wins), 'losses': int(lion_total_losses),
+        'games_played': lion_allgame_gp, 'games_remaining': games_remaining,
         'avg_pts': avg_pts, 'avg_opp_pts': avg_opp_pts,
-        'win_rate': round(lion_wr_val, 4)
+        'win_rate': round(float(win_rate), 4)
     },
     'standings': standings_sorted,
     'games': games,
@@ -494,6 +625,8 @@ output = {
         }
     },
     'roc': roc_results,
+    'scenario_chart': scenario_results,
+    'mann_whitney': mann_results,
     'next_game': {
         'opponent': next_opp,
         'win_prob_model':    round(float(next_prob_model), 4),

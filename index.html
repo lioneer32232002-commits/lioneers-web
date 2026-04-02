@@ -38,7 +38,10 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: var(--site-bg);
+      background-color: var(--site-bg);
+      /* 電路板背景紋樣（低調，靈感來自新竹晶片重鎮） */
+      background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><g fill='none' stroke='%234a2888' stroke-width='0.9'><line x1='0' y1='40' x2='60' y2='40'/><line x1='80' y1='40' x2='200' y2='40'/><line x1='0' y1='100' x2='40' y2='100'/><line x1='80' y1='100' x2='140' y2='100'/><line x1='160' y1='100' x2='200' y2='100'/><line x1='0' y1='160' x2='100' y2='160'/><line x1='140' y1='160' x2='200' y2='160'/><line x1='40' y1='0' x2='40' y2='30'/><line x1='40' y1='50' x2='40' y2='90'/><line x1='40' y1='110' x2='40' y2='200'/><line x1='100' y1='0' x2='100' y2='200'/><line x1='160' y1='0' x2='160' y2='90'/><line x1='160' y1='110' x2='160' y2='150'/><line x1='160' y1='170' x2='160' y2='200'/><line x1='60' y1='40' x2='60' y2='70'/><line x1='60' y1='70' x2='80' y2='70'/><line x1='80' y1='70' x2='80' y2='100'/><line x1='140' y1='100' x2='140' y2='130'/><line x1='140' y1='130' x2='160' y2='130'/><circle cx='40' cy='40' r='2.2' fill='%235a3098'/><circle cx='100' cy='40' r='2.2' fill='%235a3098'/><circle cx='160' cy='40' r='2.2' fill='%235a3098'/><circle cx='40' cy='100' r='2.2' fill='%235a3098'/><circle cx='100' cy='100' r='2.2' fill='%235a3098'/><circle cx='160' cy='100' r='2.2' fill='%235a3098'/><circle cx='40' cy='160' r='2.2' fill='%235a3098'/><circle cx='100' cy='160' r='2.2' fill='%235a3098'/><circle cx='160' cy='160' r='2.2' fill='%235a3098'/><circle cx='60' cy='40' r='1.4' fill='%235a3098'/><circle cx='80' cy='100' r='1.4' fill='%235a3098'/><circle cx='140' cy='100' r='1.4' fill='%235a3098'/><rect x='86' y='86' width='28' height='28' stroke-width='0.9' rx='2'/><line x1='86' y1='92' x2='80' y2='92'/><line x1='86' y1='98' x2='80' y2='98'/><line x1='86' y1='104' x2='80' y2='104'/><line x1='114' y1='92' x2='120' y2='92'/><line x1='114' y1='98' x2='120' y2='98'/><line x1='114' y1='104' x2='120' y2='104'/><line x1='92' y1='86' x2='92' y2='80'/><line x1='100' y1='86' x2='100' y2='80'/><line x1='108' y1='86' x2='108' y2='80'/><line x1='92' y1='114' x2='92' y2='120'/><line x1='100' y1='114' x2='100' y2='120'/><line x1='108' y1='114' x2='108' y2='120'/></g></svg>");
+      background-size: 200px 200px;
       color: var(--site-white);
       font-family: 'Noto Sans JP', 'Microsoft JhengHei', sans-serif;
       line-height: 1.6;
@@ -350,6 +353,58 @@
       .upd-date { min-width: 55px; font-size: .68rem; }
     }
 
+    /* ===== 晶片彩蛋徽章 ===== */
+    .chip-badge {
+      display: inline-flex; align-items: center; gap: .35rem;
+      background: rgba(94,45,140,.2); border: 1px solid rgba(157,95,214,.35);
+      color: var(--site-gray); font-size: .68rem; letter-spacing: .06em;
+      padding: .2rem .6rem; border-radius: 999px; margin-top: .65rem;
+      cursor: default; transition: all .3s;
+    }
+    .chip-badge:hover {
+      background: rgba(240,192,64,.12); border-color: var(--site-gold);
+      color: var(--site-gold);
+    }
+    .chip-badge .chip-dot {
+      width: 6px; height: 6px; border-radius: 1px;
+      background: currentColor; display: inline-block;
+    }
+
+    /* ===== ROC 暗色圖表面板 ===== */
+    .chart-panel-dark {
+      background: var(--site-bg) !important;
+      border-color: rgba(157,95,214,.25) !important;
+    }
+    .chart-panel-dark-bg {
+      background: #1e0838 !important;
+    }
+
+    /* ===== 已離隊球員（表格暗化） ===== */
+    .player-table tr.departed td {
+      opacity: .45; font-style: italic;
+    }
+    .player-table tr.departed td:first-child::after {
+      content: ' ✗'; font-size: .65rem; color: var(--c-gdark);
+      font-style: normal; vertical-align: middle;
+    }
+
+    /* ===== 四情境圖 ===== */
+    .scenario-tag {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(59,26,110,.4); border: 1px solid var(--site-border);
+      padding: .28rem .65rem; border-radius: 6px; font-size: .74rem;
+    }
+    .scenario-tag strong { color: var(--site-gold); }
+    .scenario-tag span   { color: var(--site-gray2); }
+
+    /* ===== MWU 點圖格 ===== */
+    #mwu-charts .chart-panel {
+      padding: .75rem;
+    }
+    #mwu-charts .chart-panel-bg {
+      padding: .3rem;
+    }
+
     /* ===== 平板（641px ~ 900px） ===== */
     @media(min-width:641px) and (max-width:900px){
       .grid-3 { grid-template-columns: 1fr 1fr; }
@@ -381,7 +436,10 @@
 <section class="hero">
   <div class="hero-badge">2025–26 TPBL 賽季</div>
   <h1>新竹攻城獅<br><em>數據分析中心</em></h1>
-  <p>28 場賽季數據全解析。季後賽模擬、球員熱力圖、下場勝率預測。</p>
+  <p>30 場賽季數據全解析。季後賽模擬、球員熱力圖、下場勝率預測。</p>
+  <div class="chip-badge" title="🔬 彩蛋：背景電路圖靈感來自台積電 2nm 製程架構 · 新竹晶片重鎮 · 攻城獅主場聖地">
+    <span class="chip-dot"></span> 2nm · 新竹晶片重鎮
+  </div>
 </section>
 
 <!-- 統計快覽（第一行：勝場｜敗場｜排名 / 第二行：均得分｜均失分｜剩餘） -->
@@ -439,6 +497,22 @@
         <div class="pct" id="ng-prob">—</div>
         <div class="lbl">預測勝率</div>
       </div>
+    </div>
+  </div>
+
+  <!-- ①ᵇ 四情境得分預測 -->
+  <div class="full" id="scenario-section">
+    <h2 class="section-title"><span class="icon">🎭</span> 四情境得分預測</h2>
+    <div class="card">
+      <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;">
+        依三分命中率、失誤、助攻、整體命中率加權排名分四組——<strong style="color:var(--site-gold)">Best / Ideal / Fair / Low</strong>，誤差線為 ±1 標準差。
+      </p>
+      <div class="chart-panel">
+        <div class="chart-panel-bg">
+          <canvas id="chart-scenario" style="max-height:260px"></canvas>
+        </div>
+      </div>
+      <div id="scenario-legend" style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.85rem;"></div>
     </div>
   </div>
 
@@ -525,8 +599,8 @@
     <div class="card">
       <!-- 圖表 + 圖例並排，高度對齊 -->
       <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:stretch;">
-        <div class="chart-panel" style="flex:1;min-width:280px;display:flex;flex-direction:column;">
-          <div class="chart-panel-bg" style="flex:1;display:flex;align-items:stretch;">
+        <div class="chart-panel chart-panel-dark" style="flex:1;min-width:280px;display:flex;flex-direction:column;">
+          <div class="chart-panel-bg chart-panel-dark-bg" style="flex:1;display:flex;align-items:stretch;">
             <canvas id="chart-roc"></canvas>
           </div>
         </div>
@@ -540,6 +614,22 @@
     </div>
   </div>
 
+  <!-- ⑨ Mann-Whitney 顯著指標 -->
+  <div class="full" id="mwu-section">
+    <h2 class="section-title"><span class="icon">🔬</span> 勝負關鍵指標分析（Mann-Whitney U）</h2>
+    <div class="card">
+      <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;">
+        僅顯示顯著差異指標（p &lt; 0.05）。
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5e2d8c;vertical-align:middle;margin-right:.2rem;"></span>紫點 = 勝場
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#666;vertical-align:middle;margin-right:.2rem;"></span>灰點 = 敗場　橫線 = 中位數
+      </p>
+      <div id="mwu-charts" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.1rem;"></div>
+      <div style="font-size:.72rem;color:var(--site-gray);margin-top:.85rem;line-height:1.7;">
+        Mann-Whitney U 雙尾檢定。效應量 r = 秩雙序列相關係數（|r| ≥ 0.3 中等效應；|r| ≥ 0.5 大效應）。n = 28 場，僅供參考。
+      </div>
+    </div>
+  </div>
+
   <!-- 最新動態 -->
   <div class="full">
     <h2 class="section-title"><span class="icon">🔔</span> 最新動態</h2>
@@ -549,7 +639,7 @@
 </main>
 
 <footer>
-  <p>新竹攻城獅數據分析站 &nbsp;|&nbsp; 資料來源：TPBL 官方數據 &nbsp;|&nbsp; 非官方粉絲製作</p>
+  <p>新竹攻城獅數據分析站 &nbsp;|&nbsp; 資料來源：TPBL 官方數據 &nbsp;|&nbsp; Adam Pan 製作</p>
   <p style="margin-top:.4rem">
     <a href="https://github.com/lioneer32232002-commits/lioneers-web" target="_blank">GitHub</a>
     &nbsp;·&nbsp; 數據更新至 2026/03/30
@@ -601,7 +691,9 @@ fetch('processed_data.json', { cache: 'no-store' })
     renderVsCards(data.vs_summary);
     renderHeatmap(data.heatmap, data.heatmap_teams);
     renderPlayerTable(data.player_avg);
-    renderRoc(data.roc);   // roc 現在是 {得分:{curve,auc,best,threshold}, ...}
+    renderRoc(data.roc);
+    renderScenarioChart(data.scenario_chart);
+    renderMannWhitney(data.mann_whitney);
     renderUpdates(data.games);
   });
 
@@ -800,7 +892,7 @@ function renderVsCards(vs) {
         <div class="vs-record" style="color:${textColor}">${r.w}勝 ${r.l}敗</div>
         <div class="vs-stats">
           均得 ${r.avg_lion} ：均失 ${r.avg_opp}
-          <span style="color:${diff>0?C.dark:C.coral};margin-left:.4rem;font-weight:900">${diffStr}</span>
+          <span style="color:${diff>0?'#f0c040':C.coral};margin-left:.4rem;font-weight:900">${diffStr}</span>
         </div>
         <div class="vs-bar-bg">
           <div class="vs-bar-fill" style="width:${wrPct}%;background:${barColor};height:100%;border-radius:999px"></div>
@@ -855,8 +947,9 @@ function renderPlayerTable(playerAvg) {
                   pm >= 0  ? 'pm-lo'  :
                   pm >= -3 ? 'pm-neg' : 'pm-bad';
     const pmStr = pm > 0 ? `+${pm}` : `${pm}`;
+    const depClass = s.departed ? 'departed' : '';
     tbody.innerHTML += `
-      <tr>
+      <tr class="${depClass}">
         <td>${name}</td>
         <td>${s.games}</td>
         <td><strong>${(s.score||0).toFixed(1)}</strong></td>
@@ -871,100 +964,85 @@ function renderPlayerTable(playerAvg) {
   });
 }
 
-// ⑨ ROC 曲線（多指標，含 Youden's J 標記，依視覺規範）
+// ⑨ ROC 曲線（多指標，Youden's J，暗色面板，按 AUC 分組著色）
 function renderRoc(roc) {
-  // 指標定義：依 AUC 排序，顏色依規範（強→中→弱）
+  // 不預設顏色——依 AUC 組別動態分配
   const PREDICTORS = [
-    { key: '得分',       labelEn: 'Score',   unitCh: '分',  color: C.dark,  dash: [] },
-    { key: '三分命中率', labelEn: '3P%',     unitCh: '%',   color: '#7b2d8c', dash: [] },
-    { key: '整體命中率', labelEn: 'FG%',     unitCh: '%',   color: C.mid,   dash: [4,3] },
-    { key: '失誤數',     labelEn: 'TOV',     unitCh: '次',  color: '#d97706', dash: [4,3] },
-    { key: '助攻',       labelEn: 'AST',     unitCh: '次',  color: '#2563eb', dash: [6,3] },
-    { key: '三分命中數', labelEn: '3PM',     unitCh: '顆',  color: '#16a34a', dash: [6,3] },
+    { key: '得分',       labelEn: 'Score',   unitCh: '分',  dash: [] },
+    { key: '三分命中率', labelEn: '3P%',     unitCh: '%',   dash: [] },
+    { key: '整體命中率', labelEn: 'FG%',     unitCh: '%',   dash: [4,3] },
+    { key: '失誤數',     labelEn: 'TOV',     unitCh: '次',  dash: [4,3] },
+    { key: '助攻',       labelEn: 'AST',     unitCh: '次',  dash: [6,3] },
+    { key: '三分命中數', labelEn: '3PM',     unitCh: '顆',  dash: [6,3] },
   ];
 
-  // 依 AUC 排序（強→弱）
-  const sorted = [...PREDICTORS].sort((a, b) =>
-    (roc[b.key]?.auc || 0) - (roc[a.key]?.auc || 0)
-  );
+  // 強→中→弱各用一個色系，組內深淺不同（對暗底高對比）
+  const STRONG_COLORS = ['#ffd700', '#ffa000', '#e65100']; // 金 → 琥珀 → 深橙
+  const MED_COLORS    = ['#00e5ff', '#26c6da', '#4db6ac']; // 亮青 → 青藍 → 藍綠
+  const WEAK_COLORS   = ['#f06292', '#ce93d8', '#a5d6a7']; // 粉 → 薰衣草 → 淡綠
 
-  // 強 / 中 預測指標分組
   const STRONG_THRESHOLD = 0.75;
   const MED_THRESHOLD    = 0.65;
 
-  // 建立 datasets
-  const datasets = [];
+  // 依 AUC 排序，並動態分配組內顏色
+  const sorted = [...PREDICTORS].sort((a, b) =>
+    (roc[b.key]?.auc || 0) - (roc[a.key]?.auc || 0)
+  );
+  let si = 0, mi = 0, wi = 0;
+  sorted.forEach(p => {
+    const auc = roc[p.key]?.auc || 0;
+    if      (auc >= STRONG_THRESHOLD) p.color = STRONG_COLORS[si++ % STRONG_COLORS.length];
+    else if (auc >= MED_THRESHOLD)    p.color = MED_COLORS[mi++    % MED_COLORS.length];
+    else                              p.color = WEAK_COLORS[wi++   % WEAK_COLORS.length];
+  });
 
+  // 暗色面板顏色
+  const axisColor = '#c5b8dc';
+  const gridColor = 'rgba(255,255,255,0.08)';
+
+  const datasets = [];
   sorted.forEach(p => {
     const d = roc[p.key];
     if (!d) return;
-    const auc = d.auc;
-    const curve = d.curve;
-    const best  = d.best;
-
-    // 主曲線
     datasets.push({
-      label: `${p.labelEn} (AUC=${auc.toFixed(3)})`,
-      data:  curve.map(pt => ({ x: pt.fpr, y: pt.tpr })),
-      borderColor: p.color,
-      backgroundColor: 'transparent',
+      label: `${p.labelEn} (AUC=${d.auc.toFixed(3)})`,
+      data:  d.curve.map(pt => ({ x: pt.fpr, y: pt.tpr })),
+      borderColor: p.color, backgroundColor: 'transparent',
       showLine: true, tension: 0,
-      pointRadius: 0, borderWidth: 2.2,
-      borderDash: p.dash,
-      order: 2
+      pointRadius: 0, borderWidth: 2.2, borderDash: p.dash, order: 2
     });
-
-    // Youden's J 最佳切點（單點標記）
-    if (best) {
-      const th = d.threshold;
-      const unitCh = p.unitCh;
+    if (d.best) {
       datasets.push({
-        label: `_best_${p.key}`,   // 底線開頭不顯示在圖例
-        data:  [{ x: best.fpr, y: best.tpr }],
-        borderColor: p.color,
-        backgroundColor: p.color,
-        showLine: false,
-        pointRadius: 6,
-        pointStyle: 'circle',
-        order: 1,
-        // 把切點值存進來供 tooltip 用
-        _threshold: th,
-        _unitCh: unitCh,
-        _key: p.key
+        label: `_best_${p.key}`,
+        data: [{ x: d.best.fpr, y: d.best.tpr }],
+        borderColor: p.color, backgroundColor: p.color,
+        showLine: false, pointRadius: 7, pointStyle: 'circle', order: 1,
+        _threshold: d.threshold, _unitCh: p.unitCh, _key: p.key
       });
     }
   });
-
-  // 隨機基準線
   datasets.push({
     label: 'Random (AUC=0.500)',
-    data:  [{ x: 0, y: 0 }, { x: 1, y: 1 }],
-    borderColor: C.lgray,
-    backgroundColor: 'transparent',
-    showLine: true, tension: 0,
-    pointRadius: 0, borderWidth: 1.5,
-    borderDash: [6, 5],
-    order: 3
+    data: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
+    borderColor: 'rgba(255,255,255,0.18)', backgroundColor: 'transparent',
+    showLine: true, tension: 0, pointRadius: 0, borderWidth: 1.2,
+    borderDash: [6, 5], order: 3
   });
 
   new Chart(document.getElementById('chart-roc'), {
     type: 'scatter',
     data: { datasets },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: {
-          display: false   // 用自訂圖例
-        },
+        legend: { display: false },
         tooltip: {
           filter: item => !item.dataset.label.startsWith('_best_'),
           callbacks: {
             label: item => {
               const ds = item.dataset;
-              if (ds._threshold !== undefined) {
+              if (ds._threshold !== undefined)
                 return `${ds._key} 切點=${ds._threshold}${ds._unitCh}  TPR=${item.parsed.y.toFixed(2)}  FPR=${item.parsed.x.toFixed(2)}`;
-              }
               return `TPR=${item.parsed.y.toFixed(2)}  FPR=${item.parsed.x.toFixed(2)}`;
             }
           }
@@ -972,66 +1050,60 @@ function renderRoc(roc) {
       },
       scales: {
         x: {
-          title: { display: true, text: 'False Positive Rate（1 − 特異度）', color: C.dgray, font: { size: 11, weight: '700' } },
-          ticks: { color: C.dgray, font: { size: 10 } },
-          grid:  { color: C.lgray, lineWidth: .8 },
-          min: 0, max: 1
+          title: { display: true, text: 'False Positive Rate（1 − 特異度）', color: axisColor, font: { size: 11, weight: '700' } },
+          ticks: { color: axisColor, font: { size: 10 } },
+          grid:  { color: gridColor, lineWidth: .8 }, min: 0, max: 1
         },
         y: {
-          title: { display: true, text: 'True Positive Rate（敏感度）', color: C.dgray, font: { size: 11, weight: '700' } },
-          ticks: { color: C.dgray, font: { size: 10 } },
-          grid:  { color: C.lgray, lineWidth: .8 },
-          min: 0, max: 1
+          title: { display: true, text: 'True Positive Rate（敏感度）', color: axisColor, font: { size: 11, weight: '700' } },
+          ticks: { color: axisColor, font: { size: 10 } },
+          grid:  { color: gridColor, lineWidth: .8 }, min: 0, max: 1
         }
       }
     }
   });
 
-  // 自訂圖例（右側）
+  // 自訂圖例（暗色主題）
   const legendEl = document.getElementById('roc-legend');
-  const strong = sorted.filter(p => roc[p.key]?.auc >= STRONG_THRESHOLD);
-  const medium = sorted.filter(p => roc[p.key]?.auc >= MED_THRESHOLD && roc[p.key]?.auc < STRONG_THRESHOLD);
-  const weak   = sorted.filter(p => roc[p.key]?.auc < MED_THRESHOLD);
+  const strong = sorted.filter(p => (roc[p.key]?.auc||0) >= STRONG_THRESHOLD);
+  const medium = sorted.filter(p => (roc[p.key]?.auc||0) >= MED_THRESHOLD && (roc[p.key]?.auc||0) < STRONG_THRESHOLD);
+  const weak   = sorted.filter(p => (roc[p.key]?.auc||0) < MED_THRESHOLD);
 
   function legendGroup(title, items, icon) {
     if (!items.length) return '';
     let html = `<div style="margin-bottom:.85rem;">
-      <div style="font-size:.78rem;font-weight:700;color:${C.dgray};margin-bottom:.4rem;">${icon} ${title}</div>`;
+      <div style="font-size:.78rem;font-weight:700;color:#c5b8dc;margin-bottom:.4rem;">${icon} ${title}</div>`;
     items.forEach(p => {
-      const d = roc[p.key];
-      if (!d) return;
-      const th = d.threshold;
+      const d = roc[p.key]; if (!d) return;
       html += `
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;">
           <span style="display:inline-block;width:24px;height:3px;background:${p.color};border-radius:2px;flex-shrink:0;"></span>
           <span style="font-size:.8rem;font-weight:700;color:${p.color};">${p.labelEn}</span>
-          <span style="font-size:.78rem;color:${C.dgray};">AUC=${d.auc.toFixed(3)}</span>
+          <span style="font-size:.78rem;color:#7a6a8a;">AUC=${d.auc.toFixed(3)}</span>
         </div>
-        <div style="font-size:.73rem;color:#888;margin-left:32px;margin-bottom:.2rem;">
-          切點 ${th}${p.unitCh}（J=${(d.best.tpr-d.best.fpr).toFixed(3)}）
+        <div style="font-size:.73rem;color:#5a4a6a;margin-left:32px;margin-bottom:.25rem;">
+          切點 ${d.threshold}${p.unitCh}（J=${(d.best.tpr-d.best.fpr).toFixed(3)}）
         </div>`;
     });
-    html += `</div>`;
-    return html;
+    return html + `</div>`;
   }
 
   legendEl.innerHTML = `
-    <div style="background:var(--c-bg);border-radius:8px;padding:.85rem 1rem;font-family:'Noto Sans JP',sans-serif;height:100%;">
-      <div style="font-size:.82rem;font-weight:900;color:${C.dgray};margin-bottom:.75rem;border-bottom:1px solid ${C.lgray};padding-bottom:.4rem;">
+    <div style="background:#1e0838;border:1px solid rgba(157,95,214,.3);border-radius:8px;padding:.85rem 1rem;height:100%;">
+      <div style="font-size:.82rem;font-weight:900;color:#c5b8dc;margin-bottom:.75rem;border-bottom:1px solid rgba(157,95,214,.2);padding-bottom:.4rem;">
         新竹攻城獅 2025-26｜ROC
       </div>
       ${legendGroup('強預測指標（AUC ≥ 0.75）', strong, '★')}
       ${legendGroup('中預測指標（AUC 0.65–0.75）', medium, '◆')}
-      ${legendGroup('弱預測指標（AUC < 0.65）', weak,   '—')}
-      <div style="margin-top:.6rem;border-top:1px solid ${C.lgray};padding-top:.5rem;">
+      ${legendGroup('弱預測指標（AUC < 0.65）', weak, '—')}
+      <div style="margin-top:.6rem;border-top:1px solid rgba(157,95,214,.2);padding-top:.5rem;">
         <div style="display:flex;align-items:center;gap:.5rem;">
-          <span style="display:inline-block;width:24px;height:2px;background:${C.lgray};border-radius:2px;"></span>
-          <span style="font-size:.75rem;color:#aaa;">Random（AUC=0.500）</span>
+          <span style="display:inline-block;width:24px;height:2px;background:rgba(255,255,255,0.18);border-radius:2px;"></span>
+          <span style="font-size:.75rem;color:#4a3a5a;">Random（AUC=0.500）</span>
         </div>
       </div>
     </div>`;
 
-  // 讓圖表 canvas 高度 = 圖例高度，實現左右等高
   requestAnimationFrame(() => {
     const legend  = document.getElementById('roc-legend');
     const chartBg = document.getElementById('chart-roc')?.parentElement;
@@ -1046,7 +1118,188 @@ function renderRoc(roc) {
   });
 }
 
-// ⑩ 最新動態
+// ⑩ 四情境得分預測
+function renderScenarioChart(scenarios) {
+  if (!scenarios || !scenarios.length) return;
+
+  // 誤差棒 plugin
+  const errBarPlugin = {
+    id: 'errBars',
+    afterDatasetsDraw(chart) {
+      const { ctx, scales } = chart;
+      chart.data.datasets.forEach((ds, di) => {
+        if (!ds._stds) return;
+        const meta = chart.getDatasetMeta(di);
+        meta.data.forEach((bar, i) => {
+          const val = ds.data[i], std = ds._stds[i];
+          if (std == null) return;
+          const x   = bar.x;
+          const yT  = scales.y.getPixelForValue(val + std);
+          const yB  = scales.y.getPixelForValue(val - std);
+          const cap = 5;
+          ctx.save();
+          ctx.strokeStyle = ds.borderColor;
+          ctx.lineWidth   = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(x, yT); ctx.lineTo(x, yB);
+          ctx.moveTo(x - cap, yT); ctx.lineTo(x + cap, yT);
+          ctx.moveTo(x - cap, yB); ctx.lineTo(x + cap, yB);
+          ctx.stroke();
+          ctx.restore();
+        });
+      });
+    }
+  };
+
+  new Chart(document.getElementById('chart-scenario'), {
+    type: 'bar',
+    plugins: [errBarPlugin],
+    data: {
+      labels: scenarios.map(s => `${s.label}  ${Math.round(s.win_rate*100)}% WR`),
+      datasets: [
+        {
+          label: '攻城獅均分',
+          data:  scenarios.map(s => s.lion_mean),
+          _stds: scenarios.map(s => s.lion_std),
+          backgroundColor: 'rgba(94,45,140,.7)',
+          borderColor: C.dark, borderWidth: 1.5, borderRadius: 4
+        },
+        {
+          label: '對手均分',
+          data:  scenarios.map(s => s.opp_mean),
+          _stds: scenarios.map(s => s.opp_std),
+          backgroundColor: 'rgba(102,102,102,.5)',
+          borderColor: C.gdark, borderWidth: 1.5, borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { labels: { color: C.dgray, font: { size: 12, weight: '700' } } },
+        tooltip: {
+          callbacks: {
+            afterBody: items => {
+              const s = scenarios[items[0].dataIndex];
+              return [`勝率 ${Math.round(s.win_rate*100)}%（n=${s.n}）`,
+                      `3P% ${s.stats['3P%']}  TO ${s.stats['TO']}  AST ${s.stats['AST']}  FG% ${s.stats['FG%']}`];
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: C.dgray, font: { size: 11, weight: '700' } }, grid: { display: false } },
+        y: {
+          title: { display: true, text: '得分', color: C.dgray, font: { weight: '700' } },
+          ticks: { color: C.dgray, font: { size: 10 } },
+          grid:  { color: C.lgray, lineWidth: .8 }, min: 60
+        }
+      }
+    }
+  });
+
+  // 情境摘要標籤
+  const leg = document.getElementById('scenario-legend');
+  leg.innerHTML = scenarios.map(s => `
+    <div class="scenario-tag">
+      <strong>${s.label}</strong>
+      <span>勝率 ${Math.round(s.win_rate*100)}%（n=${s.n}）</span>
+      <span style="color:var(--site-gray);font-size:.68rem;">3P% ${s.stats['3P%']} · TO ${s.stats['TO']} · AST ${s.stats['AST']} · FG% ${s.stats['FG%']}</span>
+    </div>`).join('');
+}
+
+// ⑪ Mann-Whitney U 點圖（僅顯著指標）
+function renderMannWhitney(mwResults) {
+  const sigItems = (mwResults || []).filter(r => r.significant);
+  const container = document.getElementById('mwu-charts');
+  if (!sigItems.length) {
+    container.innerHTML = '<p style="color:var(--site-gray)">無顯著差異指標</p>';
+    return;
+  }
+
+  // 確定性抖動（不需 seeded random）
+  const jitter = (i, span) => (Math.sin(i * 13.7) * 0.5 + Math.cos(i * 7.3) * 0.5) * span;
+
+  // 中位線 plugin（每個 chart 實例獨立）
+  function makeMedianPlugin(wMed, lMed) {
+    return {
+      id: 'medLines',
+      afterDatasetsDraw(chart) {
+        const { ctx, scales } = chart;
+        [[wMed, 0, C.dark], [lMed, 1, C.gdark]].forEach(([med, xIdx, color]) => {
+          const x = scales.x.getPixelForValue(xIdx);
+          const y = scales.y.getPixelForValue(med);
+          ctx.save();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(x - 20, y); ctx.lineTo(x + 20, y);
+          ctx.stroke();
+          ctx.restore();
+        });
+      }
+    };
+  }
+
+  sigItems.forEach(item => {
+    const wrap = document.createElement('div');
+    wrap.className = 'chart-panel';
+
+    const rSign = item.effect_r >= 0 ? '+' : '';
+    const title = document.createElement('div');
+    title.style.cssText = `font-size:.8rem;font-weight:700;color:${C.dgray};margin-bottom:.4rem;text-align:center;`;
+    title.textContent = `${item.stat}   p=${item.p_value.toFixed(3)}  r=${rSign}${item.effect_r.toFixed(2)}`;
+
+    const bg = document.createElement('div');
+    bg.className = 'chart-panel-bg';
+    const canvas = document.createElement('canvas');
+    canvas.style.height = '175px';
+    bg.appendChild(canvas);
+
+    const note = document.createElement('div');
+    note.style.cssText = `font-size:.7rem;color:${C.dgray};margin-top:.3rem;text-align:center;`;
+    note.textContent = `勝中位 ${item.wins_median}  /  敗中位 ${item.losses_median}`;
+
+    wrap.appendChild(title);
+    wrap.appendChild(bg);
+    wrap.appendChild(note);
+    container.appendChild(wrap);
+
+    const wData = item.wins.map((v, i)   => ({ x: 0 + jitter(i,      0.14), y: v }));
+    const lData = item.losses.map((v, i) => ({ x: 1 + jitter(i + 50, 0.14), y: v }));
+
+    new Chart(canvas, {
+      type: 'scatter',
+      plugins: [makeMedianPlugin(item.wins_median, item.losses_median)],
+      data: {
+        datasets: [
+          { label: '勝場', data: wData,
+            backgroundColor: 'rgba(94,45,140,.65)', borderColor: C.dark, borderWidth: 1, pointRadius: 5 },
+          { label: '敗場', data: lData,
+            backgroundColor: 'rgba(102,102,102,.5)', borderColor: C.gdark, borderWidth: 1, pointRadius: 5 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: it => `${it.parsed.y}` } }
+        },
+        scales: {
+          x: {
+            min: -0.5, max: 1.5,
+            ticks: { color: C.dgray, font: { size: 11, weight: '700' },
+                     callback: v => v === 0 ? '勝' : v === 1 ? '敗' : '' },
+            grid: { display: false }
+          },
+          y: { ticks: { color: C.dgray, font: { size: 9 } }, grid: { color: C.lgray, lineWidth: .8 } }
+        }
+      }
+    });
+  });
+}
+
+// ⑫ 最新動態
 function renderUpdates(games) {
   const list = document.getElementById('updates');
   list.innerHTML = `
