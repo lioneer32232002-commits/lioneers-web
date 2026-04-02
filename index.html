@@ -1227,8 +1227,8 @@ function renderMannWhitney(mwResults) {
 
     const rSign = item.effect_r >= 0 ? '+' : '';
     const title = document.createElement('div');
-    title.style.cssText = `font-size:.8rem;font-weight:700;color:#c5b8dc;margin-bottom:.4rem;text-align:center;`;
-    title.textContent = `${item.stat}   p=${item.p_value.toFixed(3)}  r=${rSign}${item.effect_r.toFixed(2)}`;
+    title.style.cssText = `font-size:.8rem;font-weight:700;color:#c5b8dc;margin-bottom:.4rem;text-align:center;line-height:1.5;`;
+    title.innerHTML = `<div>${item.stat}</div><div style="font-size:.72rem;font-weight:400;color:var(--site-gray);">p=${item.p_value.toFixed(3)} &nbsp; r=${rSign}${item.effect_r.toFixed(2)}</div>`;
 
     const bg = document.createElement('div');
     bg.className = 'chart-panel-bg chart-panel-dark-bg';
@@ -1239,7 +1239,7 @@ function renderMannWhitney(mwResults) {
 
     const note = document.createElement('div');
     note.style.cssText = `font-size:.7rem;color:#c5b8dc;margin-top:.3rem;text-align:center;`;
-    note.innerHTML = `<span style="color:${mwuWinBd};">勝中位 ${item.wins_median}</span>　／　<span style="color:${mwuLossBd};">敗中位 ${item.losses_median}</span>`;
+    note.innerHTML = `<div style="color:${mwuWinBd};">勝中位 ${item.wins_median}</div><div style="color:${mwuLossBd};">敗中位 ${item.losses_median}</div>`;
 
     wrap.appendChild(title);
     wrap.appendChild(bg);
