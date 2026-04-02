@@ -93,6 +93,31 @@ for i, t in enumerate(standings_sorted):
     marker = ' ← 攻城獅' if t['name'] == LION else ''
     print(f"{i+1}. {t['name']}: {t['wins']}W {t['losses']}L{marker}")
 
+# 各球隊進攻效率（每百回合估算：FGA − OREB + TO + 0.44×FTA）
+league_rtg = []
+for t in allteams:
+    avg  = t['average_stats']
+    fga  = avg.get('field_goals_attempted', 0) or 0
+    oreb = avg.get('offensive_rebounds',    0) or 0
+    to_v = avg.get('turnovers',             0) or 0
+    fta  = avg.get('free_throws_attempted', 0) or 0
+    poss = fga - oreb + to_v + 0.44 * fta
+    pts  = avg.get('won_score',  0) or 0
+    opp  = avg.get('lost_score', 0) or 0
+    ortg   = round(pts / poss * 100, 1) if poss > 0 else 0.0
+    drtg   = round(opp / poss * 100, 1) if poss > 0 else 0.0
+    netrtg = round(ortg - drtg, 1)
+    league_rtg.append({
+        'name':   t['team']['name'],
+        'wins':   t['won_game_count'],
+        'losses': t['lost_game_count'],
+        'gp':     t['game_count'],
+        'ortg':   ortg,
+        'drtg':   drtg,
+        'netrtg': netrtg,
+    })
+league_rtg.sort(key=lambda x: -x['netrtg'])
+
 # ================================================================
 # 3. 攻城獅本季統計
 # ================================================================
@@ -593,6 +618,7 @@ output = {
         'win_rate': round(float(win_rate), 4)
     },
     'standings': standings_sorted,
+    'league_rtg': league_rtg,
     'games': games,
     'vs_summary': vs_summary,
     'heatmap': heatmap_data,

@@ -57,6 +57,71 @@
       "gp": 30
     }
   ],
+  "league_rtg": [
+    {
+      "name": "桃園台啤永豐雲豹",
+      "wins": 19,
+      "losses": 10,
+      "gp": 29,
+      "ortg": 105.7,
+      "drtg": 100.8,
+      "netrtg": 4.9
+    },
+    {
+      "name": "福爾摩沙夢想家",
+      "wins": 19,
+      "losses": 11,
+      "gp": 30,
+      "ortg": 108.2,
+      "drtg": 103.9,
+      "netrtg": 4.3
+    },
+    {
+      "name": "新北中信特攻",
+      "wins": 14,
+      "losses": 15,
+      "gp": 29,
+      "ortg": 104.0,
+      "drtg": 100.7,
+      "netrtg": 3.3
+    },
+    {
+      "name": "新竹御嵿攻城獅",
+      "wins": 16,
+      "losses": 12,
+      "gp": 28,
+      "ortg": 104.1,
+      "drtg": 101.1,
+      "netrtg": 3.0
+    },
+    {
+      "name": "新北國王",
+      "wins": 16,
+      "losses": 14,
+      "gp": 30,
+      "ortg": 106.8,
+      "drtg": 106.6,
+      "netrtg": 0.2
+    },
+    {
+      "name": "臺北台新戰神",
+      "wins": 10,
+      "losses": 20,
+      "gp": 30,
+      "ortg": 104.4,
+      "drtg": 111.0,
+      "netrtg": -6.6
+    },
+    {
+      "name": "高雄全家海神",
+      "wins": 9,
+      "losses": 21,
+      "gp": 30,
+      "ortg": 101.2,
+      "drtg": 110.0,
+      "netrtg": -8.8
+    }
+  ],
   "games": [
     {
       "date": "20260307",
