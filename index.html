@@ -272,11 +272,63 @@
     footer a { color: var(--site-purple3); text-decoration: none; }
     footer a:hover { color: var(--site-gold); }
 
+    /* ===== 手機響應式（375px） ===== */
     @media(max-width:640px){
+      /* 導覽列：隱藏選單連結 */
       nav ul { display: none; }
-      .hero,.main-content { padding-left: 1rem; padding-right: 1rem; }
+
+      /* 主內容間距縮小 */
       main { padding: 1.5rem 1rem; }
-      .next-card { flex-direction: column; }
+      .full { margin-bottom: 1.5rem; }
+
+      /* 英雄 */
+      .hero { padding: 2.5rem 1rem 2rem; }
+      .hero h1 { font-size: 1.7rem; }
+
+      /* 統計快覽：2欄 */
+      .stats-bar { padding: 1rem; }
+      .stats-bar-inner { grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+      .stat-item .number { font-size: 1.5rem; }
+
+      /* 下一場卡片：直排 */
+      .next-card { flex-direction: column; align-items: flex-start; }
+      .ng-prob { align-self: flex-end; margin-top: .5rem; }
+
+      /* 球員名字不換行 */
+      .player-table td:first-child { white-space: nowrap; }
+
+      /* 球員表格：鎖定最小寬度，讓它可以橫向捲動 */
+      .player-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .player-table { min-width: 560px; }
+
+      /* 熱力圖：cell 縮小，確保可橫向捲動 */
+      .heatmap-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .hm-cell { width: 54px; height: 32px; font-size: .78rem; }
+      .hm-name { font-size: .78rem; padding: .35rem .4rem; }
+      .heatmap-table th { font-size: .75rem; padding: .35rem .4rem; }
+
+      /* 圖表面板 */
+      .chart-panel { padding: .6rem; }
+      .chart-panel-bg { padding: .3rem; }
+
+      /* ROC 圖最大寬度取消限制 */
+      .card .chart-panel { max-width: 100% !important; }
+
+      /* 對各隊戰績：確保格線正確 */
+      .grid-3 { grid-template-columns: 1fr; }
+
+      /* section 標題字縮小 */
+      .section-title { font-size: 1rem; }
+
+      /* 最新動態：文字不換行問題 */
+      .upd-date { min-width: 55px; font-size: .68rem; }
+    }
+
+    /* ===== 平板（641px ~ 900px） ===== */
+    @media(min-width:641px) and (max-width:900px){
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .stats-bar-inner { grid-template-columns: repeat(3, 1fr); }
+      .hm-cell { width: 62px; }
     }
   </style>
 </head>
@@ -644,8 +696,14 @@ function renderScoreChart(games) {
       },
       scales: {
         x: {
-          ticks: { color: C.dgray, maxRotation: 45, font: { size: 10, weight: '700' } },
-          grid:  { color: C.lgray, lineWidth: .8 }
+          ticks: {
+            color: C.dgray,
+            maxRotation: 55,
+            font: { size: 9, weight: '700' },
+            maxTicksLimit: window.innerWidth < 640 ? 8 : 28,
+            autoSkip: true
+          },
+          grid: { color: C.lgray, lineWidth: .8 }
         },
         y: {
           ticks: { color: C.dgray, font: { size: 10, weight: '700' } },
