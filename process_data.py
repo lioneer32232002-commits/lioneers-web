@@ -341,9 +341,11 @@ print(f'打進總冠軍賽:       {prob_final:.1%}')
 print(f'🏆 拿下總冠軍:      {prob_champ:.1%}')
 
 # ================================================================
-# 8. ROC 曲線（上半場得分差 → 預測最終勝負）
+# 8. ROC 曲線（多個預測指標，含 Youden's J 最佳切點）
 # ================================================================
-roc_points = []
+# 從每場比賽萃取攻城獅隊伍級別數據
+game_team_stats = []   # [{'won':bool, '得分':int, '三分命中率':float, ...}]
+
 for g in games:
     raw_fname = None
     for fname in game_files:
@@ -359,35 +361,91 @@ for g in games:
         d = json.load(f)
     ht, at = d['home_team'], d['away_team']
     lion = ht if ht['name'] == LION else at
-    opp  = at if ht['name'] == LION else ht
-    rl = lion['teams']['rounds']
-    ro = opp['teams']['rounds']
-    half_lion = sum(rl[str(q)]['won_score'] for q in [1, 2] if str(q) in rl)
-    half_opp  = sum(ro[str(q)]['won_score'] for q in [1, 2] if str(q) in ro)
-    roc_points.append({'score': half_lion - half_opp, 'won': int(g['won'])})
+    lt = lion['teams']['total']
 
-scores = np.array([r['score'] for r in roc_points])
-labels = np.array([r['won']   for r in roc_points])
-thresholds = np.sort(np.unique(np.concatenate([scores - .5, scores + .5])))[::-1]
+    three_att = lt.get('three_pointers_attempted', 0)
+    three_pct = lt['three_pointers_made'] / three_att if three_att else 0
+    fg_att = lt.get('field_goals_attempted', 0)
+    fg_pct = lt['field_goals_made'] / fg_att if fg_att else 0
 
-P, N_neg = labels.sum(), (labels == 0).sum()
-roc_curve = []
-for th in thresholds:
-    pred = (scores >= th).astype(int)
-    tp = int(((pred == 1) & (labels == 1)).sum())
-    fp = int(((pred == 1) & (labels == 0)).sum())
-    roc_curve.append({
-        'fpr': round(fp / N_neg if N_neg else 0, 4),
-        'tpr': round(tp / P    if P    else 0, 4)
+    game_team_stats.append({
+        'won':        int(g['won']),
+        '得分':       lt['won_score'],
+        '三分命中率': round(three_pct * 100, 1),
+        '三分命中數': lt.get('three_pointers_made', 0),
+        '整體命中率': round(fg_pct * 100, 1),
+        '助攻':       lt.get('assists', 0),
+        '失誤數':     lt.get('turnovers', 0),
     })
 
-roc_sorted = sorted(roc_curve, key=lambda x: x['fpr'])
-auc = sum(
-    (roc_sorted[i+1]['fpr'] - roc_sorted[i]['fpr']) *
-    (roc_sorted[i+1]['tpr'] + roc_sorted[i]['tpr']) / 2
-    for i in range(len(roc_sorted)-1)
-)
-print(f'\nROC AUC = {auc:.3f}')
+labels_arr = np.array([s['won'] for s in game_team_stats])
+P_all  = labels_arr.sum()
+N_all  = (labels_arr == 0).sum()
+
+def calc_roc(scores_arr, labels, higher_is_better=True):
+    """計算 ROC 曲線、AUC、Youden's J 最佳切點"""
+    if not higher_is_better:
+        scores_arr = -scores_arr
+    uniq = np.sort(np.unique(scores_arr))
+    thresholds = np.concatenate([uniq - 0.001, uniq + 0.001])
+    thresholds = np.sort(np.unique(thresholds))[::-1]
+
+    P = labels.sum()
+    N = (labels == 0).sum()
+    pts = []
+    for th in thresholds:
+        pred = (scores_arr >= th).astype(int)
+        tp = int(((pred == 1) & (labels == 1)).sum())
+        fp = int(((pred == 1) & (labels == 0)).sum())
+        tpr = tp / P if P else 0
+        fpr = fp / N if N else 0
+        pts.append((fpr, tpr, float(th if higher_is_better else -th)))
+
+    pts = sorted(pts, key=lambda x: x[0])
+    # 去重（同 fpr 取最高 tpr）
+    dedup = {}
+    for fpr, tpr, th in pts:
+        key = round(fpr, 4)
+        if key not in dedup or tpr > dedup[key][1]:
+            dedup[key] = (fpr, tpr, th)
+    pts = sorted(dedup.values(), key=lambda x: x[0])
+
+    # AUC（梯形）
+    auc_val = sum(
+        (pts[i+1][0] - pts[i][0]) * (pts[i+1][1] + pts[i][1]) / 2
+        for i in range(len(pts)-1)
+    )
+
+    # Youden's J = TPR - FPR，取最大
+    best = max(pts, key=lambda x: x[1] - x[0])
+
+    curve = [{'fpr': round(p[0], 4), 'tpr': round(p[1], 4)} for p in pts]
+    return curve, round(auc_val, 4), {'fpr': round(best[0], 4), 'tpr': round(best[1], 4), 'threshold': best[2]}
+
+# 定義預測指標（higher_is_better=False 代表數字越小越好，如失誤）
+predictors = [
+    ('得分',       '得分',       True),
+    ('三分命中率', '三分命中率', True),
+    ('整體命中率', '整體命中率', True),
+    ('失誤數',     '失誤數',     False),   # 失誤越少越好
+    ('助攻',       '助攻',       True),
+    ('三分命中數', '三分命中數', True),
+]
+
+roc_results = {}
+print('\n=== ROC 多指標分析 ===')
+for label, key, higher in predictors:
+    scores = np.array([s[key] for s in game_team_stats], dtype=float)
+    curve, auc_val, best_pt = calc_roc(scores, labels_arr, higher)
+    roc_results[label] = {
+        'curve': curve,
+        'auc':   auc_val,
+        'best':  best_pt,
+        'threshold': best_pt['threshold']
+    }
+    # 找最佳切點的原始值
+    raw_vals = np.array([s[key] for s in game_team_stats], dtype=float)
+    print(f'  {label}: AUC={auc_val:.3f}  最佳切點={best_pt["threshold"]:.1f}  (J={best_pt["tpr"]-best_pt["fpr"]:.3f})')
 
 # ================================================================
 # 9. 下一場 vs 特攻 勝率
@@ -435,7 +493,7 @@ output = {
             'championship': 'Bo7（7戰4勝），主場分配 2-2-1-1-1'
         }
     },
-    'roc': {'curve': roc_sorted, 'auc': round(float(auc), 4)},
+    'roc': roc_results,
     'next_game': {
         'opponent': next_opp,
         'win_prob_model':    round(float(next_prob_model), 4),

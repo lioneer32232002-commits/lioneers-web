@@ -99,11 +99,31 @@
     }
     .stats-bar-inner {
       max-width: 1200px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
-      gap: .75rem; text-align: center;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: .5rem 1.5rem; text-align: center;
+    }
+    .stats-bar-divider {
+      grid-column: 1 / -1;
+      height: 1px; background: var(--site-border); margin: .1rem 0;
     }
     .stat-item .number { font-size: 1.9rem; font-weight: 900; color: var(--site-gold); line-height: 1; }
-    .stat-item .label  { font-size: .75rem; color: var(--site-gray); margin-top: .25rem; }
+    .stat-item .label  { font-size: .75rem; color: var(--site-gray); margin-top: .2rem; }
+
+    /* 預測摘要卡 */
+    .forecast-bar {
+      background: linear-gradient(135deg, rgba(94,45,140,.5), rgba(59,26,110,.6));
+      border-bottom: 1px solid var(--site-border);
+      padding: 1.1rem 2rem;
+    }
+    .forecast-bar-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center; gap: 3rem; flex-wrap: wrap;
+    }
+    .forecast-item { text-align: center; }
+    .forecast-item .f-num { font-size: 2.4rem; font-weight: 900; color: var(--site-gold); line-height: 1; }
+    .forecast-item .f-label { font-size: .8rem; color: var(--site-gray2); margin-top: .2rem; font-weight: 700; }
+    .forecast-divider { width: 1px; height: 48px; background: var(--site-border); }
+    .forecast-note { font-size: .72rem; color: var(--site-gray); text-align: center; margin-top: .6rem; }
 
     /* ===== 主內容 ===== */
     main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem; }
@@ -285,10 +305,16 @@
       .hero { padding: 2.5rem 1rem 2rem; }
       .hero h1 { font-size: 1.7rem; }
 
-      /* 統計快覽：2欄 */
+      /* 統計快覽：維持3欄兩行 */
       .stats-bar { padding: 1rem; }
-      .stats-bar-inner { grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+      .stats-bar-inner { grid-template-columns: repeat(3, 1fr); gap: .4rem; }
       .stat-item .number { font-size: 1.5rem; }
+
+      /* 預測摘要欄：手機改直排 */
+      .forecast-bar { padding: .85rem 1rem; }
+      .forecast-bar-inner { gap: .75rem; flex-direction: column; }
+      .forecast-divider { width: 80%; height: 1px; }
+      .forecast-item .f-num { font-size: 2rem; }
 
       /* 下一場卡片：直排 */
       .next-card { flex-direction: column; align-items: flex-start; }
@@ -358,16 +384,41 @@
   <p>28 場賽季數據全解析。季後賽模擬、球員熱力圖、下場勝率預測。</p>
 </section>
 
-<!-- 統計快覽 -->
+<!-- 統計快覽（第一行：勝場｜敗場｜排名 / 第二行：均得分｜均失分｜剩餘） -->
 <div class="stats-bar">
   <div class="stats-bar-inner">
+    <!-- 第一行 -->
     <div class="stat-item"><div class="number" id="s-wins">—</div><div class="label">勝場</div></div>
     <div class="stat-item"><div class="number" id="s-losses">—</div><div class="label">敗場</div></div>
-    <div class="stat-item"><div class="number" id="s-pts">—</div><div class="label">均得分</div></div>
-    <div class="stat-item"><div class="number" id="s-opp">—</div><div class="label">均失分</div></div>
     <div class="stat-item"><div class="number" id="s-rank">—</div><div class="label">目前排名</div></div>
+    <!-- 分隔線 -->
+    <div class="stats-bar-divider"></div>
+    <!-- 第二行 -->
+    <div class="stat-item"><div class="number" id="s-pts">—</div><div class="label">場均得分</div></div>
+    <div class="stat-item"><div class="number" id="s-opp">—</div><div class="label">場均失分</div></div>
     <div class="stat-item"><div class="number" id="s-rem">—</div><div class="label">剩餘場次</div></div>
   </div>
+</div>
+
+<!-- 預測摘要：本季預估勝場 + 奪冠機率 -->
+<div class="forecast-bar">
+  <div class="forecast-bar-inner">
+    <div class="forecast-item">
+      <div class="f-num" id="f-proj-wins">—</div>
+      <div class="f-label">預測本季最終勝場</div>
+    </div>
+    <div class="forecast-divider"></div>
+    <div class="forecast-item">
+      <div class="f-num" id="f-playoff">—</div>
+      <div class="f-label">進季後賽機率</div>
+    </div>
+    <div class="forecast-divider"></div>
+    <div class="forecast-item">
+      <div class="f-num" id="f-champ">—</div>
+      <div class="f-label">🏆 奪冠機率</div>
+    </div>
+  </div>
+  <div class="forecast-note" id="f-note">Monte Carlo 模擬 100,000 次｜依本季各隊勝率推算剩餘賽程｜季後賽採 TPBL 正式賽制</div>
 </div>
 
 <main>
@@ -470,17 +521,21 @@
 
   <!-- ⑧ ROC 曲線 -->
   <div class="full">
-    <h2 class="section-title"><span class="icon">📉</span> ROC 曲線</h2>
+    <h2 class="section-title"><span class="icon">📉</span> ROC 曲線分析</h2>
     <div class="card">
-      <div class="chart-panel" style="max-width:560px">
-        <div class="chart-panel-bg">
-          <canvas id="chart-roc" style="max-height:300px"></canvas>
+      <!-- 圖表 + 圖例並排 -->
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;">
+        <div class="chart-panel" style="flex:1;min-width:280px;">
+          <div class="chart-panel-bg">
+            <canvas id="chart-roc" style="max-height:380px;"></canvas>
+          </div>
         </div>
+        <!-- 圖例說明 -->
+        <div id="roc-legend" style="min-width:220px;flex-shrink:0;"></div>
       </div>
-      <div class="roc-meta">
-        預測變數：上半場（Q1+Q2）得分差。標籤：最終勝 / 敗。<br>
-        AUC = <strong id="roc-auc">—</strong>（1.0 = 完美，0.5 = 隨機猜測）。
-        p 值與 Cohen's d 僅在樣本數足夠時（n ≥ 30）顯示。
+      <div class="roc-meta" style="margin-top:.85rem;">
+        依變數：勝 / 敗（Win / Loss）。圓點 = Youden's J 最佳切點（TPR − FPR 最大處）。<br>
+        n = 28 場，樣本數不足 30，p 值與 Cohen's d 僅供參考，不作顯著性判斷。
       </div>
     </div>
   </div>
@@ -534,10 +589,11 @@ Chart.defaults.font.weight = '700';
 // ================================================================
 // 主入口
 // ================================================================
-fetch('processed_data.json')
+fetch('processed_data.json', { cache: 'no-store' })
   .then(r => r.json())
   .then(data => {
     renderStatsBar(data.team_stats);
+    renderForecastBar(data.team_stats, data.simulation);
     renderNextGame(data.next_game);
     renderStandings(data.standings);
     renderSimulation(data.simulation);
@@ -545,7 +601,7 @@ fetch('processed_data.json')
     renderVsCards(data.vs_summary);
     renderHeatmap(data.heatmap, data.heatmap_teams);
     renderPlayerTable(data.player_avg);
-    renderRoc(data.roc);
+    renderRoc(data.roc);   // roc 現在是 {得分:{curve,auc,best,threshold}, ...}
     renderUpdates(data.games);
   });
 
@@ -556,6 +612,15 @@ function renderStatsBar(ts) {
   document.getElementById('s-pts').textContent    = ts.avg_pts;
   document.getElementById('s-opp').textContent    = ts.avg_opp_pts;
   document.getElementById('s-rem').textContent    = ts.games_remaining;
+}
+
+// ① 預測摘要欄
+function renderForecastBar(ts, sim) {
+  // 預測本季最終勝場：目前勝場 + 剩餘場次 × 本季勝率（四捨五入）
+  const projWins = Math.round(ts.wins + ts.games_remaining * ts.win_rate);
+  document.getElementById('f-proj-wins').textContent = projWins + ' 勝';
+  document.getElementById('f-playoff').textContent   = Math.round(sim.prob_playoff * 100) + '%';
+  document.getElementById('f-champ').textContent     = Math.round(sim.prob_champ   * 100) + '%';
 }
 
 // ② 下一場
@@ -806,51 +871,164 @@ function renderPlayerTable(playerAvg) {
   });
 }
 
-// ⑨ ROC 曲線（深紫線 + 深灰虛線基準，淺灰格線，白底）
+// ⑨ ROC 曲線（多指標，含 Youden's J 標記，依視覺規範）
 function renderRoc(roc) {
-  document.getElementById('roc-auc').textContent = roc.auc;
+  // 指標定義：依 AUC 排序，顏色依規範（強→中→弱）
+  const PREDICTORS = [
+    { key: '得分',       labelEn: 'Score',   unitCh: '分',  color: C.dark,  dash: [] },
+    { key: '三分命中率', labelEn: '3P%',     unitCh: '%',   color: '#7b2d8c', dash: [] },
+    { key: '整體命中率', labelEn: 'FG%',     unitCh: '%',   color: C.mid,   dash: [4,3] },
+    { key: '失誤數',     labelEn: 'TOV',     unitCh: '次',  color: '#d97706', dash: [4,3] },
+    { key: '助攻',       labelEn: 'AST',     unitCh: '次',  color: '#2563eb', dash: [6,3] },
+    { key: '三分命中數', labelEn: '3PM',     unitCh: '顆',  color: '#16a34a', dash: [6,3] },
+  ];
+
+  // 依 AUC 排序（強→弱）
+  const sorted = [...PREDICTORS].sort((a, b) =>
+    (roc[b.key]?.auc || 0) - (roc[a.key]?.auc || 0)
+  );
+
+  // 強 / 中 預測指標分組
+  const STRONG_THRESHOLD = 0.75;
+  const MED_THRESHOLD    = 0.65;
+
+  // 建立 datasets
+  const datasets = [];
+
+  sorted.forEach(p => {
+    const d = roc[p.key];
+    if (!d) return;
+    const auc = d.auc;
+    const curve = d.curve;
+    const best  = d.best;
+
+    // 主曲線
+    datasets.push({
+      label: `${p.labelEn} (AUC=${auc.toFixed(3)})`,
+      data:  curve.map(pt => ({ x: pt.fpr, y: pt.tpr })),
+      borderColor: p.color,
+      backgroundColor: 'transparent',
+      showLine: true, tension: 0,
+      pointRadius: 0, borderWidth: 2.2,
+      borderDash: p.dash,
+      order: 2
+    });
+
+    // Youden's J 最佳切點（單點標記）
+    if (best) {
+      const th = d.threshold;
+      const unitCh = p.unitCh;
+      datasets.push({
+        label: `_best_${p.key}`,   // 底線開頭不顯示在圖例
+        data:  [{ x: best.fpr, y: best.tpr }],
+        borderColor: p.color,
+        backgroundColor: p.color,
+        showLine: false,
+        pointRadius: 6,
+        pointStyle: 'circle',
+        order: 1,
+        // 把切點值存進來供 tooltip 用
+        _threshold: th,
+        _unitCh: unitCh,
+        _key: p.key
+      });
+    }
+  });
+
+  // 隨機基準線
+  datasets.push({
+    label: 'Random (AUC=0.500)',
+    data:  [{ x: 0, y: 0 }, { x: 1, y: 1 }],
+    borderColor: C.lgray,
+    backgroundColor: 'transparent',
+    showLine: true, tension: 0,
+    pointRadius: 0, borderWidth: 1.5,
+    borderDash: [6, 5],
+    order: 3
+  });
+
   new Chart(document.getElementById('chart-roc'), {
     type: 'scatter',
-    data: {
-      datasets: [
-        {
-          label: 'ROC (AUC=' + roc.auc + ')',
-          data: roc.curve.map(p => ({ x: p.fpr, y: p.tpr })),
-          borderColor: C.dark,
-          backgroundColor: 'rgba(94,45,140,.18)',
-          showLine: true, tension: 0.25,
-          pointRadius: 3, pointBackgroundColor: C.mid, borderWidth: 2
-        },
-        {
-          label: 'Random',
-          data: [{x:0,y:0},{x:1,y:1}],
-          borderColor: C.gdark,
-          borderDash: [6, 4], showLine: true, pointRadius: 0,
-          borderWidth: 1.5
-        }
-      ]
-    },
+    data: { datasets },
     options: {
       responsive: true,
       plugins: {
-        legend: { labels: { color: C.dgray, font: { size: 11, weight: '700' } } }
+        legend: {
+          display: false   // 用自訂圖例
+        },
+        tooltip: {
+          filter: item => !item.dataset.label.startsWith('_best_'),
+          callbacks: {
+            label: item => {
+              const ds = item.dataset;
+              if (ds._threshold !== undefined) {
+                return `${ds._key} 切點=${ds._threshold}${ds._unitCh}  TPR=${item.parsed.y.toFixed(2)}  FPR=${item.parsed.x.toFixed(2)}`;
+              }
+              return `TPR=${item.parsed.y.toFixed(2)}  FPR=${item.parsed.x.toFixed(2)}`;
+            }
+          }
+        }
       },
       scales: {
         x: {
-          title: { display: true, text: 'FPR', color: C.dgray, font: { weight: '700' } },
-          ticks: { color: C.dgray },
+          title: { display: true, text: 'False Positive Rate（1 − 特異度）', color: C.dgray, font: { size: 11, weight: '700' } },
+          ticks: { color: C.dgray, font: { size: 10 } },
           grid:  { color: C.lgray, lineWidth: .8 },
           min: 0, max: 1
         },
         y: {
-          title: { display: true, text: 'TPR', color: C.dgray, font: { weight: '700' } },
-          ticks: { color: C.dgray },
+          title: { display: true, text: 'True Positive Rate（敏感度）', color: C.dgray, font: { size: 11, weight: '700' } },
+          ticks: { color: C.dgray, font: { size: 10 } },
           grid:  { color: C.lgray, lineWidth: .8 },
           min: 0, max: 1
         }
       }
     }
   });
+
+  // 自訂圖例（右側）
+  const legendEl = document.getElementById('roc-legend');
+  const strong = sorted.filter(p => roc[p.key]?.auc >= STRONG_THRESHOLD);
+  const medium = sorted.filter(p => roc[p.key]?.auc >= MED_THRESHOLD && roc[p.key]?.auc < STRONG_THRESHOLD);
+  const weak   = sorted.filter(p => roc[p.key]?.auc < MED_THRESHOLD);
+
+  function legendGroup(title, items, icon) {
+    if (!items.length) return '';
+    let html = `<div style="margin-bottom:.85rem;">
+      <div style="font-size:.78rem;font-weight:700;color:${C.dgray};margin-bottom:.4rem;">${icon} ${title}</div>`;
+    items.forEach(p => {
+      const d = roc[p.key];
+      if (!d) return;
+      const th = d.threshold;
+      html += `
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;">
+          <span style="display:inline-block;width:24px;height:3px;background:${p.color};border-radius:2px;flex-shrink:0;"></span>
+          <span style="font-size:.8rem;font-weight:700;color:${p.color};">${p.labelEn}</span>
+          <span style="font-size:.78rem;color:${C.dgray};">AUC=${d.auc.toFixed(3)}</span>
+        </div>
+        <div style="font-size:.73rem;color:#888;margin-left:32px;margin-bottom:.2rem;">
+          切點 ${th}${p.unitCh}（J=${(d.best.tpr-d.best.fpr).toFixed(3)}）
+        </div>`;
+    });
+    html += `</div>`;
+    return html;
+  }
+
+  legendEl.innerHTML = `
+    <div style="background:var(--c-bg);border-radius:8px;padding:.85rem 1rem;font-family:'Noto Sans JP',sans-serif;">
+      <div style="font-size:.82rem;font-weight:900;color:${C.dgray};margin-bottom:.75rem;border-bottom:1px solid ${C.lgray};padding-bottom:.4rem;">
+        新竹攻城獅 2025-26｜ROC
+      </div>
+      ${legendGroup('強預測指標（AUC ≥ 0.75）', strong, '★')}
+      ${legendGroup('中預測指標（AUC 0.65–0.75）', medium, '◆')}
+      ${legendGroup('弱預測指標（AUC < 0.65）', weak,   '—')}
+      <div style="margin-top:.6rem;border-top:1px solid ${C.lgray};padding-top:.5rem;">
+        <div style="display:flex;align-items:center;gap:.5rem;">
+          <span style="display:inline-block;width:24px;height:2px;background:${C.lgray};border-radius:2px;"></span>
+          <span style="font-size:.75rem;color:#aaa;">Random（AUC=0.500）</span>
+        </div>
+      </div>
+    </div>`;
 }
 
 // ⑩ 最新動態
