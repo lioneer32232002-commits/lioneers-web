@@ -64,6 +64,7 @@
       "lion_score": 114,
       "opp_score": 111,
       "won": true,
+      "is_home": false,
       "rounds": {
         "1": 28,
         "2": 26,
@@ -77,6 +78,7 @@
       "lion_score": 94,
       "opp_score": 102,
       "won": false,
+      "is_home": true,
       "rounds": {
         "1": 32,
         "2": 23,
@@ -90,6 +92,7 @@
       "lion_score": 113,
       "opp_score": 97,
       "won": true,
+      "is_home": true,
       "rounds": {
         "1": 33,
         "2": 24,
@@ -103,6 +106,7 @@
       "lion_score": 113,
       "opp_score": 90,
       "won": true,
+      "is_home": true,
       "rounds": {
         "1": 25,
         "2": 34,
@@ -116,6 +120,7 @@
       "lion_score": 75,
       "opp_score": 95,
       "won": false,
+      "is_home": false,
       "rounds": {
         "1": 12,
         "2": 24,
@@ -129,6 +134,7 @@
       "lion_score": 101,
       "opp_score": 82,
       "won": true,
+      "is_home": false,
       "rounds": {
         "1": 24,
         "2": 27,
@@ -142,6 +148,7 @@
       "lion_score": 91,
       "opp_score": 94,
       "won": false,
+      "is_home": false,
       "rounds": {
         "1": 29,
         "2": 22,
@@ -155,6 +162,7 @@
       "lion_score": 81,
       "opp_score": 82,
       "won": false,
+      "is_home": false,
       "rounds": {
         "1": 23,
         "2": 17,
@@ -168,6 +176,7 @@
       "lion_score": 108,
       "opp_score": 89,
       "won": true,
+      "is_home": false,
       "rounds": {
         "1": 25,
         "2": 26,
@@ -181,6 +190,7 @@
       "lion_score": 102,
       "opp_score": 85,
       "won": true,
+      "is_home": true,
       "rounds": {
         "1": 28,
         "2": 24,
@@ -194,6 +204,7 @@
       "lion_score": 97,
       "opp_score": 89,
       "won": true,
+      "is_home": true,
       "rounds": {
         "1": 30,
         "2": 23,
@@ -207,6 +218,7 @@
       "lion_score": 98,
       "opp_score": 113,
       "won": false,
+      "is_home": false,
       "rounds": {
         "1": 21,
         "2": 29,
@@ -220,6 +232,7 @@
       "lion_score": 98,
       "opp_score": 100,
       "won": false,
+      "is_home": false,
       "rounds": {
         "1": 28,
         "2": 27,
@@ -233,6 +246,7 @@
       "lion_score": 94,
       "opp_score": 96,
       "won": false,
+      "is_home": false,
       "rounds": {
         "1": 24,
         "2": 24,
@@ -246,6 +260,7 @@
       "lion_score": 89,
       "opp_score": 99,
       "won": false,
+      "is_home": false,
       "rounds": {
         "1": 19,
         "2": 30,
@@ -259,6 +274,7 @@
       "lion_score": 90,
       "opp_score": 85,
       "won": true,
+      "is_home": true,
       "rounds": {
         "1": 25,
         "2": 21,
@@ -272,6 +288,7 @@
       "lion_score": 83,
       "opp_score": 94,
       "won": false,
+      "is_home": true,
       "rounds": {
         "1": 23,
         "2": 27,
@@ -285,6 +302,7 @@
       "lion_score": 98,
       "opp_score": 82,
       "won": true,
+      "is_home": true,
       "rounds": {
         "1": 15,
         "2": 33,
@@ -298,6 +316,7 @@
       "lion_score": 97,
       "opp_score": 90,
       "won": true,
+      "is_home": false,
       "rounds": {
         "1": 29,
         "2": 29,
@@ -311,6 +330,7 @@
       "lion_score": 84,
       "opp_score": 79,
       "won": true,
+      "is_home": false,
       "rounds": {
         "1": 16,
         "2": 23,
@@ -324,6 +344,7 @@
       "lion_score": 95,
       "opp_score": 79,
       "won": true,
+      "is_home": false,
       "rounds": {
         "1": 24,
         "2": 31,
@@ -337,6 +358,7 @@
       "lion_score": 101,
       "opp_score": 98,
       "won": true,
+      "is_home": false,
       "rounds": {
         "1": 22,
         "2": 25,
@@ -350,6 +372,7 @@
       "lion_score": 95,
       "opp_score": 91,
       "won": true,
+      "is_home": true,
       "rounds": {
         "1": 25,
         "2": 22,
@@ -363,6 +386,7 @@
       "lion_score": 87,
       "opp_score": 94,
       "won": false,
+      "is_home": true,
       "rounds": {
         "1": 24,
         "2": 22,
@@ -376,6 +400,7 @@
       "lion_score": 88,
       "opp_score": 92,
       "won": false,
+      "is_home": false,
       "rounds": {
         "1": 24,
         "2": 21,
@@ -389,6 +414,7 @@
       "lion_score": 85,
       "opp_score": 100,
       "won": false,
+      "is_home": false,
       "rounds": {
         "1": 27,
         "2": 26,
@@ -402,6 +428,7 @@
       "lion_score": 103,
       "opp_score": 99,
       "won": true,
+      "is_home": true,
       "rounds": {
         "1": 23,
         "2": 39,
@@ -415,6 +442,7 @@
       "lion_score": 102,
       "opp_score": 91,
       "won": true,
+      "is_home": true,
       "rounds": {
         "1": 16,
         "2": 20,
@@ -924,10 +952,18 @@
     }
   },
   "simulation": {
-    "prob_playoff": 0.9006,
-    "prob_final": 0.4133,
-    "prob_champ": 0.1984,
-    "n_simulations": 100000
+    "prob_play_in": 0.3559,
+    "prob_playoff": 0.8721,
+    "prob_semif": 0.3862,
+    "prob_final": 0.3862,
+    "prob_champ": 0.1801,
+    "n_simulations": 100000,
+    "rules": {
+      "regular_season": "36場（18主18客），前3直接進季後賽",
+      "play_in": "第4 vs 第5，Bo3，第4先獲1勝",
+      "semifinal": "Bo5（5戰3勝），主場分配 2-2-1",
+      "championship": "Bo7（7戰4勝），主場分配 2-2-1-1-1"
+    }
   },
   "roc": {
     "curve": [

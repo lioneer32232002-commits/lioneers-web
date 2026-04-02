@@ -4,45 +4,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>新竹攻城獅 2025-26 賽季數據分析</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <style>
-    /* ===== 基礎重置 ===== */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  <style>
+    /* ===== 設計規範色票 ===== */
     :root {
-      --purple-900: #1a0a2e;
-      --purple-800: #240f40;
-      --purple-700: #3b1a6e;
-      --purple-600: #5a2d9a;
-      --purple-500: #7b3fc4;
-      --purple-400: #9d5fd6;
-      --purple-300: #c49ae8;
-      --gold:       #f0c040;
-      --gold-light: #f5d675;
-      --white:      #ffffff;
-      --gray-100:   #f0eaf8;
-      --gray-300:   #c5b8dc;
-      --gray-500:   #8a7aa0;
-      --card-bg:    rgba(59, 26, 110, 0.45);
-      --card-border: rgba(157, 95, 214, 0.35);
-      --green:      #4ade80;
-      --red:        #f87171;
+      /* 網站結構色（深紫主題） */
+      --site-bg:      #1a0a2e;
+      --site-bg2:     #240f40;
+      --site-border:  rgba(157,95,214,.35);
+      --site-purple:  #7b3fc4;
+      --site-purple2: #9d5fd6;
+      --site-purple3: #c49ae8;
+      --site-gold:    #f0c040;
+      --site-white:   #ffffff;
+      --site-gray:    #8a7aa0;
+      --site-gray2:   #c5b8dc;
+      --card-bg:      rgba(59,26,110,.45);
+
+      /* 圖表視覺規範（淺色系） */
+      --c-dark:   #5e2d8c;   /* 深紫：最佳 */
+      --c-mid:    #9b6dc0;   /* 中紫：中上 */
+      --c-light:  #cdb8e0;   /* 淺紫：普通 */
+      --c-gdark:  #666666;   /* 深灰：最差 */
+      --c-lgray:  #cccccc;   /* 淺灰：輔助 */
+      --c-dgray:  #444444;   /* 深灰文字 */
+      --c-bg:     #f5f5f5;   /* 圖表底色 */
+      --c-coral:  #d73027;   /* 珊瑚紅：僅負向強調 */
     }
 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background-color: var(--purple-900);
-      color: var(--white);
-      font-family: 'Segoe UI', '微軟正黑體', 'Microsoft JhengHei', sans-serif;
+      background: var(--site-bg);
+      color: var(--site-white);
+      font-family: 'Noto Sans JP', 'Microsoft JhengHei', sans-serif;
       line-height: 1.6;
     }
 
     /* ===== 導覽列 ===== */
     header {
-      background: linear-gradient(135deg, var(--purple-800), var(--purple-900));
-      border-bottom: 2px solid var(--purple-600);
-      padding: 0 2rem;
-      position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      background: linear-gradient(135deg, var(--site-bg2), var(--site-bg));
+      border-bottom: 2px solid #5a2d9a;
+      padding: 0 2rem; position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,.5);
     }
     nav {
       max-width: 1200px; margin: 0 auto;
@@ -51,226 +58,231 @@
     .logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
     .logo-icon {
       width: 40px; height: 40px;
-      background: linear-gradient(135deg, var(--purple-500), var(--gold));
+      background: linear-gradient(135deg, var(--site-purple), var(--site-gold));
       border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
     }
-    .logo-text { font-size: 1.05rem; font-weight: 700; color: var(--white); letter-spacing: .05em; }
-    .logo-text span { color: var(--gold); }
-    nav ul { list-style: none; display: flex; gap: .25rem; }
-    nav a { color: var(--gray-300); text-decoration: none; padding: .5rem .9rem; border-radius: 6px; font-size: .88rem; transition: all .2s; }
-    nav a:hover, nav a.active { color: var(--white); background: var(--purple-700); }
+    .logo-text { font-size: 1.05rem; font-weight: 700; color: var(--site-white); }
+    .logo-text span { color: var(--site-gold); }
+    nav ul { list-style: none; display: flex; gap: .2rem; }
+    nav a {
+      color: var(--site-gray2); text-decoration: none;
+      padding: .45rem .85rem; border-radius: 6px; font-size: .85rem; transition: all .2s;
+    }
+    nav a:hover, nav a.active { color: var(--site-white); background: rgba(59,26,110,.8); }
 
     /* ===== 英雄 ===== */
     .hero {
-      background: linear-gradient(160deg, var(--purple-800), var(--purple-900) 60%);
-      padding: 4rem 2rem 3rem; text-align: center; position: relative; overflow: hidden;
+      background: linear-gradient(160deg, var(--site-bg2), var(--site-bg) 65%);
+      padding: 3.5rem 2rem 2.5rem; text-align: center; position: relative; overflow: hidden;
     }
     .hero::before {
-      content: ''; position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
-      width: 600px; height: 400px;
-      background: radial-gradient(ellipse, rgba(122,63,196,.28) 0%, transparent 70%);
+      content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(94,45,140,.3) 0%, transparent 70%);
       pointer-events: none;
     }
     .hero-badge {
       display: inline-block;
-      background: rgba(240,192,64,.15); border: 1px solid var(--gold);
-      color: var(--gold); font-size: .78rem; font-weight: 600; letter-spacing: .12em;
-      padding: .35rem 1rem; border-radius: 999px; margin-bottom: 1.2rem;
+      background: rgba(240,192,64,.12); border: 1px solid var(--site-gold);
+      color: var(--site-gold); font-size: .75rem; font-weight: 700; letter-spacing: .1em;
+      padding: .3rem .9rem; border-radius: 999px; margin-bottom: 1rem;
     }
-    .hero h1 { font-size: clamp(1.8rem,4vw,3rem); font-weight: 800; line-height: 1.2; margin-bottom: .8rem; }
-    .hero h1 em { font-style: normal; color: var(--gold); }
-    .hero p { font-size: 1rem; color: var(--gray-300); max-width: 520px; margin: 0 auto 2rem; }
+    .hero h1 { font-size: clamp(1.7rem,3.8vw,2.8rem); font-weight: 900; line-height: 1.2; margin-bottom: .7rem; }
+    .hero h1 em { font-style: normal; color: var(--site-gold); }
+    .hero p { font-size: .95rem; color: var(--site-gray2); max-width: 500px; margin: 0 auto; }
 
     /* ===== 統計快覽 ===== */
     .stats-bar {
-      background: var(--purple-800);
-      border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border);
-      padding: 1.25rem 2rem;
+      background: var(--site-bg2);
+      border-top: 1px solid var(--site-border); border-bottom: 1px solid var(--site-border);
+      padding: 1.1rem 2rem;
     }
     .stats-bar-inner {
       max-width: 1200px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 1rem; text-align: center;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+      gap: .75rem; text-align: center;
     }
-    .stat-item .number { font-size: 2rem; font-weight: 800; color: var(--gold); line-height: 1; }
-    .stat-item .label { font-size: .78rem; color: var(--gray-500); margin-top: .3rem; }
+    .stat-item .number { font-size: 1.9rem; font-weight: 900; color: var(--site-gold); line-height: 1; }
+    .stat-item .label  { font-size: .75rem; color: var(--site-gray); margin-top: .25rem; }
 
     /* ===== 主內容 ===== */
     main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem; }
 
     .section-title {
-      font-size: 1.3rem; font-weight: 700; margin-bottom: 1.25rem;
-      display: flex; align-items: center; gap: .6rem;
+      font-size: 1.2rem; font-weight: 700; margin-bottom: 1.1rem;
+      display: flex; align-items: center; gap: .55rem;
     }
-    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--card-border); }
-    .section-title .icon { color: var(--gold); }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--site-border); }
+    .section-title .icon { color: var(--site-gold); }
 
-    /* ===== 卡片 ===== */
+    /* ===== 卡片（深色） ===== */
     .card {
-      background: var(--card-bg); border: 1px solid var(--card-border);
-      border-radius: 12px; padding: 1.5rem; backdrop-filter: blur(6px);
+      background: var(--card-bg); border: 1px solid var(--site-border);
+      border-radius: 12px; padding: 1.35rem; backdrop-filter: blur(6px);
       transition: all .25s;
     }
-    .card:hover { transform: translateY(-3px); border-color: var(--purple-400); box-shadow: 0 8px 28px rgba(122,63,196,.25); }
-    .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .75rem; color: var(--gray-100); }
+    .card:hover { transform: translateY(-3px); border-color: var(--site-purple2); box-shadow: 0 8px 24px rgba(94,45,140,.25); }
+    .card h3 { font-size: .95rem; font-weight: 700; margin-bottom: .85rem; color: var(--site-gray2); }
 
-    /* ===== 2欄 / 3欄 grid ===== */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2.5rem; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; margin-bottom: 2.5rem; }
-    @media(max-width:900px){ .grid-2,.grid-3 { grid-template-columns: 1fr; } }
-    .full-width { margin-bottom: 2.5rem; }
+    /* ===== 圖表面板（淺色，依規範） ===== */
+    .chart-panel {
+      background: white; border-radius: 10px; padding: 1.1rem;
+      border: 1px solid var(--site-border);
+    }
+    .chart-panel-bg {
+      background: var(--c-bg); border-radius: 8px; padding: .5rem;
+    }
 
-    /* ===== 圖表容器 ===== */
-    .chart-wrap { position: relative; width: 100%; }
-    .chart-wrap canvas { max-height: 320px; }
-    .chart-wrap-tall canvas { max-height: 420px; }
-
-    /* ===== 熱力圖 (純 CSS) ===== */
-    .heatmap-container { overflow-x: auto; }
-    .heatmap-table {
-      border-collapse: separate; border-spacing: 3px;
-      width: 100%; font-size: .82rem;
-    }
-    .heatmap-table th {
-      padding: .4rem .6rem; color: var(--gray-300); font-weight: 600;
-      background: rgba(59,26,110,.6); border-radius: 4px; white-space: nowrap;
-    }
-    .heatmap-table td.player-name {
-      padding: .4rem .6rem; color: var(--gray-100); font-weight: 600;
-      background: rgba(59,26,110,.6); border-radius: 4px; white-space: nowrap;
-    }
-    .heatmap-table td.cell {
-      width: 80px; height: 38px; border-radius: 5px; text-align: center;
-      font-weight: 700; font-size: .88rem; vertical-align: middle;
-      transition: opacity .2s;
-    }
-    .cell-null { background: rgba(59,26,110,.3); color: var(--gray-500); }
-    .cell-pos-hi  { background: #166534; color: #bbf7d0; }
-    .cell-pos-mid { background: #14532d; color: #86efac; }
-    .cell-pos-low { background: #1a3c2b; color: #6ee7b7; }
-    .cell-zero    { background: rgba(59,26,110,.5); color: var(--gray-300); }
-    .cell-neg-low { background: #3b1515; color: #fca5a5; }
-    .cell-neg-mid { background: #5a1a1a; color: #f87171; }
-    .cell-neg-hi  { background: #7f1d1d; color: #fecaca; }
-
-    /* ===== 機率條 ===== */
-    .prob-bars { display: flex; flex-direction: column; gap: 1.1rem; }
-    .prob-item label { font-size: .9rem; color: var(--gray-300); display: block; margin-bottom: .35rem; }
-    .prob-item label strong { color: var(--white); }
-    .prob-bar-bg {
-      background: rgba(59,26,110,.5); border-radius: 999px;
-      height: 26px; overflow: hidden; position: relative;
-    }
-    .prob-bar-fill {
-      height: 100%; border-radius: 999px;
-      display: flex; align-items: center; padding-left: .75rem;
-      font-size: .82rem; font-weight: 700; transition: width 1s ease;
-    }
-    .bar-playoff { background: linear-gradient(90deg, #166534, #4ade80); color: #fff; }
-    .bar-final   { background: linear-gradient(90deg, #1e3a6e, #60a5fa); color: #fff; }
-    .bar-champ   { background: linear-gradient(90deg, #78350f, var(--gold)); color: #1a0a2e; }
+    /* ===== Grid ===== */
+    .grid-2  { display: grid; grid-template-columns: 1fr 1fr;   gap: 1.25rem; margin-bottom: 2.25rem; }
+    .grid-3  { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-bottom: 2.25rem; }
+    .full    { margin-bottom: 2.25rem; }
+    @media(max-width:900px){ .grid-2,.grid-3{ grid-template-columns:1fr; } }
 
     /* ===== 下一場卡片 ===== */
-    .next-game-card {
-      background: linear-gradient(135deg, rgba(122,63,196,.35), rgba(240,192,64,.1));
-      border: 1px solid var(--gold);
-      border-radius: 14px; padding: 2rem;
-      display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
-      flex-wrap: wrap;
+    .next-card {
+      background: linear-gradient(135deg, rgba(94,45,140,.4), rgba(240,192,64,.08));
+      border: 1px solid var(--site-gold); border-radius: 14px; padding: 1.75rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
     }
-    .ng-info h2 { font-size: 1.5rem; font-weight: 800; }
-    .ng-info h2 span { color: var(--gold); }
-    .ng-info p { color: var(--gray-300); margin-top: .3rem; font-size: .9rem; }
+    .ng-info h2 { font-size: 1.45rem; font-weight: 900; }
+    .ng-info h2 span { color: var(--site-gold); }
+    .ng-info p  { color: var(--site-gray2); margin-top: .25rem; font-size: .85rem; }
+    .ng-history { display: flex; gap: .5rem; margin-top: .65rem; flex-wrap: wrap; }
+    .ng-rec { padding: .25rem .65rem; border-radius: 6px; font-size: .8rem; font-weight: 700; }
+    .rec-w  { background: rgba(94,45,140,.25); color: var(--site-purple3); border: 1px solid rgba(157,95,214,.4); }
+    .rec-l  { background: rgba(102,102,102,.2); color: var(--c-lgray);     border: 1px solid rgba(102,102,102,.3); }
     .ng-prob {
-      text-align: center; background: rgba(0,0,0,.25); border-radius: 50%;
-      width: 110px; height: 110px; display: flex; flex-direction: column;
+      text-align: center; background: rgba(0,0,0,.3); border-radius: 50%;
+      width: 105px; height: 105px; display: flex; flex-direction: column;
       align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .ng-prob .pct { font-size: 2.2rem; font-weight: 900; color: var(--gold); line-height: 1; }
-    .ng-prob .pct-label { font-size: .72rem; color: var(--gray-300); margin-top: .2rem; }
-    .ng-history { display: flex; gap: .75rem; margin-top: .75rem; flex-wrap: wrap; }
-    .ng-rec {
-      padding: .3rem .75rem; border-radius: 6px; font-size: .82rem; font-weight: 700;
-    }
-    .rec-w { background: rgba(74,222,128,.15); color: var(--green); border: 1px solid rgba(74,222,128,.3); }
-    .rec-l { background: rgba(248,113,113,.15); color: var(--red);   border: 1px solid rgba(248,113,113,.3); }
+    .ng-prob .pct { font-size: 2.1rem; font-weight: 900; color: var(--site-gold); line-height: 1; }
+    .ng-prob .lbl { font-size: .7rem; color: var(--site-gray); margin-top: .2rem; }
+    .ng-method { font-size: .75rem; color: var(--site-gray); margin-top: .75rem; line-height: 1.5; }
 
     /* ===== 積分榜 ===== */
-    .standings-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    .standings-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
     .standings-table th {
-      padding: .6rem .8rem; color: var(--gray-500); font-weight: 600;
-      border-bottom: 1px solid var(--card-border); text-align: center;
+      padding: .55rem .7rem; color: var(--site-gray); font-weight: 700;
+      border-bottom: 1px solid var(--site-border); text-align: center;
     }
     .standings-table th:first-child { text-align: left; }
-    .standings-table td {
-      padding: .55rem .8rem; border-bottom: 1px solid rgba(59,26,110,.4); text-align: center;
-    }
+    .standings-table td { padding: .5rem .7rem; border-bottom: 1px solid rgba(59,26,110,.4); text-align: center; }
     .standings-table td:first-child { text-align: left; }
-    .standings-table tr.lion-row { background: rgba(240,192,64,.08); }
-    .standings-table tr.lion-row td { color: var(--gold-light); font-weight: 700; }
+    .standings-table tr.lion-row { background: rgba(240,192,64,.07); }
+    .standings-table tr.lion-row td { color: #f5d675; font-weight: 700; }
+    .standings-table tr.playoff-cut td { border-bottom: 2px dashed rgba(157,95,214,.6) !important; }
     .standings-table tr:last-child td { border-bottom: none; }
-    .rank-badge {
+    .rank-pill {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 24px; height: 24px; border-radius: 50%; font-size: .8rem; font-weight: 800;
+      width: 22px; height: 22px; border-radius: 50%; font-size: .75rem; font-weight: 800;
     }
-    .rank-1,.rank-2,.rank-3,.rank-4 { background: rgba(74,222,128,.2); color: var(--green); }
-    .rank-5,.rank-6,.rank-7 { background: rgba(248,113,113,.15); color: var(--red); }
-    .playoff-line td { border-bottom: 2px dashed rgba(74,222,128,.5) !important; }
+    .r-in  { background: rgba(94,45,140,.35);  color: var(--site-purple3); }
+    .r-pi  { background: rgba(155,109,192,.25); color: var(--c-mid); }
+    .r-out { background: rgba(102,102,102,.2);  color: var(--c-lgray); }
+
+    /* ===== 季後賽機率條 ===== */
+    .prob-section { display: flex; flex-direction: column; gap: 1rem; }
+    .prob-row label { font-size: .85rem; color: var(--site-gray2); display: flex; justify-content: space-between; margin-bottom: .3rem; }
+    .prob-row label strong { color: var(--site-white); }
+    .prob-row label .pct-val { font-weight: 900; }
+    .prob-bar-bg { background: rgba(59,26,110,.5); border-radius: 999px; height: 22px; overflow: hidden; }
+    .prob-bar-fill {
+      height: 100%; border-radius: 999px; transition: width 1.2s cubic-bezier(.25,.46,.45,.94);
+      display: flex; align-items: center; padding-left: .6rem; font-size: .75rem; font-weight: 700; color: white;
+    }
+    .bar-pi     { background: linear-gradient(90deg, #444, var(--c-gdark)); }
+    .bar-po     { background: linear-gradient(90deg, #3b1a6e, var(--c-dark)); }
+    .bar-sf     { background: linear-gradient(90deg, #5e2d8c, var(--c-mid)); }
+    .bar-fi     { background: linear-gradient(90deg, #9b6dc0, var(--c-light)); color: var(--c-dgray); }
+    .bar-ch     { background: linear-gradient(90deg, #78350f, var(--site-gold)); color: #1a0a2e; }
+    .rules-note { font-size: .75rem; color: var(--site-gray); margin-top: 1rem; line-height: 1.6; }
+
+    /* ===== 對各隊戰績 ===== */
+    .vs-card h3 { font-size: .95rem; margin-bottom: .6rem; }
+    .vs-record  { font-size: 1.5rem; font-weight: 900; color: var(--site-gold); }
+    .vs-stats   { font-size: .82rem; color: var(--site-gray2); margin-top: .3rem; }
+    .vs-bar-bg  { background: rgba(59,26,110,.4); border-radius: 999px; height: 5px; margin-top: .6rem; overflow: hidden; }
+    .vs-bar-fill{ height: 100%; border-radius: 999px; }
+
+    /* ===== 熱力圖 ===== */
+    .heatmap-wrap { overflow-x: auto; }
+    .heatmap-table { border-collapse: separate; border-spacing: 3px; font-size: .8rem; width: 100%; }
+    .heatmap-table th {
+      padding: .4rem .5rem; color: var(--site-gray2); font-weight: 700;
+      background: rgba(59,26,110,.6); border-radius: 4px; white-space: nowrap; text-align: center;
+    }
+    .heatmap-table th:first-child { text-align: left; }
+    .hm-name { padding: .4rem .6rem; color: var(--site-gray2); font-weight: 700; background: rgba(59,26,110,.5); border-radius: 4px; white-space: nowrap; }
+    .hm-cell { width: 74px; height: 36px; border-radius: 5px; text-align: center; font-weight: 700; font-size: .85rem; vertical-align: middle; }
+    /* 正值：深紫→中紫→淺紫 */
+    .hm-p3 { background: var(--c-dark);  color: white; }
+    .hm-p2 { background: var(--c-mid);   color: white; }
+    .hm-p1 { background: var(--c-light); color: var(--c-dgray); }
+    /* 零 */
+    .hm-z  { background: #e8e0f0; color: var(--c-dgray); }
+    /* 負值：深灰→珊瑚（強負向） */
+    .hm-n1 { background: #d4cde0; color: var(--c-dgray); }
+    .hm-n2 { background: var(--c-gdark); color: #eee; }
+    .hm-n3 { background: var(--c-coral); color: white; }
+    .hm-null{ background: rgba(59,26,110,.3); color: var(--site-gray); }
 
     /* ===== 球員數據表 ===== */
-    .player-table-wrap { overflow-x: auto; }
-    .player-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    .player-wrap { overflow-x: auto; }
+    .player-table { width: 100%; border-collapse: collapse; font-size: .83rem; }
     .player-table th {
-      padding: .5rem .7rem; color: var(--gray-500); font-weight: 600;
-      border-bottom: 1px solid var(--card-border); text-align: center;
-      white-space: nowrap; cursor: pointer;
+      padding: .5rem .65rem; color: var(--site-gray); font-weight: 700;
+      border-bottom: 1px solid var(--site-border); text-align: center; white-space: nowrap;
     }
     .player-table th:first-child { text-align: left; }
-    .player-table th:hover { color: var(--white); }
-    .player-table td {
-      padding: .5rem .7rem; border-bottom: 1px solid rgba(59,26,110,.35); text-align: center;
-    }
-    .player-table td:first-child { text-align: left; font-weight: 600; color: var(--gray-100); }
+    .player-table td { padding: .48rem .65rem; border-bottom: 1px solid rgba(59,26,110,.35); text-align: center; }
+    .player-table td:first-child { text-align: left; font-weight: 700; color: var(--site-gray2); }
     .player-table tr:last-child td { border-bottom: none; }
-    .player-table tr:hover td { background: rgba(122,63,196,.12); }
-    .pm-pos { color: var(--green); font-weight: 700; }
-    .pm-neg { color: var(--red); }
+    .player-table tr:hover td { background: rgba(94,45,140,.12); }
+    .pm-hi  { color: var(--c-dark);  font-weight: 900; }
+    .pm-mid { color: var(--c-mid);   font-weight: 700; }
+    .pm-lo  { color: var(--c-light); }
+    .pm-neg { color: var(--c-gdark); }
+    .pm-bad { color: var(--c-coral); }
+
+    /* ===== ROC 說明 ===== */
+    .roc-meta { font-size: .78rem; color: var(--site-gray); margin-top: .75rem; line-height: 1.6; }
+    .roc-meta strong { color: var(--site-white); }
 
     /* ===== 最新動態 ===== */
-    .updates-list { display: flex; flex-direction: column; gap: .65rem; }
+    .updates { display: flex; flex-direction: column; gap: .6rem; }
     .update-item {
-      background: var(--card-bg); border: 1px solid var(--card-border);
-      border-radius: 10px; padding: .85rem 1.1rem;
-      display: flex; align-items: center; gap: .85rem;
+      background: var(--card-bg); border: 1px solid var(--site-border);
+      border-radius: 10px; padding: .8rem 1.1rem;
+      display: flex; align-items: center; gap: .8rem;
     }
-    .update-date { font-size: .74rem; color: var(--gray-500); white-space: nowrap; min-width: 70px; }
-    .update-tag {
-      font-size: .7rem; padding: .18rem .55rem; border-radius: 999px; font-weight: 700; white-space: nowrap;
-    }
-    .tag-data   { background: rgba(122,63,196,.3); color: var(--purple-300); }
-    .tag-game   { background: rgba(240,192,64,.2); color: var(--gold); }
-    .tag-w      { background: rgba(74,222,128,.2); color: var(--green); }
-    .tag-l      { background: rgba(248,113,113,.2); color: var(--red); }
-    .update-text { font-size: .88rem; color: var(--gray-100); }
+    .upd-date { font-size: .72rem; color: var(--site-gray); white-space: nowrap; min-width: 65px; }
+    .upd-tag  { font-size: .68rem; padding: .18rem .55rem; border-radius: 999px; font-weight: 700; white-space: nowrap; }
+    .tag-sys  { background: rgba(94,45,140,.3);  color: var(--site-purple3); }
+    .tag-w    { background: rgba(94,45,140,.2);  color: var(--c-light); border: 1px solid rgba(157,95,214,.3); }
+    .tag-l    { background: rgba(102,102,102,.2); color: var(--c-lgray); border: 1px solid rgba(102,102,102,.3); }
+    .upd-text { font-size: .87rem; color: var(--site-gray2); }
 
     /* ===== 頁尾 ===== */
     footer {
-      background: var(--purple-800); border-top: 1px solid var(--card-border);
-      padding: 1.75rem 2rem; text-align: center; color: var(--gray-500); font-size: .8rem;
+      background: var(--site-bg2); border-top: 1px solid var(--site-border);
+      padding: 1.75rem 2rem; text-align: center; color: var(--site-gray); font-size: .78rem;
     }
-    footer a { color: var(--purple-300); text-decoration: none; }
-    footer a:hover { color: var(--gold); }
+    footer a { color: var(--site-purple3); text-decoration: none; }
+    footer a:hover { color: var(--site-gold); }
 
     @media(max-width:640px){
       nav ul { display: none; }
-      .hero { padding: 3rem 1.25rem 2rem; }
-      main { padding: 1.75rem 1rem; }
-      .next-game-card { flex-direction: column; }
+      .hero,.main-content { padding-left: 1rem; padding-right: 1rem; }
+      main { padding: 1.5rem 1rem; }
+      .next-card { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
-<!-- ===== 導覽列 ===== -->
+<!-- 導覽列 -->
 <header>
   <nav>
     <a href="index.html" class="logo">
@@ -278,135 +290,120 @@
       <div class="logo-text">新竹<span>攻城獅</span> Stats</div>
     </a>
     <ul>
-      <li><a href="index.html" class="active">首頁</a></li>
+      <li><a href="#next-game" class="active">下一場</a></li>
       <li><a href="#standings">排名</a></li>
-      <li><a href="#players">球員</a></li>
       <li><a href="#simulation">預測</a></li>
       <li><a href="#heatmap">熱力圖</a></li>
+      <li><a href="#players">球員</a></li>
     </ul>
   </nav>
 </header>
 
-<!-- ===== 英雄 ===== -->
+<!-- 英雄 -->
 <section class="hero">
   <div class="hero-badge">2025–26 TPBL 賽季</div>
   <h1>新竹攻城獅<br><em>數據分析中心</em></h1>
-  <p>深入解讀攻城獅本季每場比賽、每位球員的數據表現，用數字說球隊的故事。</p>
+  <p>28 場賽季數據全解析。季後賽模擬、球員熱力圖、下場勝率預測。</p>
 </section>
 
-<!-- ===== 統計快覽 ===== -->
+<!-- 統計快覽 -->
 <div class="stats-bar">
-  <div class="stats-bar-inner" id="stats-bar">
-    <div class="stat-item"><div class="number" id="s-wins">—</div><div class="label">本季勝場</div></div>
-    <div class="stat-item"><div class="number" id="s-losses">—</div><div class="label">本季敗場</div></div>
-    <div class="stat-item"><div class="number" id="s-pts">—</div><div class="label">隊均得分</div></div>
-    <div class="stat-item"><div class="number" id="s-opp">—</div><div class="label">隊均失分</div></div>
+  <div class="stats-bar-inner">
+    <div class="stat-item"><div class="number" id="s-wins">—</div><div class="label">勝場</div></div>
+    <div class="stat-item"><div class="number" id="s-losses">—</div><div class="label">敗場</div></div>
+    <div class="stat-item"><div class="number" id="s-pts">—</div><div class="label">均得分</div></div>
+    <div class="stat-item"><div class="number" id="s-opp">—</div><div class="label">均失分</div></div>
     <div class="stat-item"><div class="number" id="s-rank">—</div><div class="label">目前排名</div></div>
     <div class="stat-item"><div class="number" id="s-rem">—</div><div class="label">剩餘場次</div></div>
   </div>
 </div>
 
-<!-- ===== 主內容 ===== -->
 <main>
 
-  <!-- 下一場預測 -->
-  <div class="full-width" id="next-game-section">
-    <h2 class="section-title"><span class="icon">🎯</span> 下一場預測</h2>
-    <div class="next-game-card" id="next-game-card">
+  <!-- ① 下一場預測 -->
+  <div class="full" id="next-game">
+    <h2 class="section-title"><span class="icon">🎯</span> 下一場勝率預測</h2>
+    <div class="next-card">
       <div class="ng-info">
-        <h2>攻城獅 vs <span id="ng-opp">—</span></h2>
-        <p id="ng-history-label">歷史對戰記錄</p>
+        <h2>攻城獅 <span style="color:var(--site-gray)">vs</span> <span id="ng-opp">—</span></h2>
+        <p id="ng-games-label">歷史對戰</p>
         <div class="ng-history" id="ng-history"></div>
-        <p style="margin-top:.75rem;font-size:.82rem;color:var(--gray-500)">
-          綜合勝率模型（本季整體勝率）× 0.6 ＋ 歷史對戰勝率 × 0.4
-        </p>
+        <div class="ng-method">
+          預測方式：本季整體勝率 × 0.6 ＋ 歷史對戰勝率 × 0.4
+        </div>
       </div>
       <div class="ng-prob">
-        <div class="pct" id="ng-prob">—%</div>
-        <div class="pct-label">預測勝率</div>
+        <div class="pct" id="ng-prob">—</div>
+        <div class="lbl">預測勝率</div>
       </div>
     </div>
   </div>
 
-  <!-- 賽季得分趨勢 + 積分榜 -->
+  <!-- ② 積分榜 + ③ 季後賽模擬 -->
   <div class="grid-2">
-    <div class="card">
-      <h3>📈 本季逐場得分</h3>
-      <div class="chart-wrap">
-        <canvas id="chart-score"></canvas>
-      </div>
-    </div>
+    <!-- 積分榜 -->
     <div class="card" id="standings">
-      <h3>🏆 聯盟積分榜（第 <span id="standings-round">—</span> 輪後）</h3>
-      <table class="standings-table" id="standings-table">
-        <thead>
-          <tr>
-            <th>#</th><th>球隊</th><th>勝</th><th>敗</th><th>勝率</th>
-          </tr>
-        </thead>
+      <h3>🏆 聯盟積分榜（<span id="gp-label">—</span> 輪後）</h3>
+      <table class="standings-table">
+        <thead><tr><th>#</th><th>球隊</th><th>勝</th><th>敗</th><th>勝率</th></tr></thead>
         <tbody id="standings-body"></tbody>
       </table>
+      <p style="font-size:.72rem;color:var(--site-gray);margin-top:.75rem;">
+        ·&thinsp;紫色虛線上方（前3名）直接進季後賽<br>
+        ·&thinsp;第4、5名打挑戰賽（第4名先獲1勝）
+      </p>
+    </div>
+
+    <!-- 季後賽模擬 -->
+    <div class="card" id="simulation">
+      <h3>🎲 季後賽晉級機率（Monte Carlo 10 萬次）</h3>
+      <div class="prob-section" id="prob-bars"></div>
+      <div class="rules-note">
+        賽制：例行賽前3直接晉級│挑戰賽（4v5）Bo3，4th先獲1勝│季後賽 Bo5（2-2-1）│總冠軍賽 Bo7（2-2-1-1-1）｜主場加成 +5%
+      </div>
     </div>
   </div>
 
-  <!-- 季後賽模擬 -->
-  <div class="grid-2" id="simulation">
+  <!-- ④ 逐場得分趨勢（全寬） -->
+  <div class="full">
+    <h2 class="section-title"><span class="icon">📈</span> 本季逐場得分趨勢</h2>
     <div class="card">
-      <h3>🎲 季後賽晉級機率（Monte Carlo 10萬次模擬）</h3>
-      <div class="prob-bars" id="prob-bars">
-        <div class="prob-item">
-          <label><strong>進季後賽（前4名）</strong></label>
-          <div class="prob-bar-bg"><div class="prob-bar-fill bar-playoff" id="bar-playoff" style="width:0%">0%</div></div>
-        </div>
-        <div class="prob-item">
-          <label><strong>打進冠軍賽</strong></label>
-          <div class="prob-bar-bg"><div class="prob-bar-fill bar-final" id="bar-final" style="width:0%">0%</div></div>
-        </div>
-        <div class="prob-item">
-          <label><strong>🏆 拿下總冠軍</strong></label>
-          <div class="prob-bar-bg"><div class="prob-bar-fill bar-champ" id="bar-champ" style="width:0%">0%</div></div>
+      <div class="chart-panel">
+        <div class="chart-panel-bg">
+          <canvas id="chart-score" style="max-height:300px"></canvas>
         </div>
       </div>
-      <p style="font-size:.78rem;color:var(--gray-500);margin-top:1.25rem;">
-        依各隊本季勝率模擬剩餘賽程，季後賽採 1v4、2v3 半決賽 Bo3，冠軍賽 Bo5。
-      </p>
-    </div>
-    <div class="card">
-      <h3>📊 ROC 曲線（上半場領先差 → 預測最終勝負）</h3>
-      <div class="chart-wrap">
-        <canvas id="chart-roc"></canvas>
-      </div>
-      <p style="font-size:.78rem;color:var(--gray-500);margin-top:.75rem;">
-        AUC = <strong id="roc-auc">—</strong>（1.0 = 完美，0.5 = 隨機）。用上半場得分差預測最終勝負。
+      <p style="font-size:.75rem;color:var(--site-gray);margin-top:.7rem;">
+        紫色圓點 = 勝場；深灰圓點 = 敗場。虛線為對手得分。
       </p>
     </div>
   </div>
 
-  <!-- 對各隊戰績 -->
-  <div class="full-width">
+  <!-- ⑤ 對各隊戰績 -->
+  <div class="full">
     <h2 class="section-title"><span class="icon">⚔️</span> 對各隊戰績</h2>
-    <div class="grid-3" id="vs-cards"></div>
+    <div class="grid-3" id="vs-cards" style="margin-bottom:0"></div>
   </div>
 
-  <!-- 球員正負值熱力圖 -->
-  <div class="full-width" id="heatmap">
-    <h2 class="section-title"><span class="icon">🌡️</span> 球員 vs 各對手 正負值（Plus/Minus）平均</h2>
+  <!-- ⑥ 熱力圖 -->
+  <div class="full" id="heatmap" style="margin-top:2.25rem">
+    <h2 class="section-title"><span class="icon">🌡️</span> 球員 vs 各對手 Plus/Minus 均值</h2>
     <div class="card">
-      <p style="font-size:.82rem;color:var(--gray-500);margin-bottom:1rem;">
-        綠色 = 上場時球隊淨得正分；紅色 = 上場時淨失分。顯示上場 ≥3 場球員。
+      <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;">
+        深紫 → 中紫 → 淺紫 = 正向（上場時球隊淨得分高）；深灰 → 珊瑚紅 = 負向（強負向）。顯示上場 ≥ 3 場球員。
       </p>
-      <div class="heatmap-container">
+      <div class="heatmap-wrap">
         <table class="heatmap-table" id="heatmap-table"></table>
       </div>
     </div>
   </div>
 
-  <!-- 球員賽季均值 -->
-  <div class="full-width" id="players">
-    <h2 class="section-title"><span class="icon">🏃</span> 球員賽季均值（上場 ≥3 場）</h2>
+  <!-- ⑦ 球員賽季均值 -->
+  <div class="full" id="players">
+    <h2 class="section-title"><span class="icon">🏃</span> 球員賽季均值（≥ 3 場）</h2>
     <div class="card">
-      <div class="player-table-wrap">
-        <table class="player-table" id="player-table">
+      <div class="player-wrap">
+        <table class="player-table">
           <thead>
             <tr>
               <th>球員</th><th>場次</th><th>得分</th><th>籃板</th><th>助攻</th>
@@ -419,18 +416,34 @@
     </div>
   </div>
 
+  <!-- ⑧ ROC 曲線 -->
+  <div class="full">
+    <h2 class="section-title"><span class="icon">📉</span> ROC 曲線</h2>
+    <div class="card">
+      <div class="chart-panel" style="max-width:560px">
+        <div class="chart-panel-bg">
+          <canvas id="chart-roc" style="max-height:300px"></canvas>
+        </div>
+      </div>
+      <div class="roc-meta">
+        預測變數：上半場（Q1+Q2）得分差。標籤：最終勝 / 敗。<br>
+        AUC = <strong id="roc-auc">—</strong>（1.0 = 完美，0.5 = 隨機猜測）。
+        p 值與 Cohen's d 僅在樣本數足夠時（n ≥ 30）顯示。
+      </div>
+    </div>
+  </div>
+
   <!-- 最新動態 -->
-  <div class="full-width">
+  <div class="full">
     <h2 class="section-title"><span class="icon">🔔</span> 最新動態</h2>
-    <div class="updates-list" id="updates-list"></div>
+    <div class="updates" id="updates"></div>
   </div>
 
 </main>
 
-<!-- ===== 頁尾 ===== -->
 <footer>
   <p>新竹攻城獅數據分析站 &nbsp;|&nbsp; 資料來源：TPBL 官方數據 &nbsp;|&nbsp; 非官方粉絲製作</p>
-  <p style="margin-top:.5rem;">
+  <p style="margin-top:.4rem">
     <a href="https://github.com/lioneer32232002-commits/lioneers-web" target="_blank">GitHub</a>
     &nbsp;·&nbsp; 數據更新至 2026/03/30
   </p>
@@ -438,8 +451,20 @@
 
 <script>
 // ================================================================
-// 載入 processed_data.json，渲染所有元素
+// 圖表視覺規範色票
 // ================================================================
+const C = {
+  dark:  '#5e2d8c',
+  mid:   '#9b6dc0',
+  light: '#cdb8e0',
+  gdark: '#666666',
+  lgray: '#cccccc',
+  dgray: '#444444',
+  bg:    '#f5f5f5',
+  coral: '#d73027',
+  white: '#ffffff'
+};
+
 const TEAM_SHORT = {
   '高雄全家海神':   '海神',
   '臺北台新戰神':   '戰神',
@@ -450,67 +475,73 @@ const TEAM_SHORT = {
   '新竹御嵿攻城獅': '攻城獅'
 };
 
+// Chart.js 全域字型設定（Noto Sans JP）
+Chart.defaults.font.family = "'Noto Sans JP', 'Microsoft JhengHei', sans-serif";
+Chart.defaults.font.weight = '700';
+
+// ================================================================
+// 主入口
+// ================================================================
 fetch('processed_data.json')
   .then(r => r.json())
   .then(data => {
     renderStatsBar(data.team_stats);
     renderNextGame(data.next_game);
-    renderScoreChart(data.games);
-    renderStandings(data.standings, data.team_stats.wins);
+    renderStandings(data.standings);
     renderSimulation(data.simulation);
-    renderRoc(data.roc);
+    renderScoreChart(data.games);
     renderVsCards(data.vs_summary);
     renderHeatmap(data.heatmap, data.heatmap_teams);
     renderPlayerTable(data.player_avg);
+    renderRoc(data.roc);
     renderUpdates(data.games);
-  })
-  .catch(err => console.error('資料載入失敗:', err));
+  });
 
-// --- 統計快覽 ---
+// ① 統計快覽
 function renderStatsBar(ts) {
-  document.getElementById('s-wins').textContent    = ts.wins;
-  document.getElementById('s-losses').textContent  = ts.losses;
-  document.getElementById('s-pts').textContent     = ts.avg_pts;
-  document.getElementById('s-opp').textContent     = ts.avg_opp_pts;
-  document.getElementById('s-rem').textContent     = ts.games_remaining;
+  document.getElementById('s-wins').textContent   = ts.wins;
+  document.getElementById('s-losses').textContent = ts.losses;
+  document.getElementById('s-pts').textContent    = ts.avg_pts;
+  document.getElementById('s-opp').textContent    = ts.avg_opp_pts;
+  document.getElementById('s-rem').textContent    = ts.games_remaining;
 }
 
-// --- 下一場 ---
+// ② 下一場
 function renderNextGame(ng) {
   const short = TEAM_SHORT[ng.opponent] || ng.opponent;
-  document.getElementById('ng-opp').textContent  = short;
-  document.getElementById('ng-prob').textContent = Math.round(ng.win_prob_adjusted * 100) + '%';
+  document.getElementById('ng-opp').textContent      = short;
+  document.getElementById('ng-prob').textContent     = Math.round(ng.win_prob_adjusted * 100) + '%';
+  document.getElementById('ng-games-label').textContent =
+    `歷史對戰（${ng.historical_w + ng.historical_l} 場）`;
   const hist = document.getElementById('ng-history');
   for (let i = 0; i < ng.historical_w; i++) {
     const s = document.createElement('span');
-    s.className = 'ng-rec rec-w'; s.textContent = 'W';
-    hist.appendChild(s);
+    s.className = 'ng-rec rec-w'; s.textContent = 'W'; hist.appendChild(s);
   }
   for (let i = 0; i < ng.historical_l; i++) {
     const s = document.createElement('span');
-    s.className = 'ng-rec rec-l'; s.textContent = 'L';
-    hist.appendChild(s);
+    s.className = 'ng-rec rec-l'; s.textContent = 'L'; hist.appendChild(s);
   }
-  document.getElementById('ng-history-label').textContent =
-    `歷史對戰：${ng.historical_w + ng.historical_l} 場`;
 }
 
-// --- 排名 (更新 stats-bar) ---
-function renderStandings(standings, lionWins) {
+// ③ 積分榜
+function renderStandings(standings) {
   const lion = standings.find(t => t.name === '新竹御嵿攻城獅');
   const rank = standings.indexOf(lion) + 1;
-  document.getElementById('s-rank').textContent = rank + '名';
-  document.getElementById('standings-round').textContent = lion ? lion.gp : '—';
+  document.getElementById('s-rank').textContent    = rank + '名';
+  document.getElementById('gp-label').textContent  = lion ? lion.gp : '—';
 
   const tbody = document.getElementById('standings-body');
   standings.forEach((t, i) => {
-    const wr = t.gp > 0 ? (t.wins / t.gp * 100).toFixed(1) + '%' : '—';
+    const wr    = t.gp > 0 ? (t.wins / t.gp * 100).toFixed(1) + '%' : '—';
     const isLion = t.name === '新竹御嵿攻城獅';
-    const playoffClass = i === 3 ? 'playoff-line' : '';
+    const pillCls = i < 3 ? 'r-in' : i < 5 ? 'r-pi' : 'r-out';
+    // 在第3名後加分隔線（進季後賽線）
+    const cutClass = i === 2 ? 'playoff-cut' : '';
     const short = TEAM_SHORT[t.name] || t.name;
     tbody.innerHTML += `
-      <tr class="${isLion ? 'lion-row' : ''} ${playoffClass}">
-        <td><span class="rank-badge rank-${i+1}">${i+1}</span></td>
+      <tr class="${isLion ? 'lion-row' : ''} ${cutClass}">
+        <td><span class="rank-pill ${pillCls}">${i+1}</span></td>
         <td>${short}${isLion ? ' 🦁' : ''}</td>
         <td><strong>${t.wins}</strong></td>
         <td>${t.losses}</td>
@@ -519,15 +550,59 @@ function renderStandings(standings, lionWins) {
   });
 }
 
-// --- 得分趨勢折線圖 ---
-function renderScoreChart(games) {
-  const labels = games.map(g => {
-    const d = g.date;
-    return (d.slice(4,6) + '/' + d.slice(6,8));
+// ④ 季後賽機率條
+function renderSimulation(sim) {
+  const items = [
+    { id: 'bar-pi', cls: 'bar-pi', prob: sim.prob_play_in, label: '進挑戰賽（第4/5名）' },
+    { id: 'bar-po', cls: 'bar-po', prob: sim.prob_playoff, label: '進季後賽（前3或挑戰賽勝）' },
+    { id: 'bar-sf', cls: 'bar-sf', prob: sim.prob_semif,   label: '打季後賽半決賽（Bo5）' },
+    { id: 'bar-fi', cls: 'bar-fi', prob: sim.prob_final,   label: '打進總冠軍賽（Bo7）' },
+    { id: 'bar-ch', cls: 'bar-ch', prob: sim.prob_champ,   label: '🏆 拿下總冠軍' }
+  ];
+  const container = document.getElementById('prob-bars');
+  items.forEach(item => {
+    const pct = Math.round(item.prob * 100);
+    container.innerHTML += `
+      <div class="prob-row">
+        <label>
+          <strong>${item.label}</strong>
+          <span class="pct-val" id="${item.id}-val">${pct}%</span>
+        </label>
+        <div class="prob-bar-bg">
+          <div class="prob-bar-fill ${item.cls}" id="${item.id}" style="width:0%"></div>
+        </div>
+      </div>`;
   });
+  // 動畫觸發
+  setTimeout(() => {
+    items.forEach(item => {
+      const pct = Math.round(item.prob * 100);
+      document.getElementById(item.id).style.width = pct + '%';
+    });
+  }, 300);
+}
+
+// ⑤ 得分趨勢（依規範：得分深紫、失分深灰、勝場淡紫背景、敗場淡灰）
+function renderScoreChart(games) {
+  const labels     = games.map(g => g.date.slice(4,6) + '/' + g.date.slice(6,8));
   const lionScores = games.map(g => g.lion_score);
   const oppScores  = games.map(g => g.opp_score);
-  const bgColors   = games.map(g => g.won ? 'rgba(74,222,128,.15)' : 'rgba(248,113,113,.1)');
+
+  // 背景色段（勝=淡紫，敗=淡灰）
+  const bgPlugin = {
+    id: 'bgBands',
+    beforeDraw(chart) {
+      const { ctx, chartArea: { left, right, top, bottom }, scales } = chart;
+      if (!chartArea) return;
+      games.forEach((g, i) => {
+        if (i >= games.length - 1) return;
+        const x0 = scales.x.getPixelForValue(i)   - (scales.x.getPixelForValue(1) - scales.x.getPixelForValue(0)) / 2;
+        const x1 = scales.x.getPixelForValue(i+1) - (scales.x.getPixelForValue(1) - scales.x.getPixelForValue(0)) / 2;
+        ctx.fillStyle = g.won ? 'rgba(94,45,140,.07)' : 'rgba(102,102,102,.06)';
+        ctx.fillRect(x0, top, x1-x0, bottom-top);
+      });
+    }
+  };
 
   new Chart(document.getElementById('chart-score'), {
     type: 'line',
@@ -537,150 +612,105 @@ function renderScoreChart(games) {
         {
           label: '攻城獅得分',
           data: lionScores,
-          borderColor: '#c49ae8',
-          backgroundColor: 'rgba(196,154,232,.15)',
-          pointBackgroundColor: games.map(g => g.won ? '#4ade80' : '#f87171'),
-          pointRadius: 5, tension: 0.3, fill: true
+          borderColor: C.dark,
+          backgroundColor: 'rgba(94,45,140,.15)',
+          pointBackgroundColor: games.map(g => g.won ? C.mid : C.gdark),
+          pointRadius: 5, tension: 0.3, fill: true, borderWidth: 2
         },
         {
           label: '對手得分',
           data: oppScores,
-          borderColor: '#8a7aa0',
-          backgroundColor: 'rgba(138,122,160,.08)',
-          pointBackgroundColor: '#8a7aa0',
+          borderColor: C.gdark,
+          backgroundColor: 'transparent',
+          pointBackgroundColor: C.gdark,
           pointRadius: 3, tension: 0.3, fill: false,
-          borderDash: [4, 3]
+          borderDash: [5, 3], borderWidth: 1.5
         }
       ]
     },
     options: {
       responsive: true,
       plugins: {
-        legend: { labels: { color: '#c5b8dc', font: { size: 12 } } },
+        legend: { labels: { color: C.dgray, font: { size: 12, weight: '700' } } },
         tooltip: {
           callbacks: {
-            title: (items) => {
+            title: items => {
               const g = games[items[0].dataIndex];
               return `${g.date.slice(4,6)}/${g.date.slice(6,8)} vs ${TEAM_SHORT[g.opp] || g.opp}`;
             },
-            afterBody: (items) => {
-              const g = games[items[0].dataIndex];
-              return g.won ? '✅ 勝' : '❌ 敗';
-            }
+            afterBody: items => games[items[0].dataIndex].won ? '✅ Win' : '❌ Loss'
           }
         }
       },
       scales: {
-        x: { ticks: { color: '#8a7aa0', maxRotation: 45, font: { size: 10 } }, grid: { color: 'rgba(59,26,110,.5)' } },
-        y: { ticks: { color: '#8a7aa0' }, grid: { color: 'rgba(59,26,110,.5)' }, min: 60, max: 130 }
-      }
-    }
-  });
-}
-
-// --- 季後賽機率條 ---
-function renderSimulation(sim) {
-  const items = [
-    ['bar-playoff', sim.prob_playoff],
-    ['bar-final',   sim.prob_final],
-    ['bar-champ',   sim.prob_champ]
-  ];
-  items.forEach(([id, prob]) => {
-    const pct = Math.round(prob * 100);
-    const el = document.getElementById(id);
-    setTimeout(() => {
-      el.style.width = pct + '%';
-      el.textContent = pct + '%';
-    }, 300);
-  });
-}
-
-// --- ROC 曲線 ---
-function renderRoc(roc) {
-  document.getElementById('roc-auc').textContent = roc.auc;
-  const pts = roc.curve;
-  new Chart(document.getElementById('chart-roc'), {
-    type: 'scatter',
-    data: {
-      datasets: [
-        {
-          label: 'ROC',
-          data: pts.map(p => ({ x: p.fpr, y: p.tpr })),
-          borderColor: '#c49ae8',
-          backgroundColor: 'rgba(196,154,232,.3)',
-          showLine: true, tension: 0.2, pointRadius: 3
+        x: {
+          ticks: { color: C.dgray, maxRotation: 45, font: { size: 10, weight: '700' } },
+          grid:  { color: C.lgray, lineWidth: .8 }
         },
-        {
-          label: '隨機猜測',
-          data: [{x:0,y:0},{x:1,y:1}],
-          borderColor: 'rgba(138,122,160,.5)',
-          borderDash: [5,5], showLine: true, pointRadius: 0
+        y: {
+          ticks: { color: C.dgray, font: { size: 10, weight: '700' } },
+          grid:  { color: C.lgray, lineWidth: .8 },
+          min: 60, max: 130
         }
-      ]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { labels: { color: '#c5b8dc', font: { size: 11 } } } },
-      scales: {
-        x: { title: { display: true, text: 'FPR（假陽性率）', color: '#8a7aa0' }, ticks: { color: '#8a7aa0' }, grid: { color: 'rgba(59,26,110,.5)' }, min: 0, max: 1 },
-        y: { title: { display: true, text: 'TPR（真陽性率）', color: '#8a7aa0' }, ticks: { color: '#8a7aa0' }, grid: { color: 'rgba(59,26,110,.5)' }, min: 0, max: 1 }
       }
     }
   });
 }
 
-// --- 對各隊戰績卡片 ---
+// ⑥ 對各隊戰績（顏色依勝率：≥75%深紫、60-74%中紫、54-59%淺紫、<54%深灰）
 function renderVsCards(vs) {
   const container = document.getElementById('vs-cards');
   Object.entries(vs).forEach(([opp, r]) => {
-    const short = TEAM_SHORT[opp] || opp;
-    const total = r.w + r.l;
-    const winRate = total > 0 ? Math.round(r.w / total * 100) : 0;
-    const diff = +(r.avg_lion - r.avg_opp).toFixed(1);
+    const short  = TEAM_SHORT[opp] || opp;
+    const total  = r.w + r.l;
+    const wr     = total > 0 ? r.w / total : 0;
+    const wrPct  = Math.round(wr * 100);
+    const diff   = +(r.avg_lion - r.avg_opp).toFixed(1);
     const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
-    const diffColor = diff > 0 ? 'var(--green)' : 'var(--red)';
+    const barColor = wr >= 0.75 ? C.dark :
+                     wr >= 0.60 ? C.mid  :
+                     wr >= 0.54 ? C.light : C.gdark;
+    const textColor = wr >= 0.54 ? 'var(--site-gold)' : 'var(--c-lgray)';
     container.innerHTML += `
-      <div class="card">
+      <div class="card vs-card">
         <h3>vs ${short}</h3>
-        <div style="display:flex;align-items:center;gap:1rem;margin:.5rem 0;">
-          <div style="font-size:1.6rem;font-weight:800;color:var(--gold)">${r.w}勝${r.l}敗</div>
-          <div style="font-size:.85rem;color:var(--gray-500)">勝率 ${winRate}%</div>
-        </div>
-        <div style="font-size:.85rem;color:var(--gray-300)">
+        <div class="vs-record" style="color:${textColor}">${r.w}勝 ${r.l}敗</div>
+        <div class="vs-stats">
           均得 ${r.avg_lion} ：均失 ${r.avg_opp}
-          <span style="color:${diffColor};font-weight:700;margin-left:.5rem">${diffStr}</span>
+          <span style="color:${diff>0?C.dark:C.coral};margin-left:.4rem;font-weight:900">${diffStr}</span>
         </div>
-        <div style="margin-top:.6rem;background:rgba(59,26,110,.5);border-radius:999px;height:6px;overflow:hidden">
-          <div style="width:${winRate}%;height:100%;background:${diff>0?'var(--green)':'var(--red)'};border-radius:999px"></div>
+        <div class="vs-bar-bg">
+          <div class="vs-bar-fill" style="width:${wrPct}%;background:${barColor};height:100%;border-radius:999px"></div>
         </div>
+        <div style="font-size:.72rem;color:var(--site-gray);margin-top:.3rem">勝率 ${wrPct}%</div>
       </div>`;
   });
 }
 
-// --- 熱力圖 ---
+// ⑦ 熱力圖（正值深紫→中紫→淺紫；負值深灰→珊瑚）
 function renderHeatmap(heatmap, teams) {
   const table = document.getElementById('heatmap-table');
   const shortTeams = teams.map(t => TEAM_SHORT[t] || t);
 
-  // Header
   let html = '<thead><tr><th>球員</th>';
   shortTeams.forEach(t => { html += `<th>${t}</th>`; });
   html += '</tr></thead><tbody>';
 
   heatmap.forEach(row => {
-    html += `<tr><td class="player-name">${row.player}</td>`;
+    html += `<tr><td class="hm-name">${row.player}</td>`;
     teams.forEach(opp => {
       const val = row.values[opp];
       if (val === null || val === undefined) {
-        html += `<td class="cell cell-null">—</td>`;
+        html += `<td class="hm-cell hm-null">—</td>`;
       } else {
-        const cls = val > 8  ? 'cell-pos-hi'  :
-                    val > 3  ? 'cell-pos-mid' :
-                    val > 0  ? 'cell-pos-low' :
-                    val === 0 ? 'cell-zero'    :
-                    val > -3 ? 'cell-neg-low' :
-                    val > -8 ? 'cell-neg-mid' : 'cell-neg-hi';
-        html += `<td class="cell ${cls}">${val > 0 ? '+' : ''}${val}</td>`;
+        const cls = val >= 8  ? 'hm-p3' :
+                    val >= 3  ? 'hm-p2' :
+                    val > 0   ? 'hm-p1' :
+                    val === 0 ? 'hm-z'  :
+                    val > -3  ? 'hm-n1' :
+                    val > -8  ? 'hm-n2' : 'hm-n3';
+        const sign = val > 0 ? '+' : '';
+        html += `<td class="hm-cell ${cls}">${sign}${val}</td>`;
       }
     });
     html += '</tr>';
@@ -689,15 +719,18 @@ function renderHeatmap(heatmap, teams) {
   table.innerHTML = html;
 }
 
-// --- 球員數據表 ---
+// ⑧ 球員賽季均值（正負值依規範上色）
 function renderPlayerTable(playerAvg) {
   const tbody = document.getElementById('player-tbody');
-  const players = Object.entries(playerAvg)
+  const sorted = Object.entries(playerAvg)
     .sort((a, b) => (b[1].score || 0) - (a[1].score || 0));
 
-  players.forEach(([name, s]) => {
-    const pm = s.plus_minus || 0;
-    const pmClass = pm > 0 ? 'pm-pos' : pm < 0 ? 'pm-neg' : '';
+  sorted.forEach(([name, s]) => {
+    const pm  = +(s.plus_minus || 0);
+    const pmCls = pm >= 5  ? 'pm-hi'  :
+                  pm >= 2  ? 'pm-mid' :
+                  pm >= 0  ? 'pm-lo'  :
+                  pm >= -3 ? 'pm-neg' : 'pm-bad';
     const pmStr = pm > 0 ? `+${pm}` : `${pm}`;
     tbody.innerHTML += `
       <tr>
@@ -710,36 +743,78 @@ function renderPlayerTable(playerAvg) {
         <td>${(s.blocks||0).toFixed(1)}</td>
         <td>${(s.turnovers||0).toFixed(1)}</td>
         <td>${(s.efficiency||0).toFixed(1)}</td>
-        <td class="${pmClass}">${pmStr}</td>
+        <td class="${pmCls}">${pmStr}</td>
       </tr>`;
   });
 }
 
-// --- 最新動態 ---
+// ⑨ ROC 曲線（深紫線 + 深灰虛線基準，淺灰格線，白底）
+function renderRoc(roc) {
+  document.getElementById('roc-auc').textContent = roc.auc;
+  new Chart(document.getElementById('chart-roc'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'ROC (AUC=' + roc.auc + ')',
+          data: roc.curve.map(p => ({ x: p.fpr, y: p.tpr })),
+          borderColor: C.dark,
+          backgroundColor: 'rgba(94,45,140,.18)',
+          showLine: true, tension: 0.25,
+          pointRadius: 3, pointBackgroundColor: C.mid, borderWidth: 2
+        },
+        {
+          label: 'Random',
+          data: [{x:0,y:0},{x:1,y:1}],
+          borderColor: C.gdark,
+          borderDash: [6, 4], showLine: true, pointRadius: 0,
+          borderWidth: 1.5
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { labels: { color: C.dgray, font: { size: 11, weight: '700' } } }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'FPR', color: C.dgray, font: { weight: '700' } },
+          ticks: { color: C.dgray },
+          grid:  { color: C.lgray, lineWidth: .8 },
+          min: 0, max: 1
+        },
+        y: {
+          title: { display: true, text: 'TPR', color: C.dgray, font: { weight: '700' } },
+          ticks: { color: C.dgray },
+          grid:  { color: C.lgray, lineWidth: .8 },
+          min: 0, max: 1
+        }
+      }
+    }
+  });
+}
+
+// ⑩ 最新動態
 function renderUpdates(games) {
-  const list = document.getElementById('updates-list');
-  // 最近5場
-  const recent = [...games].reverse().slice(0, 5);
-  recent.forEach(g => {
+  const list = document.getElementById('updates');
+  list.innerHTML = `
+    <div class="update-item">
+      <span class="upd-date">2026/04/01</span>
+      <span class="upd-tag tag-sys">系統</span>
+      <span class="upd-text">網站上線！28 場賽季數據完整分析，正確 TPBL 賽制模擬已更新。</span>
+    </div>`;
+  [...games].reverse().slice(0, 5).forEach(g => {
     const d = g.date;
-    const dateStr = `${d.slice(0,4)}/${d.slice(4,6)}/${d.slice(6,8)}`;
+    const ds = `${d.slice(0,4)}/${d.slice(4,6)}/${d.slice(6,8)}`;
     const short = TEAM_SHORT[g.opp] || g.opp;
-    const tagClass = g.won ? 'tag-w' : 'tag-l';
-    const tagText  = g.won ? '勝' : '敗';
     list.innerHTML += `
       <div class="update-item">
-        <span class="update-date">${dateStr}</span>
-        <span class="update-tag ${tagClass}">${tagText}</span>
-        <span class="update-text">vs ${short}：${g.lion_score} - ${g.opp_score}</span>
+        <span class="upd-date">${ds}</span>
+        <span class="upd-tag ${g.won ? 'tag-w' : 'tag-l'}">${g.won ? 'Win' : 'Loss'}</span>
+        <span class="upd-text">vs ${short}：${g.lion_score} - ${g.opp_score}</span>
       </div>`;
   });
-  // 最頂加一筆系統通知
-  list.insertAdjacentHTML('afterbegin', `
-    <div class="update-item">
-      <span class="update-date">2026/04/01</span>
-      <span class="update-tag tag-data">數據更新</span>
-      <span class="update-text">網站上線！已完成 28 場賽季數據分析，含季後賽模擬與球員熱力圖。</span>
-    </div>`);
 }
 </script>
 </body>
