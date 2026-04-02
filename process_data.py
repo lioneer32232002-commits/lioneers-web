@@ -79,7 +79,10 @@ standings_raw = [
      'gp': t['game_count']}
     for t in allteams
 ]
-standings_sorted = sorted(standings_raw, key=lambda x: -x['wins'])
+standings_sorted = sorted(
+    standings_raw,
+    key=lambda x: -(x['wins'] / x['gp'] if x['gp'] > 0 else 0)
+)
 
 print('=== 聯盟排名 ===')
 for i, t in enumerate(standings_sorted):

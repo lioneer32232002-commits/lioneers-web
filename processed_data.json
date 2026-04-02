@@ -15,21 +15,15 @@
   },
   "standings": [
     {
-      "name": "福爾摩沙夢想家",
-      "wins": 19,
-      "losses": 11,
-      "gp": 30
-    },
-    {
       "name": "桃園台啤永豐雲豹",
       "wins": 19,
       "losses": 10,
       "gp": 29
     },
     {
-      "name": "新北國王",
-      "wins": 16,
-      "losses": 14,
+      "name": "福爾摩沙夢想家",
+      "wins": 19,
+      "losses": 11,
       "gp": 30
     },
     {
@@ -39,22 +33,28 @@
       "gp": 28
     },
     {
+      "name": "新北國王",
+      "wins": 16,
+      "losses": 14,
+      "gp": 30
+    },
+    {
       "name": "新北中信特攻",
       "wins": 14,
       "losses": 14,
       "gp": 28
     },
     {
-      "name": "高雄全家海神",
-      "wins": 9,
-      "losses": 21,
-      "gp": 30
-    },
-    {
       "name": "臺北台新戰神",
       "wins": 9,
       "losses": 20,
       "gp": 29
+    },
+    {
+      "name": "高雄全家海神",
+      "wins": 9,
+      "losses": 21,
+      "gp": 30
     }
   ],
   "games": [
