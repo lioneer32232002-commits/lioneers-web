@@ -18,7 +18,7 @@
       --site-purple:  #7b3fc4;
       --site-purple2: #9d5fd6;
       --site-purple3: #c49ae8;
-      --site-gold:    #f0c040;
+      --site-gold:    #00e5ff;
       --site-white:   #ffffff;
       --site-gray:    #8a7aa0;
       --site-gray2:   #c5b8dc;
@@ -65,7 +65,7 @@
       border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
     }
     .logo-text { font-size: 1.05rem; font-weight: 700; color: var(--site-white); }
-    .logo-text span { color: var(--site-gold); }
+    .logo-text span { color: var(--site-white); }
     nav ul { list-style: none; display: flex; gap: .2rem; }
     nav a {
       color: var(--site-gray2); text-decoration: none;
@@ -86,7 +86,7 @@
     }
     .hero-badge {
       display: inline-block;
-      background: rgba(240,192,64,.12); border: 1px solid var(--site-gold);
+      background: rgba(0,229,255,.10); border: 1px solid var(--site-gold);
       color: var(--site-gold); font-size: .75rem; font-weight: 700; letter-spacing: .1em;
       padding: .3rem .9rem; border-radius: 999px; margin-bottom: 1rem;
     }
@@ -164,12 +164,13 @@
 
     /* ===== 下一場卡片 ===== */
     .next-card {
-      background: linear-gradient(135deg, rgba(94,45,140,.4), rgba(240,192,64,.08));
+      background: linear-gradient(135deg, rgba(94,45,140,.4), rgba(0,229,255,.06));
       border: 1px solid var(--site-gold); border-radius: 14px; padding: 1.75rem;
       display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
     }
-    .ng-info h2 { font-size: 1.45rem; font-weight: 900; }
-    .ng-info h2 span { color: var(--site-gold); }
+    .ng-info h2 { font-size: 1.45rem; font-weight: 900; color: var(--site-white); }
+    .ng-info h2 span { color: var(--site-white); }
+    .ng-date { font-size: .78rem; color: var(--site-gray2); margin-bottom: .35rem; letter-spacing: .04em; }
     .ng-info p  { color: var(--site-gray2); margin-top: .25rem; font-size: .85rem; }
     .ng-history { display: flex; gap: .5rem; margin-top: .65rem; flex-wrap: wrap; }
     .ng-rec { padding: .25rem .65rem; border-radius: 6px; font-size: .8rem; font-weight: 700; }
@@ -373,7 +374,7 @@
       cursor: default; transition: all .3s;
     }
     .chip-badge:hover {
-      background: rgba(240,192,64,.12); border-color: var(--site-gold);
+      background: rgba(0,229,255,.10); border-color: var(--site-gold);
       color: var(--site-gold);
     }
     .chip-badge .chip-dot {
@@ -485,7 +486,7 @@
       <div class="f-label">🏆 奪冠機率</div>
     </div>
   </div>
-  <div class="forecast-note" id="f-note">Monte Carlo 模擬 100,000 次｜依本季各隊勝率推算剩餘賽程｜季後賽採 TPBL 正式賽制</div>
+  <div class="forecast-note" id="f-note">Monte Carlo 模擬 300,000 次｜Pythagorean 勝率 ^13.91｜依各隊效率差推算剩餘賽程｜季後賽採 TPBL 正式賽制</div>
 </div>
 
 <main>
@@ -495,7 +496,8 @@
     <h2 class="section-title"><span class="icon">🎯</span> 下一場勝率預測</h2>
     <div class="next-card">
       <div class="ng-info">
-        <h2>攻城獅 <span style="color:var(--site-gray)">vs</span> <span id="ng-opp">—</span></h2>
+        <p class="ng-date" id="ng-date">—</p>
+        <h2>攻城獅 <span>vs</span> <span id="ng-opp">—</span></h2>
         <p id="ng-games-label">歷史對戰</p>
         <div class="ng-history" id="ng-history"></div>
         <div class="ng-method">
@@ -514,7 +516,7 @@
     <h2 class="section-title"><span class="icon">🎭</span> 四情境得分預測</h2>
     <div class="card">
       <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;">
-        依三分命中率、失誤、助攻、整體命中率加權排名分四組——<strong style="color:var(--site-gold)">Best / Ideal / Fair / Low</strong>，誤差線為 ±1 標準差。
+        依 3P%、失誤、助攻、FG% 加權排名分四組——<strong style="color:var(--site-gold)">Best / Ideal / Fair / Low</strong>，攻城獅長條為 <strong style="color:#00e5ff">進攻效率色</strong>，誤差線為 ±1 標準差。
       </p>
       <div class="chart-panel chart-panel-dark">
         <div class="chart-panel-bg chart-panel-dark-bg" style="position:relative;aspect-ratio:4/3;min-height:260px;">
@@ -702,6 +704,7 @@ fetch('processed_data.json', { cache: 'no-store' })
     renderScenarioChart(data.scenario_chart);
     renderMannWhitney(data.mann_whitney);
     renderUpdates(data.games);
+    addCJKSpacing();
   });
 
 // ① 統計快覽
@@ -728,6 +731,7 @@ function renderNextGame(ng) {
   const short = TEAM_SHORT[ng.opponent] || ng.opponent;
   document.getElementById('ng-opp').textContent      = short;
   document.getElementById('ng-prob').textContent     = Math.round(ng.win_prob_adjusted * 100) + '%';
+  if (ng.date) document.getElementById('ng-date').textContent = ng.date;
   document.getElementById('ng-games-label').textContent =
     `歷史對戰（${ng.historical_w + ng.historical_l} 場）`;
   const hist = document.getElementById('ng-history');
@@ -816,7 +820,7 @@ function renderLeagueRtg(rtgData, standings) {
     const short  = TEAM_SHORT[t.name] || t.name;
     const rank   = rankMap[t.name] || '—';
     const pillCls = rank <= 3 ? 'r-in' : rank <= 5 ? 'r-pi' : 'r-out';
-    const netColor = t.netrtg > 0 ? '#f0c040' : '#e05040';
+    const netColor = t.netrtg > 0 ? '#00e5ff' : '#e05040';
     const barW   = Math.abs(t.netrtg) / maxAbs * 60; // max 60px
     const barDir = t.netrtg >= 0 ? 'left' : 'right';
     const barBg  = t.netrtg >= 0 ? 'rgba(123,63,196,.7)' : 'rgba(215,48,39,.6)';
@@ -861,7 +865,7 @@ function renderVsCards(vs) {
         <div class="vs-record" style="color:${textColor}">${r.w}勝 ${r.l}敗</div>
         <div class="vs-stats">
           均得 ${r.avg_lion} ：均失 ${r.avg_opp}
-          <span style="color:${diff>0?'#f0c040':C.coral};margin-left:.4rem;font-weight:900">${diffStr}</span>
+          <span style="color:${diff>0?'#00e5ff':C.coral};margin-left:.4rem;font-weight:900">${diffStr}</span>
         </div>
         <div class="vs-bar-bg">
           <div class="vs-bar-fill" style="width:${wrPct}%;background:${barColor};height:100%;border-radius:999px"></div>
@@ -1130,8 +1134,8 @@ function renderScenarioChart(scenarios) {
           label: '攻城獅均分',
           data:  scenarios.map(s => s.lion_mean),
           _stds: scenarios.map(s => s.lion_std),
-          backgroundColor: 'rgba(94,45,140,.7)',
-          borderColor: C.dark, borderWidth: 1.5, borderRadius: 4
+          backgroundColor: 'rgba(0,229,255,.55)',
+          borderColor: '#00b8d4', borderWidth: 1.5, borderRadius: 4
         },
         {
           label: '對手均分',
@@ -1299,6 +1303,24 @@ function renderUpdates(games) {
         <span class="upd-tag ${g.won ? 'tag-w' : 'tag-l'}">${g.won ? 'Win' : 'Loss'}</span>
         <span class="upd-text">vs ${short}：${g.lion_score} - ${g.opp_score}</span>
       </div>`;
+  });
+}
+
+// 中英文／數字之間自動插入半形空格
+function addCJKSpacing() {
+  const CJK = /[\u4e00-\u9fa5\u3400-\u4dbf\u2e80-\u2eff\uff00-\uffef]/;
+  const skip = new Set(['SCRIPT','STYLE','CODE','PRE','TEXTAREA','INPUT']);
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode: n => skip.has(n.parentElement?.tagName) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+  });
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => {
+    const s = node.textContent;
+    const n = s
+      .replace(/([\u4e00-\u9fa5\u3400-\u4dbf\u2e80-\u2eff\uff00-\uffef])([A-Za-z0-9])/g, '$1 $2')
+      .replace(/([A-Za-z0-9])([\u4e00-\u9fa5\u3400-\u4dbf\u2e80-\u2eff\uff00-\uffef])/g, '$1 $2');
+    if (n !== s) node.textContent = n;
   });
 }
 </script>
