@@ -55,7 +55,7 @@
       box-shadow: 0 4px 20px rgba(0,0,0,.5);
     }
     nav {
-      max-width: 1200px; margin: 0 auto;
+      max-width: 820px; margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between; height: 64px;
     }
     .logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
@@ -101,7 +101,7 @@
       padding: 1.1rem 2rem;
     }
     .stats-bar-inner {
-      max-width: 1200px; margin: 0 auto;
+      max-width: 820px; margin: 0 auto;
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: .5rem 1.5rem; text-align: center;
     }
@@ -119,7 +119,7 @@
       padding: 1.1rem 2rem;
     }
     .forecast-bar-inner {
-      max-width: 1200px; margin: 0 auto;
+      max-width: 820px; margin: 0 auto;
       display: flex; align-items: center; justify-content: center; gap: 3rem; flex-wrap: wrap;
     }
     .forecast-item { text-align: center; }
@@ -129,7 +129,7 @@
     .forecast-note { font-size: .72rem; color: var(--site-gray); text-align: center; margin-top: .6rem; }
 
     /* ===== 主內容 ===== */
-    main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem; }
+    main { max-width: 820px; margin: 0 auto; padding: 2rem 1.25rem; }
 
     .section-title {
       font-size: 1.2rem; font-weight: 700; margin-bottom: 1.1rem;
@@ -157,10 +157,9 @@
     }
 
     /* ===== Grid ===== */
-    .grid-2  { display: grid; grid-template-columns: 1fr 1fr;   gap: 1.25rem; margin-bottom: 2.25rem; }
-    .grid-3  { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-bottom: 2.25rem; }
-    .full    { margin-bottom: 2.25rem; }
-    @media(max-width:900px){ .grid-2,.grid-3{ grid-template-columns:1fr; } }
+    .grid-2  { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin-bottom: 2rem; }
+    .grid-3  { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin-bottom: 2rem; }
+    .full    { margin-bottom: 2rem; }
 
     /* ===== 下一場卡片 ===== */
     .next-card {
@@ -231,15 +230,15 @@
     .vs-bar-fill{ height: 100%; border-radius: 999px; }
 
     /* ===== 熱力圖 ===== */
-    .heatmap-wrap { overflow-x: auto; }
-    .heatmap-table { border-collapse: separate; border-spacing: 3px; font-size: .88rem; }
+    .heatmap-wrap { overflow-x: visible; }
+    .heatmap-table { border-collapse: separate; border-spacing: 3px; font-size: .85rem; }
     .heatmap-table th {
       padding: .45rem .6rem; color: var(--site-gray2); font-weight: 700;
       background: rgba(59,26,110,.6); border-radius: 4px; white-space: nowrap; text-align: center;
     }
     .heatmap-table th:first-child { text-align: left; }
     .hm-name { padding: .4rem .75rem; color: var(--site-gray2); font-weight: 700; background: rgba(59,26,110,.5); border-radius: 4px; white-space: nowrap; width: 1%; }
-    .hm-cell { width: 78px; height: 38px; border-radius: 5px; text-align: center; font-weight: 700; font-size: .88rem; vertical-align: middle; }
+    .hm-cell { width: 65px; height: 36px; border-radius: 5px; text-align: center; font-weight: 700; font-size: .82rem; vertical-align: middle; }
     /* 正值：深紫→中紫→淺紫 */
     .hm-p3 { background: var(--c-dark);  color: white; }
     .hm-p2 { background: var(--c-mid);   color: white; }
@@ -253,14 +252,14 @@
     .hm-null{ background: rgba(59,26,110,.3); color: var(--site-gray); }
 
     /* ===== 球員數據表 ===== */
-    .player-wrap { overflow-x: auto; }
-    .player-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    .player-wrap { overflow-x: visible; }
+    .player-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
     .player-table th {
-      padding: .55rem .7rem; color: var(--site-gray); font-weight: 700;
+      padding: .5rem .55rem; color: var(--site-gray); font-weight: 700;
       border-bottom: 1px solid var(--site-border); text-align: center; white-space: nowrap;
     }
     .player-table th:first-child { text-align: left; }
-    .player-table td { padding: .52rem .7rem; border-bottom: 1px solid rgba(59,26,110,.35); text-align: center; }
+    .player-table td { padding: .48rem .55rem; border-bottom: 1px solid rgba(59,26,110,.35); text-align: center; }
     .player-table td:first-child { text-align: left; font-weight: 700; color: var(--site-gray2); }
     .player-table tr:last-child td { border-bottom: none; }
     .player-table tr:hover td { background: rgba(94,45,140,.12); }
