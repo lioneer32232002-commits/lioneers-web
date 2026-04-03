@@ -54,8 +54,8 @@ ctx.font = `bold 38px WenQuanYi Zen Hei, sans-serif`;
 ctx.fillText('新竹攻城獅  2025-26 賽季預測', W / 2, 90);
 
 // ── 副標 ──
-ctx.fillStyle = 'rgba(197,184,220,.7)';
-ctx.font = `22px WenQuanYi Zen Hei, sans-serif`;
+ctx.fillStyle = 'rgba(197,184,220,.85)';
+ctx.font = `26px WenQuanYi Zen Hei, sans-serif`;
 ctx.fillText(`Monte Carlo 300,000 次模擬 · Pythagorean ^13.91 · 已賽 ${ts.wins}勝${ts.losses}負（剩 ${ts.games_remaining} 場）`, W / 2, 138);
 
 // ── 三欄數據 ──
@@ -79,10 +79,10 @@ cols.forEach((col, i) => {
   ctx.fillText(col.id, cx, numY);
 
   // 標籤（換行）
-  ctx.fillStyle = 'rgba(197,184,220,.85)';
-  ctx.font = `bold 26px WenQuanYi Zen Hei, sans-serif`;
+  ctx.fillStyle = 'rgba(197,184,220,.9)';
+  ctx.font = `bold 32px WenQuanYi Zen Hei, sans-serif`;
   col.label.split('\n').forEach((line, li) => {
-    ctx.fillText(line, cx, lblY + li * 36);
+    ctx.fillText(line, cx, lblY + li * 42);
   });
 
   // 分隔線
