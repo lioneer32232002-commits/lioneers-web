@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+Sitemap: https://lioneer32232002-commits.github.io/lioneers-web/
