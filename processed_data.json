@@ -1013,12 +1013,12 @@
     }
   },
   "simulation": {
-    "prob_play_in": 0.1919,
-    "prob_playoff": 0.9384,
-    "prob_semif": 0.4146,
-    "prob_final": 0.4146,
-    "prob_champ": 0.1962,
-    "n_simulations": 100000,
+    "prob_play_in": 0.2193,
+    "prob_playoff": 0.9238,
+    "prob_semif": 0.6329,
+    "prob_final": 0.4492,
+    "prob_champ": 0.3196,
+    "n_simulations": 300000,
     "rules": {
       "regular_season": "36場（18主18客），前3直接進季後賽",
       "play_in": "第4 vs 第5，Bo3，第4先獲1勝",
@@ -1835,6 +1835,7 @@
     }
   ],
   "next_game": {
+    "date": "4/8（二）客場",
     "opponent": "新北中信特攻",
     "win_prob_model": 0.5421,
     "win_prob_adjusted": 0.5652,
