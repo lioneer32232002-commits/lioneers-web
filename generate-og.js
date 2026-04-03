@@ -51,7 +51,7 @@ ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(W, 0); ctx.stroke();
 ctx.textAlign = 'center';
 ctx.fillStyle = '#ffffff';
 ctx.font = `bold 38px WenQuanYi Zen Hei, sans-serif`;
-ctx.fillText('新竹御嵿攻城獅  2025-26 賽季預測', W / 2, 90);
+ctx.fillText('新竹攻城獅  2025-26 賽季預測', W / 2, 90);
 
 // ── 副標 ──
 ctx.fillStyle = 'rgba(197,184,220,.7)';
@@ -62,7 +62,7 @@ ctx.fillText(`Monte Carlo 300,000 次模擬 · Pythagorean ^13.91 · 已賽 ${ts
 const cols = [
   { id: projWins + ' 勝', label: '預測本季\n最終勝場',  accent: '#00e5ff' },
   { id: playoff + '%',    label: '進季後賽\n機率',       accent: '#ffffff' },
-  { id: champ  + '%',     label: '🏆  奪冠\n機率',       accent: '#f0c040' },
+  { id: champ  + '%',     label: '奪冠機率',              accent: '#f0c040' },
 ];
 
 const colW  = W / 3;
