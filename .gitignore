@@ -9,3 +9,6 @@ Thumbs.db
 # 暫存檔
 *.log
 *.tmp
+node_modules/
+package-lock.json
+package.json
