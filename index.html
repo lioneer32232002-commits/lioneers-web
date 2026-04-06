@@ -841,9 +841,6 @@ function renderSimulation(sim) {
 function renderLeagueRtg(rtgData, standings) {
   if (!rtgData || !rtgData.length) return;
   const tbody = document.getElementById('rtg-body');
-  // 用 standings 排名順序查排名
-  const rankMap = {};
-  standings.forEach((t, i) => { rankMap[t.name] = i + 1; });
 
   // 找 net 最大最小以繪長條
   const nets = rtgData.map(t => t.netrtg);
@@ -852,7 +849,7 @@ function renderLeagueRtg(rtgData, standings) {
   rtgData.forEach((t, i) => {
     const isLion = t.name === LION;
     const short  = TEAM_SHORT[t.name] || t.name;
-    const rank   = rankMap[t.name] || '—';
+    const rank   = i + 1;  // netrtg 效率排名
     const pillCls = rank <= 3 ? 'r-in' : rank <= 5 ? 'r-pi' : 'r-out';
     const netColor = t.netrtg > 0 ? '#00e5ff' : '#e05040';
     const barW   = Math.abs(t.netrtg) / maxAbs * 60; // max 60px
