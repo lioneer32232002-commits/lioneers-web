@@ -258,6 +258,12 @@
     .hm-n3 { background: var(--c-coral); color: white; }
     .hm-null{ background: rgba(59,26,110,.3); color: var(--site-gray); }
 
+    /* PPP 色階（青色系） */
+    .ppp-hi  { background: #00b0c8; color: #fff; }          /* ≥ 1.3  深青 */
+    .ppp-mid { background: #00d4e8; color: #0a2a30; }       /* 1.0-1.3 亮青 */
+    .ppp-lo  { background: rgba(180,220,230,.25); color: var(--site-gray2); } /* 0.8-1.0 淡青灰 */
+    .ppp-bad { background: var(--c-coral); color: #fff; }   /* < 0.8  珊瑚紅 */
+
     /* ===== 球員數據表 ===== */
     .player-wrap { overflow-x: visible; }
     .player-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
@@ -445,7 +451,8 @@
       <li><a href="#next-game" class="active">下一場</a></li>
       <li><a href="#standings">排名</a></li>
       <li><a href="#simulation">預測</a></li>
-      <li><a href="#heatmap">熱力圖</a></li>
+      <li><a href="#heatmap">±熱力圖</a></li>
+      <li><a href="#ppp-heatmap">PPP</a></li>
       <li><a href="#players">球員</a></li>
     </ul>
   </nav>
@@ -599,6 +606,21 @@
     </div>
   </div>
 
+  <!-- ⑥b PPP 熱力圖 -->
+  <div class="full" id="ppp-heatmap" style="margin-top:2.25rem">
+    <h2 class="section-title"><span class="icon">⚡</span> 球員 vs 各對手 PPP（每回合得分）</h2>
+    <div class="card">
+      <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
+        <span style="white-space:nowrap">PPP = 球員得分 ÷ 使用回合數（FGA − ORB + TO + 0.44×FTA）</span>
+        <span style="white-space:nowrap">聯盟均值約 1.0・深青 ≥ 1.3・淡青 1.0–1.3・灰 0.8–1.0・珊瑚紅 &lt; 0.8</span>
+        <span style="white-space:nowrap">顯示上場 ≥ 3 場球員</span>
+      </p>
+      <div class="heatmap-wrap">
+        <table class="heatmap-table" id="ppp-table"></table>
+      </div>
+    </div>
+  </div>
+
   <!-- ⑦ 球員賽季均值 -->
   <div class="full" id="players">
     <h2 class="section-title"><span class="icon">🏃</span> 球員賽季均值（≥ 3 場）</h2>
@@ -715,6 +737,7 @@ fetch('processed_data.json', { cache: 'no-store' })
     renderLeagueRtg(data.league_rtg, data.standings);
     renderVsCards(data.vs_summary);
     renderHeatmap(data.heatmap, data.heatmap_teams);
+    renderPppHeatmap(data.ppp_heatmap, data.heatmap_teams);
     renderPlayerTable(data.player_avg);
     renderRoc(data.roc);
     renderScenarioChart(data.scenario_chart);
@@ -915,6 +938,35 @@ function renderHeatmap(heatmap, teams) {
                     val > -8  ? 'hm-n2' : 'hm-n3';
         const sign = val > 0 ? '+' : '';
         html += `<td class="hm-cell ${cls}">${sign}${val}</td>`;
+      }
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+// ⑦b PPP 熱力圖
+function renderPppHeatmap(pppData, teams) {
+  const table = document.getElementById('ppp-table');
+  if (!table || !pppData) return;
+  const shortTeams = teams.map(t => TEAM_SHORT[t] || t);
+
+  let html = '<thead><tr><th>球員</th>';
+  shortTeams.forEach(t => { html += `<th>${t}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  pppData.forEach(row => {
+    html += `<tr><td class="hm-name">${row.player}</td>`;
+    teams.forEach(opp => {
+      const val = row.values[opp];
+      if (val === null || val === undefined) {
+        html += `<td class="hm-cell hm-null">—</td>`;
+      } else {
+        const cls = val >= 1.3  ? 'ppp-hi'  :
+                    val >= 1.0  ? 'ppp-mid' :
+                    val >= 0.8  ? 'ppp-lo'  : 'ppp-bad';
+        html += `<td class="hm-cell ${cls}">${val.toFixed(2)}</td>`;
       }
     });
     html += '</tr>';
