@@ -915,8 +915,9 @@ function renderHeatmap(heatmap, teams) {
   const shortTeams = teams.map(t => TEAM_SHORT[t] || t);
 
   const pmScore = v => v >= 8 ? 3 : v >= 3 ? 2 : v > 0 ? 1 : v === 0 ? 0 : v > -3 ? -1 : v > -8 ? -2 : -3;
+  const nonNull = r => Object.values(r.values).filter(x => x !== null && x !== undefined).length;
   const colorSum = r => Object.values(r.values).filter(x => x !== null && x !== undefined).reduce((a, v) => a + pmScore(v), 0);
-  const sorted = [...heatmap].sort((a, b) => colorSum(b) - colorSum(a));
+  const sorted = [...heatmap].sort((a, b) => nonNull(b) !== nonNull(a) ? nonNull(b) - nonNull(a) : colorSum(b) - colorSum(a));
 
   let html = '<thead><tr><th>球員</th>';
   shortTeams.forEach(t => { html += `<th>${t}</th>`; });
@@ -952,8 +953,9 @@ function renderPppHeatmap(pppData, teams) {
   const shortTeams = teams.map(t => TEAM_SHORT[t] || t);
 
   const pppScore = v => v >= 1.3 ? 3 : v >= 1.15 ? 2 : v >= 1.0 ? 1 : v >= 0.9 ? -1 : v >= 0.8 ? -2 : -3;
+  const nonNull = r => Object.values(r.values).filter(x => x !== null && x !== undefined).length;
   const colorSum = r => Object.values(r.values).filter(x => x !== null && x !== undefined).reduce((a, v) => a + pppScore(v), 0);
-  const sorted = [...pppData].sort((a, b) => colorSum(b) - colorSum(a));
+  const sorted = [...pppData].sort((a, b) => nonNull(b) !== nonNull(a) ? nonNull(b) - nonNull(a) : colorSum(b) - colorSum(a));
 
   let html = '<thead><tr><th>球員</th>';
   shortTeams.forEach(t => { html += `<th>${t}</th>`; });
