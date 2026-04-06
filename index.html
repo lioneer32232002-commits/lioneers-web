@@ -590,8 +590,8 @@
     <h2 class="section-title"><span class="icon">🌡️</span> 球員 vs 各對手 Plus/Minus 均值</h2>
     <div class="card">
       <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
-        <span style="white-space:nowrap">深紫 → 中紫 → 淺紫 = 正向（上場時球隊淨得分高）</span>
-        <span style="white-space:nowrap">深灰 → 珊瑚紅 = 負向（強負向）</span>
+        <span style="white-space:nowrap">深紫 = 正向最高・中紫 = 正向・淺紫 = 略正向</span>
+        <span style="white-space:nowrap">淡灰 = 略負向・深灰 = 負向・珊瑚紅 = 負向最大</span>
         <span style="white-space:nowrap">顯示上場 ≥ 3 場球員</span>
       </p>
       <div class="heatmap-wrap">
@@ -605,9 +605,10 @@
     <h2 class="section-title"><span class="icon">⚡</span> 球員 vs 各對手 PPP（每回合得分）</h2>
     <div class="card">
       <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
-        <span style="white-space:nowrap">深紫 → 中紫 → 淺紫 = 高效（PPP ≥ 1.0）</span>
-        <span style="white-space:nowrap">深灰 → 珊瑚紅 = 低效（PPP &lt; 1.0，強負向）</span>
-        <span style="white-space:nowrap">PPP = 得分 ÷（FGA − ORB + TO + 0.44×FTA）・聯盟均值約 1.0・顯示上場 ≥ 3 場球員</span>
+        <span style="white-space:nowrap">深紫 = 高效最高・中紫 = 高效・淺紫 = 略高於均值</span>
+        <span style="white-space:nowrap">淡灰 = 略低於均值・深灰 = 低效・珊瑚紅 = 低效最大</span>
+        <span style="white-space:nowrap">PPP = 得分 ÷（FGA − ORB + TO + 0.44×FTA）</span>
+        <span style="white-space:nowrap">聯盟均值約 1.0・顯示上場 ≥ 3 場球員</span>
       </p>
       <div class="heatmap-wrap">
         <table class="heatmap-table" id="ppp-table"></table>
