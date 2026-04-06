@@ -258,12 +258,6 @@
     .hm-n3 { background: var(--c-coral); color: white; }
     .hm-null{ background: rgba(59,26,110,.3); color: var(--site-gray); }
 
-    /* PPP 色階（青色系） */
-    .ppp-hi  { background: #00b0c8; color: #fff; }          /* ≥ 1.3  深青 */
-    .ppp-mid { background: #00d4e8; color: #0a2a30; }       /* 1.0-1.3 亮青 */
-    .ppp-lo  { background: rgba(180,220,230,.25); color: var(--site-gray2); } /* 0.8-1.0 淡青灰 */
-    .ppp-bad { background: var(--c-coral); color: #fff; }   /* < 0.8  珊瑚紅 */
-
     /* ===== 球員數據表 ===== */
     .player-wrap { overflow-x: visible; }
     .player-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
@@ -611,9 +605,9 @@
     <h2 class="section-title"><span class="icon">⚡</span> 球員 vs 各對手 PPP（每回合得分）</h2>
     <div class="card">
       <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
-        <span style="white-space:nowrap">PPP = 球員得分 ÷ 使用回合數（FGA − ORB + TO + 0.44×FTA）</span>
-        <span style="white-space:nowrap">聯盟均值約 1.0・深青 ≥ 1.3・淡青 1.0–1.3・灰 0.8–1.0・珊瑚紅 &lt; 0.8</span>
-        <span style="white-space:nowrap">顯示上場 ≥ 3 場球員</span>
+        <span style="white-space:nowrap">深紫 → 中紫 → 淺紫 = 高效（PPP ≥ 1.0）</span>
+        <span style="white-space:nowrap">深灰 → 珊瑚紅 = 低效（PPP &lt; 1.0，強負向）</span>
+        <span style="white-space:nowrap">PPP = 得分 ÷（FGA − ORB + TO + 0.44×FTA）・聯盟均值約 1.0・顯示上場 ≥ 3 場球員</span>
       </p>
       <div class="heatmap-wrap">
         <table class="heatmap-table" id="ppp-table"></table>
@@ -963,9 +957,11 @@ function renderPppHeatmap(pppData, teams) {
       if (val === null || val === undefined) {
         html += `<td class="hm-cell hm-null">—</td>`;
       } else {
-        const cls = val >= 1.3  ? 'ppp-hi'  :
-                    val >= 1.0  ? 'ppp-mid' :
-                    val >= 0.8  ? 'ppp-lo'  : 'ppp-bad';
+        const cls = val >= 1.3  ? 'hm-p3' :
+                    val >= 1.15 ? 'hm-p2' :
+                    val >= 1.0  ? 'hm-p1' :
+                    val >= 0.9  ? 'hm-n1' :
+                    val >= 0.8  ? 'hm-n2' : 'hm-n3';
         html += `<td class="hm-cell ${cls}">${val.toFixed(2)}</td>`;
       }
     });
