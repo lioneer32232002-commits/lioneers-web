@@ -914,11 +914,14 @@ function renderHeatmap(heatmap, teams) {
   const table = document.getElementById('heatmap-table');
   const shortTeams = teams.map(t => TEAM_SHORT[t] || t);
 
+  const avg = r => { const v = Object.values(r.values).filter(x => x !== null && x !== undefined); return v.length ? v.reduce((a,b)=>a+b,0)/v.length : -Infinity; };
+  const sorted = [...heatmap].sort((a, b) => avg(b) - avg(a));
+
   let html = '<thead><tr><th>球員</th>';
   shortTeams.forEach(t => { html += `<th>${t}</th>`; });
   html += '</tr></thead><tbody>';
 
-  heatmap.forEach(row => {
+  sorted.forEach(row => {
     html += `<tr><td class="hm-name">${row.player}</td>`;
     teams.forEach(opp => {
       const val = row.values[opp];
@@ -947,11 +950,14 @@ function renderPppHeatmap(pppData, teams) {
   if (!table || !pppData) return;
   const shortTeams = teams.map(t => TEAM_SHORT[t] || t);
 
+  const avg = r => { const v = Object.values(r.values).filter(x => x !== null && x !== undefined); return v.length ? v.reduce((a,b)=>a+b,0)/v.length : -Infinity; };
+  const sorted = [...pppData].sort((a, b) => avg(b) - avg(a));
+
   let html = '<thead><tr><th>球員</th>';
   shortTeams.forEach(t => { html += `<th>${t}</th>`; });
   html += '</tr></thead><tbody>';
 
-  pppData.forEach(row => {
+  sorted.forEach(row => {
     html += `<tr><td class="hm-name">${row.player}</td>`;
     teams.forEach(opp => {
       const val = row.values[opp];
