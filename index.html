@@ -630,13 +630,13 @@
       </div>
       <div style="margin-top:.85rem;display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;">
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(255,200,50,0.88);display:inline-block;"></span>三分球</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(100,160,255,0.88);display:inline-block;"></span>三分球</span>
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(255,135,60,0.88);display:inline-block;"></span>禁區兩分</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(60,195,175,0.85);display:inline-block;"></span>禁區兩分</span>
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(235,85,95,0.85);display:inline-block;"></span>中距離兩分</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(155,105,240,0.88);display:inline-block;"></span>中距離兩分</span>
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(210,70,150,0.85);display:inline-block;"></span>罰球</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(205,90,210,0.85);display:inline-block;"></span>罰球</span>
       </div>
       <div id="scoring-stats" style="margin-top:.75rem;font-size:.73rem;color:var(--site-gray);display:flex;flex-direction:column;gap:.3rem;"></div>
     </div>
@@ -936,10 +936,10 @@ function renderScoringSources(data) {
   const axisColor = '#c5b8dc';
   const gridColor = 'rgba(255,255,255,0.08)';
   const CATS = [
-    { key: 'three', label: '三分球',   color: 'rgba(255,200,50,0.88)' },
-    { key: 'paint', label: '禁區兩分', color: 'rgba(255,135,60,0.88)' },
-    { key: 'mid',   label: '中距離兩分',color: 'rgba(235,85,95,0.85)' },
-    { key: 'ft',    label: '罰球',     color: 'rgba(210,70,150,0.85)' },
+    { key: 'three', label: '三分球',   color: 'rgba(100,160,255,0.88)' },
+    { key: 'paint', label: '禁區兩分', color: 'rgba(60,195,175,0.85)'  },
+    { key: 'mid',   label: '中距離兩分',color: 'rgba(155,105,240,0.88)' },
+    { key: 'ft',    label: '罰球',     color: 'rgba(205,90,210,0.85)'  },
   ];
 
   const labels      = data.map(t => (t.name === LION_NAME ? '▶ ' : '') + t.name);
