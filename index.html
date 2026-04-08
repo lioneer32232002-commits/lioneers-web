@@ -1020,7 +1020,7 @@ function renderScoringSources(data) {
 
   document.getElementById('scoring-stats').innerHTML =
     mkRow('各項最高',   rows.map(r => `${r.label}：${r.leader}`)) +
-    mkRow('攻城獅佔比', rows.map(r => `${r.label}：${r.pct}%`)) +
+    mkRow('攻城獅佔比', rows.map(r => `${r.label} ${r.pct}%`)) +
     mkRow('攻城獅排名', rows.map(r => `${r.label}：第 ${r.rank} 名`));
 }
 
