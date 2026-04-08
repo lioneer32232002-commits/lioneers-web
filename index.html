@@ -976,7 +976,7 @@ function renderHomeAway(ha) {
         <tr>
           <td class="ha-label">勝敗</td>
           <td><span class="ha-big" style="color:var(--site-gold)">${H.wins}勝 ${H.losses}敗</span></td>
-          <td><span class="ha-big" style="color:var(--site-gold)">${A.wins}勝 ${A.losses}敗</span></td>
+          <td><span class="ha-big" style="color:${aWrColor}">${A.wins}勝 ${A.losses}敗</span></td>
         </tr>
         <tr>
           <td class="ha-label">勝率</td>
@@ -986,7 +986,7 @@ function renderHomeAway(ha) {
         <tr>
           <td class="ha-label">均得分</td>
           <td style="color:#00e5ff;font-weight:800;font-size:1.05rem">${H.avg_pts}</td>
-          <td style="color:#00e5ff;font-weight:800;font-size:1.05rem">${A.avg_pts}</td>
+          <td style="color:${aWrColor};font-weight:800;font-size:1.05rem">${A.avg_pts}</td>
         </tr>
         <tr>
           <td class="ha-label">均失分</td>
@@ -996,7 +996,7 @@ function renderHomeAway(ha) {
         <tr>
           <td class="ha-label">淨差</td>
           <td style="color:${hNetColor};font-weight:900;font-size:1.1rem">${hNet}</td>
-          <td style="color:${aNetColor};font-weight:900;font-size:1.1rem">${aNet}</td>
+          <td style="color:${aWrColor};font-weight:900;font-size:1.1rem">${aNet}</td>
         </tr>
       </tbody>
     </table>
