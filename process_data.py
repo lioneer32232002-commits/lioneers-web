@@ -159,6 +159,29 @@ for t in allteams:
     })
 league_rtg.sort(key=lambda x: -x['netrtg'])
 
+# 各隊得分來源分解
+scoring_sources = []
+for t in allteams:
+    avg   = t['average_stats']
+    three_pm = avg.get('three_pointers_made', 0) or 0
+    fgm      = avg.get('field_goals_made', 0) or 0
+    ftm      = avg.get('free_throws_made', 0) or 0
+    paint    = avg.get('points_in_paint', 0) or 0
+    pts_3    = round(three_pm * 3, 1)
+    pts_2    = round((fgm - three_pm) * 2, 1)   # 全部兩分球得分
+    pts_mid  = round(max(0, pts_2 - paint), 1)   # 中距離（兩分 − 禁區）
+    pts_ft   = round(ftm, 1)
+    total    = round(avg.get('won_score', 0) or 0, 1)
+    scoring_sources.append({
+        'name':  t['team']['name'],
+        'three': pts_3,
+        'mid':   pts_mid,
+        'paint': round(paint, 1),
+        'ft':    pts_ft,
+        'total': total,
+    })
+scoring_sources.sort(key=lambda x: -x['total'])
+
 # ================================================================
 # 3. 攻城獅本季統計
 # ================================================================
@@ -742,6 +765,7 @@ output = {
     },
     'standings': standings_sorted,
     'league_rtg': league_rtg,
+    'scoring_sources': scoring_sources,
     'games': games,
     'vs_summary': vs_summary,
     'heatmap': heatmap_data,
