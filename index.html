@@ -1264,8 +1264,8 @@ function renderUsgTs(playerAvg) {
           data: mkPts(players),
           pointRadius:      ctx => getR(ctx.raw?._games ?? minG),
           pointHoverRadius: ctx => getR(ctx.raw?._games ?? minG) + 2.5,
-          backgroundColor: 'rgba(0,229,255,0.72)',
-          borderColor:     'rgba(0,229,255,1)',
+          backgroundColor: ctx => (ctx.raw?.y ?? avgTs) >= avgTs ? 'rgba(0,229,255,0.72)'    : 'rgba(197,152,232,0.72)',
+          borderColor:     ctx => (ctx.raw?.y ?? avgTs) >= avgTs ? 'rgba(0,229,255,1)'        : 'rgba(197,152,232,1)',
           borderWidth: 1.5,
         }
       ]
