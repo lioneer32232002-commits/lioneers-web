@@ -1012,12 +1012,16 @@ function renderScoringSources(data) {
   const cell = (txt, bold) =>
     `<span style="white-space:nowrap;${bold ? 'color:#c5b8dc;font-weight:700;' : ''}">${txt}</span>`;
 
-  const statsEl = document.getElementById('scoring-stats');
-  statsEl.innerHTML = [
-    '各項最高　' + rows.map(r => cell(`${r.label}：${r.leader}`, false)).join('　'),
-    '攻城獅佔比　' + rows.map(r => cell(`${r.label}：${r.pct}%`, false)).join('　'),
-    '攻城獅排名　' + rows.map(r => cell(`${r.label}：第 ${r.rank} 名`, false)).join('　'),
-  ].map(line => `<div style="display:flex;flex-wrap:wrap;gap:.15rem .6rem;">${line}</div>`).join('');
+  const mkRow = (title, items) =>
+    `<div style="margin-bottom:.3rem;">` +
+    `<span style="color:#c5b8dc;font-weight:700;white-space:nowrap;margin-right:.4rem;">${title}</span>` +
+    items.map(i => `<span style="white-space:nowrap;margin-right:.55rem;">${i}</span>`).join('') +
+    `</div>`;
+
+  document.getElementById('scoring-stats').innerHTML =
+    mkRow('各項最高',   rows.map(r => `${r.label}：${r.leader}`)) +
+    mkRow('攻城獅佔比', rows.map(r => `${r.label}：${r.pct}%`)) +
+    mkRow('攻城獅排名', rows.map(r => `${r.label}：第 ${r.rank} 名`));
 }
 
 // ④ 聯盟每百回合攻守效率表
