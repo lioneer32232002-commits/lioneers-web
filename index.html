@@ -76,7 +76,7 @@
     nav ul { list-style: none; display: flex; gap: .2rem; }
     nav a {
       color: var(--site-gray2); text-decoration: none;
-      padding: .45rem .85rem; border-radius: 6px; font-size: .85rem; transition: all .2s;
+      padding: .45rem .5rem; border-radius: 6px; font-size: .85rem; transition: all .2s;
       white-space: nowrap;
     }
     nav a:hover, nav a.active { color: var(--site-white); background: rgba(59,26,110,.8); }
@@ -403,7 +403,7 @@
     .ha-table { width: 100%; border-collapse: collapse; }
     .ha-table thead th { font-size: .88rem; font-weight: 700; padding: .45rem .75rem .65rem; text-align: center; }
     .ha-th-label { width: 5rem; text-align: left !important; }
-    .ha-th-home { color: #9d5fd6; border-bottom: 2px solid rgba(157,95,214,.6); }
+    .ha-th-home { color: var(--site-gold); border-bottom: 2px solid rgba(0,229,255,.5); }
     .ha-th-away { color: var(--site-gray); border-bottom: 2px solid rgba(140,140,140,.4); }
     .ha-table tbody td { padding: .55rem .75rem; text-align: center; font-size: .95rem; border-bottom: 1px solid rgba(255,255,255,.05); }
     .ha-table tbody tr:last-child td { border-bottom: none; }
@@ -980,7 +980,7 @@ function renderHomeAway(ha) {
         </tr>
         <tr>
           <td class="ha-label">勝率</td>
-          <td style="color:${hWrColor};font-weight:800;font-size:1.05rem">${Math.round(H.win_rate*100)}%</td>
+          <td style="color:var(--site-gold);font-weight:800;font-size:1.05rem">${Math.round(H.win_rate*100)}%</td>
           <td style="color:${aWrColor};font-weight:800;font-size:1.05rem">${Math.round(A.win_rate*100)}%</td>
         </tr>
         <tr>
