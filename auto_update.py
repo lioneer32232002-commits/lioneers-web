@@ -135,8 +135,13 @@ def update_team_stats():
 def update_schedule(schedule):
     games = lion_games(schedule)
     today = date.today()
+    already_played = existing_dates()   # 有本地檔案 = 已取得數據 = 已打完
+
+    # 今天（含）之後、且還沒有本地數據的比賽 = 尚未打完
     upcoming = sorted(
-        [g for g in games if datetime.strptime(g['game_date'], '%Y-%m-%d').date() > today],
+        [g for g in games
+         if datetime.strptime(g['game_date'], '%Y-%m-%d').date() >= today
+         and g['game_date'].replace('-', '') not in already_played],
         key=lambda x: x['game_date']
     )
 
