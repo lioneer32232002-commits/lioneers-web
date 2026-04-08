@@ -103,7 +103,7 @@ ctx.fillRect(0, 570, W, 60);
 ctx.fillStyle = 'rgba(197,184,220,.6)';
 ctx.font = `18px WenQuanYi Zen Hei, sans-serif`;
 ctx.textAlign = 'center';
-ctx.fillText(`lioneer32232002-commits.github.io/lioneers-web  ·  資料截至 ${data.meta.generated}`, W / 2, 608);
+ctx.fillText(`lioneers-web.pages.dev  ·  資料截至 ${data.meta.generated}`, W / 2, 608);
 
 // ── 輸出 ──
 const out = path.join(__dirname, 'og-image.png');
