@@ -477,6 +477,7 @@
       <li><a href="#vs-section">對各隊戰績</a></li>
       <li><a href="#heatmap">球員±熱力圖</a></li>
       <li><a href="#ppp-heatmap">球員PPP圖</a></li>
+      <li><a href="#usg-ts">使用率圖</a></li>
       <li><a href="#roc-section">ROC曲線</a></li>
       <li><a href="#mwu-section">勝負關鍵指標</a></li>
     </ul>
@@ -677,6 +678,19 @@
     </div>
   </div>
 
+  <!-- ⑦b USG% vs TS% 散佈圖 -->
+  <div class="full" id="usg-ts">
+    <h2 class="section-title"><span class="icon">📐</span> 使用率 vs 真實命中率</h2>
+    <div class="card">
+      <div class="chart-panel chart-panel-dark">
+        <div class="chart-panel-bg chart-panel-dark-bg" style="position:relative;aspect-ratio:4/3;min-height:320px;">
+          <canvas id="chart-usg-ts" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+        </div>
+      </div>
+      <div id="usg-ts-meta" style="margin-top:.85rem;font-size:.73rem;color:var(--site-gray);display:flex;flex-wrap:wrap;gap:.25rem .75rem;"></div>
+    </div>
+  </div>
+
   <!-- ⑧ ROC 曲線 -->
   <div class="full" id="roc-section">
     <h2 class="section-title"><span class="icon">📉</span> ROC 曲線分析</h2>
@@ -723,7 +737,7 @@
 </main>
 
 <footer>
-  <p>新竹攻城獅數據分析站 &nbsp;|&nbsp; 資料來源：TPBL 官方數據 &nbsp;|&nbsp; Adam Pan 製作</p>
+  <p>新竹攻城獅數據分析站 &nbsp;|&nbsp; 資料來源：TPBL 官方數據 &nbsp;|&nbsp; Adam Pan 製作 &nbsp;|&nbsp; 瀏覽 <span id="visit-count" style="color:var(--site-purple3);">—</span> 次</p>
   <p style="margin-top:.4rem">
     <a href="https://github.com/lioneer32232002-commits/lioneers-web" target="_blank">GitHub</a>
     &nbsp;·&nbsp; 數據更新至 2026/03/30
@@ -779,6 +793,7 @@ fetch('processed_data.json', { cache: 'no-store' })
     renderHeatmap(data.heatmap, data.heatmap_teams);
     renderPppHeatmap(data.ppp_heatmap, data.heatmap_teams);
     renderPlayerTable(data.player_avg);
+    renderUsgTs(data.player_avg);
     renderRoc(data.roc);
     renderScenarioChart(data.scenario_chart);
     renderMannWhitney(data.mann_whitney);
@@ -1154,15 +1169,158 @@ function renderPlayerTable(playerAvg) {
   });
 }
 
+// ⑦b USG% vs TS% 散佈圖
+function renderUsgTs(playerAvg) {
+  if (!playerAvg) return;
+
+  const players = Object.entries(playerAvg)
+    .filter(([, s]) => s.usg != null && s.tsp != null && s.usg > 0 && s.tsp > 0)
+    .map(([name, s]) => ({ name, usg: s.usg, ts: s.tsp, games: s.games || 0, departed: s.departed || false }));
+
+  if (!players.length) return;
+
+  const active  = players.filter(p => !p.departed);
+  const avgUsg  = active.reduce((s, p) => s + p.usg, 0) / (active.length || 1);
+  const avgTs   = active.reduce((s, p) => s + p.ts,  0) / (active.length || 1);
+  const maxG    = Math.max(...players.map(p => p.games));
+  const minG    = Math.min(...players.map(p => p.games));
+  const getR    = g => (maxG === minG) ? 7 : 5 + ((g - minG) / (maxG - minG)) * 5;
+
+  const axisColor = '#c5b8dc';
+  const gridColor = 'rgba(255,255,255,0.08)';
+
+  // Plugin ①：象限虛線 + 角落文字
+  const quadPlugin = {
+    id: 'usgQuad',
+    beforeDatasetsDraw(chart) {
+      const { ctx, scales, chartArea: ca } = chart;
+      const xQ = scales.x.getPixelForValue(avgUsg);
+      const yQ = scales.y.getPixelForValue(avgTs);
+      ctx.save();
+      ctx.setLineDash([5, 5]);
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(xQ, ca.top);    ctx.lineTo(xQ, ca.bottom); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ca.left, yQ);   ctx.lineTo(ca.right, yQ);  ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font = '9px "Noto Sans JP", sans-serif';
+      ctx.fillStyle = 'rgba(197,184,220,0.28)';
+      const pad = 7;
+      ctx.textAlign = 'left';  ctx.fillText('核心得分手', xQ + pad, ca.top + 14);
+      ctx.textAlign = 'right'; ctx.fillText('高效角色',   xQ - pad, ca.top + 14);
+      ctx.textAlign = 'left';  ctx.fillText('低效持球',   xQ + pad, ca.bottom - 6);
+      ctx.textAlign = 'right'; ctx.fillText('低效替補',   xQ - pad, ca.bottom - 6);
+      ctx.restore();
+    }
+  };
+
+  // Plugin ②：球員名稱標籤
+  const namePlugin = {
+    id: 'usgNames',
+    afterDatasetsDraw(chart) {
+      const { ctx, chartArea: ca } = chart;
+      chart.data.datasets.forEach((ds, di) => {
+        chart.getDatasetMeta(di).data.forEach((pt, i) => {
+          const d = ds.data[i];
+          if (!d?._name) return;
+          const r  = getR(d._games);
+          const cx = (ca.left + ca.right) / 2;
+          const onRight = pt.x > cx;
+          ctx.save();
+          ctx.font      = '10px "Noto Sans JP", sans-serif';
+          ctx.fillStyle = d._departed ? 'rgba(138,122,160,0.5)' : 'rgba(197,184,220,0.88)';
+          if (onRight) {
+            ctx.textAlign = 'right';
+            ctx.fillText(d._name, pt.x - r - 4, pt.y - r - 3);
+          } else {
+            ctx.textAlign = 'left';
+            ctx.fillText(d._name, pt.x + r + 4, pt.y - r - 3);
+          }
+          ctx.restore();
+        });
+      });
+    }
+  };
+
+  const mkPts = arr => arr.map(p => ({ x: p.usg, y: p.ts, _name: p.name, _games: p.games, _departed: p.departed }));
+
+  new Chart(document.getElementById('chart-usg-ts'), {
+    type: 'scatter',
+    plugins: [quadPlugin, namePlugin],
+    data: {
+      datasets: [
+        {
+          label: '現役',
+          data: mkPts(active),
+          pointRadius:      ctx => getR(ctx.raw?._games ?? minG),
+          pointHoverRadius: ctx => getR(ctx.raw?._games ?? minG) + 2.5,
+          backgroundColor: 'rgba(0,229,255,0.72)',
+          borderColor:     'rgba(0,229,255,1)',
+          borderWidth: 1.5,
+        },
+        {
+          label: '已離隊',
+          data: mkPts(players.filter(p => p.departed)),
+          pointRadius:      ctx => getR(ctx.raw?._games ?? minG),
+          pointHoverRadius: ctx => getR(ctx.raw?._games ?? minG) + 2,
+          backgroundColor: 'rgba(100,88,130,0.42)',
+          borderColor:     'rgba(150,138,180,0.5)',
+          borderWidth: 1,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(18,4,38,0.96)',
+          borderColor:     'rgba(157,95,214,0.55)',
+          borderWidth: 1,
+          titleColor:      '#00e5ff',
+          titleFont: { size: 13, weight: '700', family: '"Noto Sans JP", sans-serif' },
+          bodyColor:  '#c5b8dc',
+          bodyFont:   { size: 11, family: '"Noto Sans JP", sans-serif' },
+          padding: 10,
+          callbacks: {
+            title: items => items[0]?.raw?._name || '',
+            label: item  => {
+              const d = item.raw;
+              return `  USG% ${d.x.toFixed(1)}　TS% ${d.y.toFixed(1)}　${d._games} 場`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: '使用率 USG%',    color: axisColor, font: { size: 11, weight: '700' } },
+          ticks: { color: axisColor, font: { size: 10 }, callback: v => `${v}%` },
+          grid:  { color: gridColor, lineWidth: .8 }
+        },
+        y: {
+          title: { display: true, text: '真實命中率 TS%', color: axisColor, font: { size: 11, weight: '700' } },
+          ticks: { color: axisColor, font: { size: 10 }, callback: v => `${v}%` },
+          grid:  { color: gridColor, lineWidth: .8 }
+        }
+      }
+    }
+  });
+
+  document.getElementById('usg-ts-meta').innerHTML =
+    `<span style="white-space:nowrap">點越大 = 出賽場次越多。</span>` +
+    `<span style="white-space:nowrap">虛線 = 現役均值（USG% ${avgUsg.toFixed(1)} ／ TS% ${avgTs.toFixed(1)}）。</span>` +
+    `<span style="white-space:nowrap">右上象限 = 高使用率且高效率，最理想的進攻角色。</span>`;
+}
+
 // ⑨ ROC 曲線（多指標，Youden's J，暗色面板，按 AUC 分組著色）
 function renderRoc(roc) {
   // 不預設顏色——依 AUC 組別動態分配
   const PREDICTORS = [
-    { key: '得分',       labelEn: 'Score',   unitCh: '分',  dash: [] },
     { key: '三分命中率', labelEn: '3P%',     unitCh: '%',   dash: [] },
     { key: '整體命中率', labelEn: 'FG%',     unitCh: '%',   dash: [4,3] },
-    { key: '失誤數',     labelEn: 'TOV',     unitCh: '次',  dash: [4,3] },
+    { key: '阻攻',       labelEn: 'BLK',     unitCh: '次',  dash: [] },
     { key: '助攻',       labelEn: 'AST',     unitCh: '次',  dash: [6,3] },
+    { key: '失誤數',     labelEn: 'TOV',     unitCh: '次',  dash: [4,3] },
     { key: '三分命中數', labelEn: '3PM',     unitCh: '顆',  dash: [6,3] },
   ];
 
@@ -1540,6 +1698,15 @@ function addCJKSpacing() {
     if (n !== s) node.textContent = n;
   });
 }
+
+// 瀏覽次數
+fetch('https://api.counterapi.dev/v1/lioneers-web-2526/visits/up')
+  .then(r => r.json())
+  .then(d => {
+    const el = document.getElementById('visit-count');
+    if (el && d.count != null) el.textContent = Number(d.count).toLocaleString();
+  })
+  .catch(() => {});
 </script>
 </body>
 </html>
