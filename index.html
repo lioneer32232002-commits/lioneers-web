@@ -454,6 +454,14 @@
       padding: .3rem;
     }
 
+    /* ===== USG/TS 散佈圖 ===== */
+    .usg-ts-wrap {
+      position: relative; aspect-ratio: 4/3; min-height: 320px;
+    }
+    @media (max-width: 640px) {
+      .usg-ts-wrap { aspect-ratio: 1/1; min-height: 0; }
+    }
+
     /* ===== 平板（641px ~ 900px） ===== */
     @media(min-width:641px) and (max-width:900px){
       .grid-3 { grid-template-columns: 1fr 1fr; }
@@ -660,6 +668,19 @@
     </div>
   </div>
 
+  <!-- ⑦b USG% vs TS% 散佈圖 -->
+  <div class="full" id="usg-ts">
+    <h2 class="section-title"><span class="icon">📐</span> 使用率 vs 真實命中率</h2>
+    <div class="card">
+      <div class="chart-panel chart-panel-dark">
+        <div class="chart-panel-bg chart-panel-dark-bg usg-ts-wrap">
+          <canvas id="chart-usg-ts" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+        </div>
+      </div>
+      <div id="usg-ts-meta" style="margin-top:.85rem;font-size:.73rem;color:var(--site-gray);display:flex;flex-wrap:wrap;gap:.25rem .75rem;"></div>
+    </div>
+  </div>
+
   <!-- ⑦ 球員賽季均值 -->
   <div class="full" id="players">
     <h2 class="section-title"><span class="icon">🏃</span> 球員賽季均值（≥ 3 場）</h2>
@@ -675,19 +696,6 @@
           <tbody id="player-tbody"></tbody>
         </table>
       </div>
-    </div>
-  </div>
-
-  <!-- ⑦b USG% vs TS% 散佈圖 -->
-  <div class="full" id="usg-ts">
-    <h2 class="section-title"><span class="icon">📐</span> 使用率 vs 真實命中率</h2>
-    <div class="card">
-      <div class="chart-panel chart-panel-dark">
-        <div class="chart-panel-bg chart-panel-dark-bg" style="position:relative;aspect-ratio:4/3;min-height:320px;">
-          <canvas id="chart-usg-ts" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
-        </div>
-      </div>
-      <div id="usg-ts-meta" style="margin-top:.85rem;font-size:.73rem;color:var(--site-gray);display:flex;flex-wrap:wrap;gap:.25rem .75rem;"></div>
     </div>
   </div>
 
@@ -1174,14 +1182,13 @@ function renderUsgTs(playerAvg) {
   if (!playerAvg) return;
 
   const players = Object.entries(playerAvg)
-    .filter(([, s]) => s.usg != null && s.tsp != null && s.usg > 0 && s.tsp > 0)
-    .map(([name, s]) => ({ name, usg: s.usg, ts: s.tsp, games: s.games || 0, departed: s.departed || false }));
+    .filter(([, s]) => s.usg != null && s.tsp != null && s.usg > 0 && s.tsp > 0 && !s.departed)
+    .map(([name, s]) => ({ name, usg: s.usg, ts: s.tsp, games: s.games || 0 }));
 
   if (!players.length) return;
 
-  const active  = players.filter(p => !p.departed);
-  const avgUsg  = active.reduce((s, p) => s + p.usg, 0) / (active.length || 1);
-  const avgTs   = active.reduce((s, p) => s + p.ts,  0) / (active.length || 1);
+  const avgUsg  = players.reduce((s, p) => s + p.usg, 0) / players.length;
+  const avgTs   = players.reduce((s, p) => s + p.ts,  0) / players.length;
   const maxG    = Math.max(...players.map(p => p.games));
   const minG    = Math.min(...players.map(p => p.games));
   const getR    = g => (maxG === minG) ? 7 : 5 + ((g - minG) / (maxG - minG)) * 5;
@@ -1203,13 +1210,16 @@ function renderUsgTs(playerAvg) {
       ctx.beginPath(); ctx.moveTo(xQ, ca.top);    ctx.lineTo(xQ, ca.bottom); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(ca.left, yQ);   ctx.lineTo(ca.right, yQ);  ctx.stroke();
       ctx.setLineDash([]);
-      ctx.font = '9px "Noto Sans JP", sans-serif';
-      ctx.fillStyle = 'rgba(197,184,220,0.28)';
-      const pad = 7;
-      ctx.textAlign = 'left';  ctx.fillText('核心得分手', xQ + pad, ca.top + 14);
-      ctx.textAlign = 'right'; ctx.fillText('高效角色',   xQ - pad, ca.top + 14);
-      ctx.textAlign = 'left';  ctx.fillText('低效持球',   xQ + pad, ca.bottom - 6);
-      ctx.textAlign = 'right'; ctx.fillText('低效替補',   xQ - pad, ca.bottom - 6);
+      ctx.font = '600 10px "Noto Sans JP", sans-serif';
+      const pad = 8;
+      // 上排兩象限：亮青色
+      ctx.fillStyle = 'rgba(0,229,255,0.72)';
+      ctx.textAlign = 'left';  ctx.fillText('▲ 核心得分手', xQ + pad, ca.top + 15);
+      ctx.textAlign = 'right'; ctx.fillText('高效角色 ▲',   xQ - pad, ca.top + 15);
+      // 下排兩象限：淡紫色
+      ctx.fillStyle = 'rgba(197,152,232,0.65)';
+      ctx.textAlign = 'left';  ctx.fillText('▽ 低效持球',   xQ + pad, ca.bottom - 7);
+      ctx.textAlign = 'right'; ctx.fillText('低效替補 ▽',   xQ - pad, ca.bottom - 7);
       ctx.restore();
     }
   };
@@ -1228,7 +1238,7 @@ function renderUsgTs(playerAvg) {
           const onRight = pt.x > cx;
           ctx.save();
           ctx.font      = '10px "Noto Sans JP", sans-serif';
-          ctx.fillStyle = d._departed ? 'rgba(138,122,160,0.5)' : 'rgba(197,184,220,0.88)';
+          ctx.fillStyle = 'rgba(197,184,220,0.88)';
           if (onRight) {
             ctx.textAlign = 'right';
             ctx.fillText(d._name, pt.x - r - 4, pt.y - r - 3);
@@ -1242,7 +1252,7 @@ function renderUsgTs(playerAvg) {
     }
   };
 
-  const mkPts = arr => arr.map(p => ({ x: p.usg, y: p.ts, _name: p.name, _games: p.games, _departed: p.departed }));
+  const mkPts = arr => arr.map(p => ({ x: p.usg, y: p.ts, _name: p.name, _games: p.games }));
 
   new Chart(document.getElementById('chart-usg-ts'), {
     type: 'scatter',
@@ -1250,22 +1260,13 @@ function renderUsgTs(playerAvg) {
     data: {
       datasets: [
         {
-          label: '現役',
-          data: mkPts(active),
+          label: '球員',
+          data: mkPts(players),
           pointRadius:      ctx => getR(ctx.raw?._games ?? minG),
           pointHoverRadius: ctx => getR(ctx.raw?._games ?? minG) + 2.5,
           backgroundColor: 'rgba(0,229,255,0.72)',
           borderColor:     'rgba(0,229,255,1)',
           borderWidth: 1.5,
-        },
-        {
-          label: '已離隊',
-          data: mkPts(players.filter(p => p.departed)),
-          pointRadius:      ctx => getR(ctx.raw?._games ?? minG),
-          pointHoverRadius: ctx => getR(ctx.raw?._games ?? minG) + 2,
-          backgroundColor: 'rgba(100,88,130,0.42)',
-          borderColor:     'rgba(150,138,180,0.5)',
-          borderWidth: 1,
         }
       ]
     },
