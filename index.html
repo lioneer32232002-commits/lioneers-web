@@ -362,9 +362,10 @@
       /* MWU 格：兩欄 */
       #mwu-charts { grid-template-columns: 1fr 1fr !important; gap: .7rem !important; }
 
-      /* 情境標籤：手機版隱藏，改顯示五行摘要 */
-      #scenario-desc, #scenario-legend { display: none !important; }
-      #scenario-mobile { display: block !important; }
+      /* 情境標籤：手機版兩欄 */
+      #scenario-legend { grid-template-columns: 1fr 1fr !important; }
+      .scenario-tag { font-size: .76rem; padding: .45rem .6rem; min-width: 0; }
+      .scenario-tag strong { font-size: .85rem; }
 
       /* 對各隊戰績：確保格線正確 */
       .grid-3 { grid-template-columns: 1fr; }
@@ -586,8 +587,8 @@
   <div class="full" id="scenario-section">
     <h2 class="section-title"><span class="icon">🎭</span> 四情境得分預測</h2>
     <div class="card">
-      <p id="scenario-desc" style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;">
-        依 3P%、失誤、助攻、FG% 加權排名分四組——<strong style="color:var(--site-gold)">Best / Ideal / Fair / Low</strong>，<span style="display:inline-block;white-space:nowrap;">誤差線為 ±1 標準差。</span>
+      <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;">
+        依 3P%、失誤、助攻、FG% 加權排名分四組情境
       </p>
       <div class="chart-panel chart-panel-dark">
         <div class="chart-panel-bg chart-panel-dark-bg" style="position:relative;aspect-ratio:4/3;min-height:260px;">
@@ -595,7 +596,6 @@
         </div>
       </div>
       <div id="scenario-legend"></div>
-      <div id="scenario-mobile"></div>
     </div>
   </div>
 
@@ -1688,30 +1688,23 @@ function renderScenarioChart(scenarios) {
     }
   });
 
-  // 情境摘要標籤（桌機版）
+  // 情境摘要標籤
   const leg = document.getElementById('scenario-legend');
-  leg.innerHTML = scenarios.map(s => `
+  leg.innerHTML = scenarios.map(s => {
+    const lion = s.lion_mean.toFixed(1);
+    const opp  = s.opp_mean.toFixed(1);
+    const std  = s.lion_std.toFixed(1);
+    return `
     <div class="scenario-tag">
-      <strong>${s.label}</strong>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:.4rem;">
+        <strong>${s.label}</strong>
+        <span style="color:var(--site-gray2);font-size:.76rem;white-space:nowrap;">得 ${lion} : 失 ${opp}　±${std}</span>
+      </div>
       <span>勝率 ${Math.round(s.win_rate*100)}%（n=${s.n}）</span>
       <span style="color:var(--site-gray);font-size:.75rem;">3P% ${s.stats['3P%']} · TO ${s.stats['TO']}</span>
       <span style="color:var(--site-gray);font-size:.75rem;">AST ${s.stats['AST']} · FG% ${s.stats['FG%']}</span>
-    </div>`).join('');
-
-  // 手機版五行摘要
-  const mob = document.getElementById('scenario-mobile');
-  const labelColor = { Best:'#c5b8dc', Ideal:'#c5b8dc', Fair:'#c5b8dc', Low:'#c5b8dc' };
-  mob.innerHTML =
-    `<p style="font-size:.78rem;color:var(--site-gray);margin:0 0 .5rem;">依 3P%、失誤、助攻、FG% 加權排名分四組情境</p>` +
-    scenarios.map(s => {
-      const lion = s.lion_mean.toFixed(1);
-      const opp  = s.opp_mean.toFixed(1);
-      const std  = s.lion_std.toFixed(1);
-      return `<p style="font-size:.82rem;color:#c5b8dc;margin:.25rem 0;">` +
-        `<strong style="color:var(--site-gold);margin-right:.4rem;">${s.label}</strong>` +
-        `得 ${lion} : 失 ${opp}　±${std}` +
-        `</p>`;
-    }).join('');
+    </div>`;
+  }).join('');
 }
 
 // ⑪ Mann-Whitney U 點圖（僅顯著指標）
