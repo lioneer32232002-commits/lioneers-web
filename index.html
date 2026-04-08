@@ -1614,18 +1614,21 @@ function renderScenarioChart(scenarios) {
   const errBarPlugin = {
     id: 'errBars',
     afterDatasetsDraw(chart) {
-      const { ctx, scales } = chart;
+      const { ctx, scales, chartArea } = chart;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
+      ctx.clip();
       chart.data.datasets.forEach((ds, di) => {
         if (!ds._stds) return;
         const meta = chart.getDatasetMeta(di);
         meta.data.forEach((bar, i) => {
           const val = ds.data[i], std = ds._stds[i];
           if (std == null) return;
-          const x   = bar.x;
-          const yT  = scales.y.getPixelForValue(val + std);
-          const yB  = scales.y.getPixelForValue(val - std);
+          const x  = bar.x;
+          const yT = scales.y.getPixelForValue(val + std);
+          const yB = scales.y.getPixelForValue(val - std);
           const cap = 5;
-          ctx.save();
           ctx.strokeStyle = ds.borderColor;
           ctx.lineWidth   = 1.5;
           ctx.beginPath();
@@ -1633,9 +1636,9 @@ function renderScenarioChart(scenarios) {
           ctx.moveTo(x - cap, yT); ctx.lineTo(x + cap, yT);
           ctx.moveTo(x - cap, yB); ctx.lineTo(x + cap, yB);
           ctx.stroke();
-          ctx.restore();
         });
       });
+      ctx.restore();
     }
   };
 
@@ -1643,7 +1646,7 @@ function renderScenarioChart(scenarios) {
     type: 'bar',
     plugins: [errBarPlugin],
     data: {
-      labels: scenarios.map(s => `${s.label}  ${Math.round(s.win_rate*100)}% WR`),
+      labels: scenarios.map(s => s.label),
       datasets: [
         {
           label: '攻城獅均分',
@@ -1663,7 +1666,7 @@ function renderScenarioChart(scenarios) {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      layout: { padding: { right: 14 } },
+
       plugins: {
         legend: { labels: { color: '#c5b8dc', font: { size: 12, weight: '700' } } },
         tooltip: {
