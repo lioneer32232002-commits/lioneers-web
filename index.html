@@ -364,7 +364,7 @@
 
       /* 情境標籤：手機版兩欄 */
       #scenario-legend { grid-template-columns: 1fr 1fr !important; }
-      .scenario-tag { font-size: .76rem; padding: .45rem .6rem; }
+      .scenario-tag { font-size: .76rem; padding: .45rem .6rem; min-width: 0; }
       .scenario-tag strong { font-size: .85rem; }
 
       /* 對各隊戰績：確保格線正確 */
@@ -587,7 +587,7 @@
     <h2 class="section-title"><span class="icon">🎭</span> 四情境得分預測</h2>
     <div class="card">
       <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;">
-        依 3P%、失誤、助攻、FG% 加權排名分四組——<strong style="color:var(--site-gold)">Best / Ideal / Fair / Low</strong>，攻城獅長條為 <strong style="color:#00e5ff">進攻效率色</strong>，誤差線為 ±1 標準差。
+        依 3P%、失誤、助攻、FG% 加權排名分四組——<strong style="color:var(--site-gold)">Best / Ideal / Fair / Low</strong>，<span style="display:inline-block;white-space:nowrap;">誤差線為 ±1 標準差。</span>
       </p>
       <div class="chart-panel chart-panel-dark">
         <div class="chart-panel-bg chart-panel-dark-bg" style="position:relative;aspect-ratio:4/3;min-height:260px;">
