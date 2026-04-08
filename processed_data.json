@@ -2358,11 +2358,11 @@
     }
   ],
   "next_game": {
-    "opponent": "桃園台啤永豐雲豹",
-    "date": "4/11（六）主場",
+    "opponent": "新北中信特攻",
+    "date": "4/8（三）主場",
     "is_home": true,
-    "win_prob_model": 0.4576,
-    "win_prob_adjusted": 0.5645,
+    "win_prob_model": 0.5254,
+    "win_prob_adjusted": 0.6053,
     "historical_w": 3,
     "historical_l": 2
   },
