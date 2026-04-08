@@ -397,6 +397,32 @@
       background: #1e0838 !important;
     }
 
+    /* ===== 主客場 / 節次分析 ===== */
+    .split-compare { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .split-panel {
+      background: rgba(59,26,110,.35); border: 1px solid var(--site-border);
+      border-radius: 10px; padding: 1rem; text-align: center;
+    }
+    .split-panel.home { border-color: rgba(157,95,214,.55); }
+    .split-panel.away { border-color: rgba(100,100,100,.4); }
+    .split-label { font-size: .72rem; font-weight: 700; letter-spacing: .1em; color: var(--site-gray); margin-bottom: .5rem; }
+    .split-wl { font-size: 1.7rem; font-weight: 900; color: var(--site-gold); line-height: 1; }
+    .split-wr { font-size: .85rem; font-weight: 700; color: var(--site-purple3); margin-top: .2rem; }
+    .split-stat { font-size: .78rem; color: var(--site-gray2); margin-top: .55rem; line-height: 1.7; }
+    .split-net { font-weight: 900; }
+
+    .quarter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; }
+    .q-card {
+      background: rgba(59,26,110,.35); border: 1px solid var(--site-border);
+      border-radius: 10px; padding: .75rem 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .q-card.q-weak { border-color: rgba(215,48,39,.45); background: rgba(90,20,20,.25); }
+    .q-label { font-size: 1.1rem; font-weight: 900; color: var(--site-purple3); }
+    .q-score { font-size: 1.4rem; font-weight: 900; color: var(--site-gold); line-height: 1; }
+    .q-sub { font-size: .72rem; color: var(--site-gray); }
+    .q-wr { font-size: .82rem; font-weight: 700; }
+
     /* ===== 已離隊球員（表格暗化） ===== */
     .player-table tr.departed td {
       opacity: .45; font-style: italic;
@@ -585,6 +611,20 @@
     <div class="grid-3" id="vs-cards" style="margin-bottom:0"></div>
   </div>
 
+  <!-- ⑤ᵇ 主客場 + 節次分析 -->
+  <div class="grid-2" id="splits-section">
+    <!-- 主客場 -->
+    <div>
+      <h2 class="section-title"><span class="icon">🏟️</span> 主客場對比</h2>
+      <div class="card" id="home-away-card"></div>
+    </div>
+    <!-- 節次分析 -->
+    <div>
+      <h2 class="section-title"><span class="icon">⏱️</span> 節次分析</h2>
+      <div class="card" id="quarter-card"></div>
+    </div>
+  </div>
+
   <!-- ⑥ 熱力圖 -->
   <div class="full" id="heatmap" style="margin-top:2.25rem">
     <h2 class="section-title"><span class="icon">🌡️</span> 球員 vs 各對手 Plus/Minus 均值</h2>
@@ -731,6 +771,8 @@ fetch('processed_data.json', { cache: 'no-store' })
     renderStandings(data.standings);
     renderLeagueRtg(data.league_rtg, data.standings);
     renderVsCards(data.vs_summary);
+    renderHomeAway(data.home_away);
+    renderQuarterAnalysis(data.quarter_analysis);
     renderHeatmap(data.heatmap, data.heatmap_teams);
     renderPppHeatmap(data.ppp_heatmap, data.heatmap_teams);
     renderPlayerTable(data.player_avg);
@@ -904,6 +946,80 @@ function renderVsCards(vs) {
         <div style="font-size:.72rem;color:var(--site-gray);margin-top:.3rem">勝率 ${wrPct}%</div>
       </div>`;
   });
+}
+
+// ⑤ᵇ 主客場對比
+function renderHomeAway(ha) {
+  if (!ha) return;
+  const card = document.getElementById('home-away-card');
+  const H = ha.home, A = ha.away;
+  const hNet = H.net > 0 ? `+${H.net}` : `${H.net}`;
+  const aNet = A.net > 0 ? `+${A.net}` : `${A.net}`;
+  const hNetColor = H.net >= 0 ? 'var(--site-gold)' : '#e05040';
+  const aNetColor = A.net >= 0 ? 'var(--site-gold)' : '#e05040';
+  const hWrColor  = H.win_rate >= 0.6 ? '#9d5fd6' : H.win_rate >= 0.4 ? '#c5b8dc' : '#e05040';
+  const aWrColor  = A.win_rate >= 0.6 ? '#9d5fd6' : A.win_rate >= 0.4 ? '#c5b8dc' : '#e05040';
+
+  card.innerHTML = `
+    <div class="split-compare">
+      <div class="split-panel home">
+        <div class="split-label">🏠 主場</div>
+        <div class="split-wl">${H.wins}勝 ${H.losses}敗</div>
+        <div class="split-wr" style="color:${hWrColor}">${Math.round(H.win_rate*100)}%</div>
+        <div class="split-stat">
+          均得 <strong style="color:#00e5ff">${H.avg_pts}</strong>　均失 <strong style="color:#f06292">${H.avg_opp}</strong><br>
+          淨差 <span class="split-net" style="color:${hNetColor}">${hNet}</span>
+        </div>
+      </div>
+      <div class="split-panel away">
+        <div class="split-label">✈️ 客場</div>
+        <div class="split-wl">${A.wins}勝 ${A.losses}敗</div>
+        <div class="split-wr" style="color:${aWrColor}">${Math.round(A.win_rate*100)}%</div>
+        <div class="split-stat">
+          均得 <strong style="color:#00e5ff">${A.avg_pts}</strong>　均失 <strong style="color:#f06292">${A.avg_opp}</strong><br>
+          淨差 <span class="split-net" style="color:${aNetColor}">${aNet}</span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:.72rem;color:var(--site-gray);margin-top:.85rem;text-align:center;">
+      主場優勢差距：勝率 ${Math.round((H.win_rate - A.win_rate)*100)}pp ／ 淨差 ${H.net >= 0 ? '+' : ''}${H.net} vs ${aNet}
+    </p>`;
+}
+
+// ⑤ᶜ 節次分析
+function renderQuarterAnalysis(qa) {
+  if (!qa) return;
+  const card = document.getElementById('quarter-card');
+  const quarters = ['Q1','Q2','Q3','Q4'];
+  const weakQ = quarters.reduce((a, b) => (qa[a]?.win_rate||0) < (qa[b]?.win_rate||0) ? a : b);
+
+  let html = '<div class="quarter-grid">';
+  quarters.forEach(q => {
+    const d = qa[q]; if (!d) return;
+    const wr = Math.round(d.win_rate * 100);
+    const isWeak = (q === weakQ);
+    const diff = +(d.avg_score - d.avg_opp).toFixed(1);
+    const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
+    const wrColor = wr >= 55 ? '#9d5fd6' : wr >= 45 ? '#c5b8dc' : '#e05040';
+    html += `
+      <div class="q-card${isWeak ? ' q-weak' : ''}">
+        <div>
+          <div class="q-label">${q}${isWeak ? ' ⚠️' : ''}</div>
+          <div class="q-sub">節次勝率</div>
+          <div class="q-wr" style="color:${wrColor}">${wr}%</div>
+        </div>
+        <div style="text-align:right">
+          <div class="q-score">${d.avg_score}</div>
+          <div class="q-sub">均得 / 均失 ${d.avg_opp}</div>
+          <div style="font-size:.78rem;font-weight:700;color:${diff>=0?'var(--site-gold)':'#e05040'}">${diffStr}</div>
+        </div>
+      </div>`;
+  });
+  html += '</div>';
+  html += `<p style="font-size:.72rem;color:var(--site-gray);margin-top:.85rem;">
+    ⚠️ 第三節是本季最弱節次（節次勝率僅 ${Math.round(qa['Q3']?.win_rate*100)}%），對手往往在此拉開差距。
+  </p>`;
+  card.innerHTML = html;
 }
 
 // ⑦ 熱力圖（正值深紫→中紫→淺紫；負值深灰→珊瑚）

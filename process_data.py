@@ -46,8 +46,17 @@ for fname in game_files:
     opp_score  = lt['lost_score']
     won        = lion_score > opp_score
 
-    rounds_data = {int(k): v.get('won_score', 0)
-                   for k, v in lion['teams']['rounds'].items()}
+    rounds_data     = {int(k): v.get('won_score', 0)
+                       for k, v in lion['teams']['rounds'].items()}
+    opp_rounds_data = {int(k): v.get('won_score', 0)
+                       for k, v in opp_team['teams']['rounds'].items()}
+
+    # 得分來源（隊伍層級）
+    ot = opp_team['teams']['total']
+    paint   = lt.get('points_in_paint',      0) or 0
+    fb_pts  = lt.get('fast_break_points',     0) or 0
+    sc2_pts = lt.get('second_chance_points',  0) or 0
+    ft_made = lt.get('free_throws_made',      0) or 0
 
     date_str = fname.replace('.txt', '')
     if len(date_str) == 4:
@@ -56,7 +65,10 @@ for fname in game_files:
     games.append({
         'date': date_str, 'opp': opp_name,
         'lion_score': lion_score, 'opp_score': opp_score,
-        'won': won, 'is_home': is_home, 'rounds': rounds_data
+        'won': won, 'is_home': is_home,
+        'rounds': rounds_data, 'opp_rounds': opp_rounds_data,
+        'paint': paint, 'fast_break': fb_pts,
+        'second_chance': sc2_pts, 'ft_made': ft_made,
     })
 
     for pid, p in lion['players']['total'].items():
@@ -490,7 +502,9 @@ for label, key, higher in predictors:
 # ================================================================
 # 9. 下一場 vs 特攻 勝率
 # ================================================================
-next_opp     = '新北中信特攻'
+next_opp        = '新北中信特攻'
+next_is_home    = True          # 4/8 主場
+next_date_label = '4/8（三）主場'
 lion_wr_val  = float(win_rate)
 opp_wr_val   = float(wr_arr[team_list.index(next_opp)])
 next_prob_model = lion_wr_val / (lion_wr_val + opp_wr_val)
@@ -498,9 +512,11 @@ next_prob_model = lion_wr_val / (lion_wr_val + opp_wr_val)
 vs_next    = vs_record[next_opp]
 hist_total = vs_next['w'] + vs_next['l']
 hist_wr    = vs_next['w'] / hist_total if hist_total else 0.5
-next_prob_adj = 0.6 * next_prob_model + 0.4 * hist_wr
+next_prob_base = 0.6 * next_prob_model + 0.4 * hist_wr
+# 主客場調整（主場 +5%、客場 -5%）
+next_prob_adj  = float(np.clip(next_prob_base + (HOME_ADV if next_is_home else -HOME_ADV), 0.05, 0.95))
 
-print(f'\n下一場 vs {next_opp}: 模型 {next_prob_model:.1%} / 加權 {next_prob_adj:.1%}')
+print(f'\n下一場 vs {next_opp}（{next_date_label}）: 模型 {next_prob_model:.1%} / 加權 {next_prob_adj:.1%}')
 
 # ================================================================
 # 11. 四情境得分預測（依攻城獅綜合表現分四組）
@@ -607,6 +623,54 @@ sig_list = [r['stat'] for r in mann_results if r['significant']]
 print(f'\n顯著指標（p<0.05）: {sig_list}')
 
 # ================================================================
+# 13. 主客場分析
+# ================================================================
+home_games_list = [g for g in games if g['is_home']]
+away_games_list = [g for g in games if not g['is_home']]
+
+def split_stats(gl):
+    if not gl: return {}
+    return {
+        'gp':      len(gl),
+        'wins':    sum(g['won'] for g in gl),
+        'losses':  sum(not g['won'] for g in gl),
+        'win_rate': round(sum(g['won'] for g in gl) / len(gl), 4),
+        'avg_pts': mean([g['lion_score'] for g in gl]),
+        'avg_opp': mean([g['opp_score']  for g in gl]),
+        'net':     round(mean([g['lion_score'] for g in gl]) - mean([g['opp_score'] for g in gl]), 1),
+    }
+
+home_away_data = {
+    'home': split_stats(home_games_list),
+    'away': split_stats(away_games_list),
+}
+print(f'\n=== 主客場 ===')
+print(f"主場 {home_away_data['home']['wins']}W{home_away_data['home']['losses']}L"
+      f"  均得{home_away_data['home']['avg_pts']} 均失{home_away_data['home']['avg_opp']}")
+print(f"客場 {home_away_data['away']['wins']}W{home_away_data['away']['losses']}L"
+      f"  均得{home_away_data['away']['avg_pts']} 均失{home_away_data['away']['avg_opp']}")
+
+# ================================================================
+# 14. 節次分析
+# ================================================================
+quarter_data = {}
+for q in [1, 2, 3, 4]:
+    q_lion = [g['rounds'].get(q, 0) for g in games if q in g.get('rounds', {})]
+    q_opp  = [g['opp_rounds'].get(q, 0) for g in games if q in g.get('opp_rounds', {})]
+    pairs  = [(l, o) for l, o in zip(q_lion, q_opp)]
+    q_wr   = round(sum(1 for l, o in pairs if l > o) / len(pairs), 4) if pairs else 0
+    # 逐場節次數據（for chart）
+    q_diffs = [round(l - o, 1) for l, o in pairs]
+    quarter_data[f'Q{q}'] = {
+        'avg_score': mean(q_lion),
+        'avg_opp':   mean(q_opp),
+        'win_rate':  q_wr,
+        'games':     len(pairs),
+        'diffs':     q_diffs,  # 每節得失分差（正=贏該節）
+    }
+    print(f"Q{q}: 均得{mean(q_lion)} 均失{mean(q_opp)} 節次勝率{q_wr:.1%}")
+
+# ================================================================
 # 10. 輸出 JSON
 # ================================================================
 output = {
@@ -642,12 +706,16 @@ output = {
     'scenario_chart': scenario_results,
     'mann_whitney': mann_results,
     'next_game': {
-        'opponent': next_opp,
+        'opponent':          next_opp,
+        'date':              next_date_label,
+        'is_home':           next_is_home,
         'win_prob_model':    round(float(next_prob_model), 4),
         'win_prob_adjusted': round(float(next_prob_adj),   4),
-        'historical_w': int(vs_next['w']),
-        'historical_l': int(vs_next['l'])
-    }
+        'historical_w':      int(vs_next['w']),
+        'historical_l':      int(vs_next['l'])
+    },
+    'home_away':    home_away_data,
+    'quarter_analysis': quarter_data,
 }
 
 out_path = os.path.join(os.path.dirname(__file__), 'processed_data.json')
