@@ -767,14 +767,22 @@
     <h2 class="section-title"><span class="icon">🔬</span> 勝負關鍵指標分析（Mann-Whitney U）</h2>
     <div class="card">
       <p style="font-size:.78rem;color:var(--site-gray2);margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
-        <span style="white-space:nowrap">僅顯示顯著差異指標（p &lt; 0.05）。</span>
-        <span style="white-space:nowrap">橫線 = 中位數</span>
+        <span style="white-space:nowrap">顯著指標（p &lt; 0.05）與趨勢指標（p &lt; 0.10）各場數據點分布。橫線 = 中位數。</span>
       </p>
       <div id="mwu-charts" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.1rem;"></div>
       <div style="font-size:.72rem;color:var(--site-gray);margin-top:.85rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
         <span style="white-space:nowrap">Mann-Whitney U 雙尾檢定。</span>
         <span style="white-space:nowrap">效應量 r = 秩雙序列相關係數（|r| ≥ 0.3 中等效應；|r| ≥ 0.5 大效應）。</span>
         <span style="white-space:nowrap">n = 28 場，僅供參考。</span>
+      </div>
+      <div style="margin-top:1.75rem;">
+        <div style="font-size:.8rem;font-weight:700;color:#c5b8dc;margin-bottom:.5rem;">全指標效應量一覽（效應量 r）</div>
+        <div style="font-size:.72rem;color:var(--site-gray);margin-bottom:.65rem;display:flex;flex-wrap:wrap;gap:.2rem .75rem;">
+          <span>紫色 = 勝場較高；珊瑚 = 敗場較高。深淺對應 |r| 大小。</span>
+          <span>虛線：|r| = 0.3 / 0.5 參考門檻。</span>
+          <span>★ 顯著（p &lt; 0.05）　▲ 趨勢（p &lt; 0.10）</span>
+        </div>
+        <div style="position:relative;height:260px;"><canvas id="mwu-bar-chart"></canvas></div>
       </div>
     </div>
   </div>
@@ -1713,16 +1721,21 @@ function renderScenarioChart(scenarios) {
   }).join('');
 }
 
-// ⑪ Mann-Whitney U 點圖（僅顯著指標）
+// ⑪ Mann-Whitney U 點圖（顯著 + 趨勢指標）＋全指標效應量橫條圖
 function renderMannWhitney(mwResults) {
-  const sigItems = (mwResults || []).filter(r => r.significant);
+  const all = mwResults || [];
+
+  // 散點圖：p < 0.1，按 r 值由負到正排序
+  const scatterItems = all
+    .filter(r => r.p_value < 0.1)
+    .sort((a, b) => a.effect_r - b.effect_r);
+
   const container = document.getElementById('mwu-charts');
-  if (!sigItems.length) {
+  if (!scatterItems.length) {
     container.innerHTML = '<p style="color:var(--site-gray)">無顯著差異指標</p>';
-    return;
   }
 
-  // 確定性抖動（不需 seeded random）
+  // 確定性抖動
   const jitter = (i, span) => (Math.sin(i * 13.7) * 0.5 + Math.cos(i * 7.3) * 0.5) * span;
 
   // 中位線 plugin（每個 chart 實例獨立）
@@ -1731,11 +1744,11 @@ function renderMannWhitney(mwResults) {
       id: 'medLines',
       afterDatasetsDraw(chart) {
         const { ctx, scales } = chart;
-        [[wMed, 0, '#c5b8dc'], [lMed, 1, '#c5b8dc']].forEach(([med, xIdx, color]) => {
+        [[wMed, 0, '#c5b8dc'], [lMed, 1, '#c5b8dc']].forEach(([med, xIdx]) => {
           const x = scales.x.getPixelForValue(xIdx);
           const y = scales.y.getPixelForValue(med);
           ctx.save();
-          ctx.strokeStyle = color;
+          ctx.strokeStyle = '#c5b8dc';
           ctx.lineWidth = 2.5;
           ctx.beginPath();
           ctx.moveTo(x - 20, y); ctx.lineTo(x + 20, y);
@@ -1746,22 +1759,26 @@ function renderMannWhitney(mwResults) {
     };
   }
 
-  const mwuAxis  = '#c5b8dc';
-  const mwuGrid  = 'rgba(255,255,255,0.08)';
-  const mwuWinBg = 'rgba(157,95,214,.7)';
-  const mwuWinBd = '#9d5fd6';
-  const mwuLossBg= 'rgba(215,48,39,.6)';
-  const mwuLossBd= '#e05040';
+  const mwuAxis   = '#c5b8dc';
+  const mwuGrid   = 'rgba(255,255,255,0.08)';
+  const mwuWinBg  = 'rgba(157,95,214,.7)';
+  const mwuWinBd  = '#9d5fd6';
+  const mwuLossBg = 'rgba(215,48,39,.6)';
+  const mwuLossBd = '#e05040';
 
-  sigItems.forEach(item => {
+  scatterItems.forEach(item => {
+    const isTrend = !item.significant;
     const wrap = document.createElement('div');
     wrap.className = 'chart-panel chart-panel-dark';
     wrap.style.cssText = 'padding:.75rem;';
 
     const rSign = item.effect_r >= 0 ? '+' : '';
+    const badge = isTrend
+      ? `<span style="display:inline-block;background:rgba(255,255,255,.08);color:#9a8ab8;font-size:.63rem;padding:.05rem .3rem;border-radius:3px;margin-left:.3rem;vertical-align:middle;letter-spacing:.03em;">趨勢</span>`
+      : '';
     const title = document.createElement('div');
-    title.style.cssText = `font-size:.8rem;font-weight:700;color:#c5b8dc;margin-bottom:.4rem;text-align:center;line-height:1.5;`;
-    title.innerHTML = `<div>${item.stat}</div><div style="font-size:.72rem;font-weight:400;color:var(--site-gray);">p = ${item.p_value.toFixed(3)} &nbsp; r = ${rSign}${item.effect_r.toFixed(2)}</div>`;
+    title.style.cssText = 'font-size:.8rem;font-weight:700;color:#c5b8dc;margin-bottom:.4rem;text-align:center;line-height:1.5;';
+    title.innerHTML = `<div>${item.stat}${badge}</div><div style="font-size:.72rem;font-weight:400;color:var(--site-gray);">p = ${item.p_value.toFixed(3)} &nbsp; r = ${rSign}${item.effect_r.toFixed(2)}</div>`;
 
     const bg = document.createElement('div');
     bg.className = 'chart-panel-bg chart-panel-dark-bg';
@@ -1771,7 +1788,7 @@ function renderMannWhitney(mwResults) {
     bg.appendChild(canvas);
 
     const note = document.createElement('div');
-    note.style.cssText = `font-size:.7rem;color:#c5b8dc;margin-top:.3rem;text-align:center;`;
+    note.style.cssText = 'font-size:.7rem;color:#c5b8dc;margin-top:.3rem;text-align:center;';
     note.innerHTML = `<div style="color:${mwuWinBd};">勝中位 ${item.wins_median}</div><div style="color:${mwuLossBd};">敗中位 ${item.losses_median}</div>`;
 
     wrap.appendChild(title);
@@ -1779,6 +1796,8 @@ function renderMannWhitney(mwResults) {
     wrap.appendChild(note);
     container.appendChild(wrap);
 
+    const winAlpha  = isTrend ? '.45' : '.7';
+    const lossAlpha = isTrend ? '.35' : '.6';
     const wData = item.wins.map((v, i)   => ({ x: 0 + jitter(i,      0.14), y: v }));
     const lData = item.losses.map((v, i) => ({ x: 1 + jitter(i + 50, 0.14), y: v }));
 
@@ -1788,9 +1807,11 @@ function renderMannWhitney(mwResults) {
       data: {
         datasets: [
           { label: '勝場', data: wData,
-            backgroundColor: mwuWinBg, borderColor: mwuWinBd, borderWidth: 1, pointRadius: 5 },
+            backgroundColor: `rgba(157,95,214,${winAlpha})`,
+            borderColor: mwuWinBd, borderWidth: 1, pointRadius: 5 },
           { label: '敗場', data: lData,
-            backgroundColor: mwuLossBg, borderColor: mwuLossBd, borderWidth: 1, pointRadius: 5 }
+            backgroundColor: `rgba(215,48,39,${lossAlpha})`,
+            borderColor: mwuLossBd, borderWidth: 1, pointRadius: 5 }
         ]
       },
       options: {
@@ -1810,6 +1831,91 @@ function renderMannWhitney(mwResults) {
         }
       }
     });
+  });
+
+  // ── 全指標效應量橫條圖 ──────────────────────────────────────
+  const barCanvas = document.getElementById('mwu-bar-chart');
+  if (!barCanvas) return;
+
+  // 按 r 值由最負到最正（由上到下）
+  const barItems = [...all].sort((a, b) => a.effect_r - b.effect_r);
+  const barLabels = barItems.map(d => {
+    const tag = d.significant ? ' ★' : d.p_value < 0.1 ? ' ▲' : '';
+    return d.stat + tag;
+  });
+  const barValues = barItems.map(d => d.effect_r);
+
+  // 色深依 |r|；方向決定色相（紫 vs 珊瑚）
+  const barBg = barItems.map(d => {
+    const alpha = Math.min(0.2 + Math.abs(d.effect_r) * 1.5, 0.95).toFixed(2);
+    return d.effect_r <= 0
+      ? `rgba(123,63,196,${alpha})`
+      : `rgba(215,48,39,${alpha})`;
+  });
+  const barBd = barItems.map(d => d.effect_r <= 0 ? '#9d5fd6' : '#e05040');
+
+  // 參考線 plugin
+  const refLinePlugin = {
+    id: 'mwuRefLines',
+    afterDraw(chart) {
+      const { ctx, scales } = chart;
+      const xs = scales.x, ys = scales.y;
+      [[-0.5, 1], [-0.3, 1], [0, 2], [0.3, 1], [0.5, 1]].forEach(([val, lw]) => {
+        const x = xs.getPixelForValue(val);
+        ctx.save();
+        ctx.strokeStyle = val === 0 ? 'rgba(255,255,255,0.25)' : 'rgba(180,160,210,0.2)';
+        ctx.lineWidth = lw;
+        ctx.setLineDash(val === 0 ? [] : [4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(x, ys.top);
+        ctx.lineTo(x, ys.bottom);
+        ctx.stroke();
+        ctx.restore();
+      });
+    }
+  };
+
+  new Chart(barCanvas, {
+    type: 'bar',
+    plugins: [refLinePlugin],
+    data: {
+      labels: barLabels,
+      datasets: [{
+        data: barValues,
+        backgroundColor: barBg,
+        borderColor: barBd,
+        borderWidth: 1,
+        borderRadius: 3
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: it => {
+              const d = barItems[it.dataIndex];
+              const tag = d.significant ? '★ 顯著' : d.p_value < 0.1 ? '▲ 趨勢' : '';
+              return `r = ${it.parsed.x >= 0 ? '+' : ''}${it.parsed.x.toFixed(3)}  p = ${d.p_value.toFixed(3)}  ${tag}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          min: -0.65, max: 0.65,
+          ticks: { color: mwuAxis, font: { size: 10 } },
+          grid: { color: mwuGrid, lineWidth: 0.8 }
+        },
+        y: {
+          ticks: { color: mwuAxis, font: { size: 10 } },
+          grid: { display: false }
+        }
+      }
+    }
   });
 }
 
