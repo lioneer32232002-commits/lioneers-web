@@ -943,7 +943,7 @@ function renderScoringSources(data) {
   ];
 
   const labels      = data.map(t => (t.name === LION_NAME ? '▶ ' : '') + t.name);
-  const labelColors = data.map(t => t.name === LION_NAME ? '#00e5ff' : axisColor);
+  const labelColors = data.map(t => t.name === LION_NAME ? '#f5d675' : axisColor);
   const labelWeights= data.map(t => t.name === LION_NAME ? '900' : '400');
 
   new Chart(document.getElementById('chart-scoring'), {
