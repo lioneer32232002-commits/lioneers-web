@@ -1559,7 +1559,7 @@ function renderScenarioChart(scenarios) {
     </div>`).join('');
 }
 
-// ⑪ Mann-Whitney U 點圖（僅顯著指標）
+// ⑪ Mann-Whitney U 點圖 + 箱型圖（僅顯著指標）
 function renderMannWhitney(mwResults) {
   const sigItems = (mwResults || []).filter(r => r.significant);
   const container = document.getElementById('mwu-charts');
@@ -1571,35 +1571,101 @@ function renderMannWhitney(mwResults) {
   // 確定性抖動（不需 seeded random）
   const jitter = (i, span) => (Math.sin(i * 13.7) * 0.5 + Math.cos(i * 7.3) * 0.5) * span;
 
-  // 中位線 plugin（每個 chart 實例獨立）
-  function makeMedianPlugin(wMed, lMed) {
+  // 計算箱型圖統計量 (Q1, median, Q3, whiskers with 1.5×IQR)
+  function boxStats(arr) {
+    const sorted = [...arr].sort((a, b) => a - b);
+    const n = sorted.length;
+    const median = n % 2 === 0
+      ? (sorted[n / 2 - 1] + sorted[n / 2]) / 2
+      : sorted[Math.floor(n / 2)];
+    const q1 = n % 2 === 0
+      ? (sorted[n / 4 - 1] + sorted[n / 4]) / 2
+      : sorted[Math.floor(n / 4)];
+    const q3 = n % 2 === 0
+      ? (sorted[Math.floor(n * 3 / 4) - 1] + sorted[Math.floor(n * 3 / 4)]) / 2
+      : sorted[Math.floor(n * 3 / 4)];
+    const iqr = q3 - q1;
+    const wLow = Math.min(...sorted.filter(v => v >= q1 - 1.5 * iqr));
+    const wHigh = Math.max(...sorted.filter(v => v <= q3 + 1.5 * iqr));
+    return { q1, median, q3, wLow, wHigh };
+  }
+
+  // 箱型圖 plugin（在散點之前繪製箱子）
+  function makeBoxPlugin(wStats, lStats, xWin, xLoss) {
     return {
-      id: 'medLines',
-      afterDatasetsDraw(chart) {
+      id: 'boxPlot',
+      beforeDatasetsDraw(chart) {
         const { ctx, scales } = chart;
-        [[wMed, 0, '#c5b8dc'], [lMed, 1, '#c5b8dc']].forEach(([med, xIdx, color]) => {
-          const x = scales.x.getPixelForValue(xIdx);
-          const y = scales.y.getPixelForValue(med);
+        const halfBox = 28; // pixels half-width of box
+
+        function drawBox(stats, xCenter, fillColor, strokeColor) {
+          const xPx   = scales.x.getPixelForValue(xCenter);
+          const q1Px  = scales.y.getPixelForValue(stats.q1);
+          const medPx = scales.y.getPixelForValue(stats.median);
+          const q3Px  = scales.y.getPixelForValue(stats.q3);
+          const wLPx  = scales.y.getPixelForValue(stats.wLow);
+          const wHPx  = scales.y.getPixelForValue(stats.wHigh);
+
           ctx.save();
-          ctx.strokeStyle = color;
+
+          // Whisker vertical line
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(xPx, wLPx);
+          ctx.lineTo(xPx, wHPx);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Whisker caps
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(xPx - halfBox * 0.4, wLPx);
+          ctx.lineTo(xPx + halfBox * 0.4, wLPx);
+          ctx.moveTo(xPx - halfBox * 0.4, wHPx);
+          ctx.lineTo(xPx + halfBox * 0.4, wHPx);
+          ctx.stroke();
+
+          // Box fill (Q1–Q3)
+          ctx.fillStyle = fillColor;
+          ctx.fillRect(xPx - halfBox, q3Px, halfBox * 2, q1Px - q3Px);
+
+          // Box border
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(xPx - halfBox, q3Px, halfBox * 2, q1Px - q3Px);
+
+          // Median line
+          ctx.strokeStyle = '#ffffff';
           ctx.lineWidth = 2.5;
           ctx.beginPath();
-          ctx.moveTo(x - 20, y); ctx.lineTo(x + 20, y);
+          ctx.moveTo(xPx - halfBox, medPx);
+          ctx.lineTo(xPx + halfBox, medPx);
           ctx.stroke();
+
           ctx.restore();
-        });
+        }
+
+        drawBox(wStats, xWin,  'rgba(0,229,255,0.15)',   'rgba(0,229,255,0.8)');
+        drawBox(lStats, xLoss, 'rgba(215,48,39,0.15)',   'rgba(215,48,39,0.6)');
       }
     };
   }
 
-  const mwuAxis  = '#c5b8dc';
-  const mwuGrid  = 'rgba(255,255,255,0.08)';
-  const mwuWinBg = 'rgba(157,95,214,.7)';
-  const mwuWinBd = '#9d5fd6';
-  const mwuLossBg= 'rgba(215,48,39,.6)';
-  const mwuLossBd= '#e05040';
+  const mwuAxis   = '#c5b8dc';
+  const mwuGrid   = 'rgba(255,255,255,0.08)';
+  const mwuWinBg  = 'rgba(0,229,255,0.7)';
+  const mwuWinBd  = '#00e5ff';
+  const mwuLossBg = 'rgba(215,48,39,0.6)';
+  const mwuLossBd = '#e05040';
+  const xWin  = 0.3;
+  const xLoss = 0.7;
 
   sigItems.forEach(item => {
+    const wStats = boxStats(item.wins);
+    const lStats = boxStats(item.losses);
+
     const wrap = document.createElement('div');
     wrap.className = 'chart-panel chart-panel-dark';
     wrap.style.cssText = 'padding:.75rem;';
@@ -1618,25 +1684,29 @@ function renderMannWhitney(mwResults) {
 
     const note = document.createElement('div');
     note.style.cssText = `font-size:.7rem;color:#c5b8dc;margin-top:.3rem;text-align:center;`;
-    note.innerHTML = `<div style="color:${mwuWinBd};">勝中位 ${item.wins_median}</div><div style="color:${mwuLossBd};">敗中位 ${item.losses_median}</div>`;
+    note.innerHTML = `
+      <span style="color:${mwuWinBd};">● 勝 &nbsp;中位 ${item.wins_median} &nbsp;Q1–Q3 ${wStats.q1.toFixed(1)}–${wStats.q3.toFixed(1)}</span>
+      &nbsp;&nbsp;
+      <span style="color:${mwuLossBd};">● 敗 &nbsp;中位 ${item.losses_median} &nbsp;Q1–Q3 ${lStats.q1.toFixed(1)}–${lStats.q3.toFixed(1)}</span>`;
 
     wrap.appendChild(title);
     wrap.appendChild(bg);
     wrap.appendChild(note);
     container.appendChild(wrap);
 
-    const wData = item.wins.map((v, i)   => ({ x: 0 + jitter(i,      0.14), y: v }));
-    const lData = item.losses.map((v, i) => ({ x: 1 + jitter(i + 50, 0.14), y: v }));
+    // Dots jittered around xWin/xLoss centres
+    const wData = item.wins.map((v, i)   => ({ x: xWin  + jitter(i,      0.08), y: v }));
+    const lData = item.losses.map((v, i) => ({ x: xLoss + jitter(i + 50, 0.08), y: v }));
 
     new Chart(canvas, {
       type: 'scatter',
-      plugins: [makeMedianPlugin(item.wins_median, item.losses_median)],
+      plugins: [makeBoxPlugin(wStats, lStats, xWin, xLoss)],
       data: {
         datasets: [
           { label: '勝場', data: wData,
-            backgroundColor: mwuWinBg, borderColor: mwuWinBd, borderWidth: 1, pointRadius: 5 },
+            backgroundColor: mwuWinBg, borderColor: mwuWinBd, borderWidth: 1, pointRadius: 4 },
           { label: '敗場', data: lData,
-            backgroundColor: mwuLossBg, borderColor: mwuLossBd, borderWidth: 1, pointRadius: 5 }
+            backgroundColor: mwuLossBg, borderColor: mwuLossBd, borderWidth: 1, pointRadius: 4 }
         ]
       },
       options: {
@@ -1647,9 +1717,14 @@ function renderMannWhitney(mwResults) {
         },
         scales: {
           x: {
-            min: -0.5, max: 1.5,
+            min: 0, max: 1,
             ticks: { color: mwuAxis, font: { size: 11, weight: '700' },
-                     callback: v => v === 0 ? '勝' : v === 1 ? '敗' : '' },
+                     callback: v => {
+                       if (Math.abs(v - xWin) < 0.01)  return '勝';
+                       if (Math.abs(v - xLoss) < 0.01) return '敗';
+                       return '';
+                     }
+                   },
             grid: { display: false }
           },
           y: { ticks: { color: mwuAxis, font: { size: 9 } }, grid: { color: mwuGrid, lineWidth: .8 } }
