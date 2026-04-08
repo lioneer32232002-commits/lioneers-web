@@ -23,7 +23,8 @@ game_files = sorted([
 # ================================================================
 # 1. 解析所有比賽
 # ================================================================
-player_vs_opp_pm = defaultdict(lambda: defaultdict(list))
+player_vs_opp_pm  = defaultdict(lambda: defaultdict(list))
+player_vs_opp_ppp = defaultdict(lambda: defaultdict(list))
 player_stats     = defaultdict(lambda: defaultdict(list))
 games = []
 
@@ -75,6 +76,15 @@ for fname in game_files:
         pname = p['name']
         pm    = p.get('plus_minus') or 0
         player_vs_opp_pm[pname][opp_name].append(pm)
+        # 計算個人 PPP（每回合得分）
+        pts  = float(p.get('score') or 0)
+        fga  = float(p.get('field_goals_attempted') or 0)
+        oreb = float(p.get('offensive_rebounds') or 0)
+        to_  = float(p.get('turnovers') or 0)
+        fta  = float(p.get('free_throws_attempted') or 0)
+        poss = fga - oreb + to_ + 0.44 * fta
+        if poss > 0:
+            player_vs_opp_ppp[pname][opp_name].append(round(pts / poss, 3))
         for sk in STAT_KEYS:
             v = p.get(sk)
             if v is not None:
@@ -192,6 +202,26 @@ for pname in key_players_sorted:
         vals = player_vs_opp_pm[pname].get(opp, [])
         row['values'][opp] = mean(vals) if vals else None
     heatmap_data.append(row)
+
+# PPP 熱力圖（同排序邏輯）
+ppp_key_players = [p for p, od in player_vs_opp_ppp.items()
+                   if sum(len(v) for v in od.values()) >= 3
+                   and p not in DEPARTED]
+ppp_score_fn = lambda v: (3 if v >= 1.3 else 2 if v >= 1.15 else 1 if v >= 1.0 else -1 if v >= 0.9 else -2 if v >= 0.8 else -3)
+ppp_players_sorted = sorted(
+    ppp_key_players,
+    key=lambda p: (
+        -sum(1 for vs in player_vs_opp_ppp[p].values() for _ in vs),  # 非null場次多的先
+        -sum(ppp_score_fn(v) for vs in player_vs_opp_ppp[p].values() for v in vs)
+    )
+)
+ppp_heatmap_data = []
+for pname in ppp_players_sorted:
+    row = {'player': pname, 'values': {}}
+    for opp in teams_order:
+        vals = player_vs_opp_ppp[pname].get(opp, [])
+        row['values'][opp] = round(mean(vals), 3) if vals else None
+    ppp_heatmap_data.append(row)
 
 # ================================================================
 # 6. 球員賽季均值
@@ -702,6 +732,7 @@ output = {
     'games': games,
     'vs_summary': vs_summary,
     'heatmap': heatmap_data,
+    'ppp_heatmap': ppp_heatmap_data,
     'heatmap_teams': teams_order,
     'player_avg': player_season_avg,
     'simulation': {

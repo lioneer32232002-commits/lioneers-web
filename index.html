@@ -471,12 +471,13 @@
       <div class="logo-text">新竹<span>攻城獅</span> Stats</div>
     </a>
     <ul>
-      <li><a href="#next-game" class="active">下一場</a></li>
-      <li><a href="#standings">排名</a></li>
-      <li><a href="#simulation">預測</a></li>
-      <li><a href="#heatmap">±熱力圖</a></li>
-      <li><a href="#ppp-heatmap">PPP</a></li>
-      <li><a href="#players">球員</a></li>
+      <li><a href="#next-game" class="active">下一場預測</a></li>
+      <li><a href="#standings">聯盟積分榜</a></li>
+      <li><a href="#vs-section">對各隊戰績</a></li>
+      <li><a href="#heatmap">球員±熱力圖</a></li>
+      <li><a href="#ppp-heatmap">球員PPP圖</a></li>
+      <li><a href="#roc-section">ROC曲線</a></li>
+      <li><a href="#mwu-section">勝負關鍵指標</a></li>
     </ul>
   </nav>
 </header>
@@ -609,7 +610,7 @@
   </div>
 
   <!-- ⑤ 對各隊戰績 -->
-  <div class="full">
+  <div class="full" id="vs-section">
     <h2 class="section-title"><span class="icon">⚔️</span> 對各隊戰績</h2>
     <div class="grid-3" id="vs-cards" style="margin-bottom:0"></div>
   </div>
@@ -676,7 +677,7 @@
   </div>
 
   <!-- ⑧ ROC 曲線 -->
-  <div class="full">
+  <div class="full" id="roc-section">
     <h2 class="section-title"><span class="icon">📉</span> ROC 曲線分析</h2>
     <div class="card">
       <!-- 圖表：正方形 -->
