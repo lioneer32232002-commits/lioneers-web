@@ -1678,7 +1678,7 @@ function renderScenarioChart(scenarios) {
       scales: {
         x: { ticks: { color: '#c5b8dc', font: { size: 11, weight: '700' } }, grid: { display: false } },
         y: {
-          title: { display: true, text: '得分', color: '#c5b8dc', font: { weight: '700' } },
+          title: { display: false },
           ticks: { color: '#c5b8dc', font: { size: 10 } },
           grid:  { color: 'rgba(255,255,255,0.08)', lineWidth: .8 },
           min: Math.max(55, Math.floor((Math.min(...scenarios.map(s => Math.min(s.lion_mean - s.lion_std, s.opp_mean - s.opp_std))) - 5) / 5) * 5),
@@ -1698,7 +1698,7 @@ function renderScenarioChart(scenarios) {
     <div class="scenario-tag">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:.4rem;">
         <strong>${s.label}</strong>
-        <span style="color:var(--site-gray2);font-size:.76rem;white-space:nowrap;">得 ${lion} : 失 ${opp}　±${std}</span>
+        <span style="color:var(--site-gray2);font-size:.76rem;white-space:nowrap;">${lion} : ${opp}　±${std}</span>
       </div>
       <span>勝率 ${Math.round(s.win_rate*100)}%（n=${s.n}）</span>
       <span style="color:var(--site-gray);font-size:.75rem;">3P% ${s.stats['3P%']} · TO ${s.stats['TO']}</span>
