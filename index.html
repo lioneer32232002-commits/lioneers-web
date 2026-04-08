@@ -649,13 +649,13 @@
       </div>
       <div style="margin-top:.85rem;display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;">
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(100,160,255,0.88);display:inline-block;"></span>三分球</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(155,195,255,0.90);display:inline-block;"></span>三分球</span>
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(60,195,175,0.85);display:inline-block;"></span>禁區兩分</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(100,145,245,0.90);display:inline-block;"></span>禁區兩分</span>
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(155,105,240,0.88);display:inline-block;"></span>中距離兩分</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(90,90,210,0.90);display:inline-block;"></span>中距離兩分</span>
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(205,90,210,0.85);display:inline-block;"></span>罰球</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(120,60,185,0.90);display:inline-block;"></span>罰球</span>
       </div>
       <div id="scoring-stats" style="margin-top:.75rem;font-size:.73rem;color:var(--site-gray);display:flex;flex-direction:column;gap:.3rem;"></div>
     </div>
@@ -848,7 +848,7 @@ fetch('processed_data.json', { cache: 'no-store' })
     renderRoc(data.roc);
     renderScenarioChart(data.scenario_chart);
     renderMannWhitney(data.mann_whitney);
-    renderUpdates(data.games);
+    renderUpdates(data.meta, data.games);
     addCJKSpacing();
   });
 
@@ -955,10 +955,10 @@ function renderScoringSources(data) {
   const axisColor = '#c5b8dc';
   const gridColor = 'rgba(255,255,255,0.08)';
   const CATS = [
-    { key: 'three', label: '三分球',   color: 'rgba(100,160,255,0.88)' },
-    { key: 'paint', label: '禁區兩分', color: 'rgba(60,195,175,0.85)'  },
-    { key: 'mid',   label: '中距離兩分',color: 'rgba(155,105,240,0.88)' },
-    { key: 'ft',    label: '罰球',     color: 'rgba(205,90,210,0.85)'  },
+    { key: 'three', label: '三分球',    color: 'rgba(155,195,255,0.90)' },
+    { key: 'paint', label: '禁區兩分',  color: 'rgba(100,145,245,0.90)' },
+    { key: 'mid',   label: '中距離兩分',color: 'rgba(90,90,210,0.90)'  },
+    { key: 'ft',    label: '罰球',      color: 'rgba(120,60,185,0.90)' },
   ];
 
   const labels      = data.map(t => (t.name === LION_NAME ? '▶ ' : '') + t.name);
@@ -1799,25 +1799,40 @@ function renderMannWhitney(mwResults) {
 }
 
 // ⑫ 最新動態
-function renderUpdates(games) {
+function renderUpdates(meta, games) {
   const list = document.getElementById('updates');
-  list.innerHTML = `
-    <div class="update-item">
-      <span class="upd-date">2026/04/01</span>
-      <span class="upd-tag tag-sys">系統</span>
-      <span class="upd-text">網站上線！28 場賽季數據完整分析，正確 TPBL 賽制模擬已更新。</span>
-    </div>`;
-  [...games].reverse().slice(0, 5).forEach(g => {
-    const d = g.date;
-    const ds = `${d.slice(0,4)}/${d.slice(4,6)}/${d.slice(6,8)}`;
+  const entries = [];
+
+  // 資料更新 entry（動態，來自 meta.generated）
+  const updRaw = meta.generated.replace(/-/g, '');   // "20260408"
+  const updDs  = meta.generated.replace(/-/g, '/');  // "2026/04/08"
+  entries.push({
+    sortKey: updRaw + '_upd',
+    html: `<div class="update-item">
+      <span class="upd-date">${updDs}</span>
+      <span class="upd-tag tag-sys">更新</span>
+      <span class="upd-text">積分榜・球員均值・預測模擬・對手戰績・各隊得分來源（共 ${meta.total_games} 場）</span>
+    </div>`
+  });
+
+  // 比賽結果 entries
+  [...games].reverse().forEach(g => {
+    const ds = `${g.date.slice(0,4)}/${g.date.slice(4,6)}/${g.date.slice(6,8)}`;
     const short = TEAM_SHORT[g.opp] || g.opp;
-    list.innerHTML += `
-      <div class="update-item">
+    const loc = g.is_home ? '主' : '客';
+    entries.push({
+      sortKey: g.date + '_game',
+      html: `<div class="update-item">
         <span class="upd-date">${ds}</span>
         <span class="upd-tag ${g.won ? 'tag-w' : 'tag-l'}">${g.won ? 'Win' : 'Loss'}</span>
-        <span class="upd-text">vs ${short}：${g.lion_score} - ${g.opp_score}</span>
-      </div>`;
+        <span class="upd-text">（${loc}）vs ${short}：${g.lion_score} - ${g.opp_score}</span>
+      </div>`
+    });
   });
+
+  // 依日期降序，最多顯示 5 筆
+  entries.sort((a, b) => b.sortKey.localeCompare(a.sortKey));
+  list.innerHTML = entries.slice(0, 5).map(e => e.html).join('');
 }
 
 // 中英文／數字之間自動插入半形空格
