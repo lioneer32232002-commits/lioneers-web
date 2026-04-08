@@ -38,6 +38,12 @@ EXCLUDE_FILES = {
 
 WEEKDAY_CN = ['一', '二', '三', '四', '五', '六', '日']
 
+# TPBL 七隊白名單（非這些隊伍的比賽不抓）
+TPBL_TEAMS = {
+    '新竹御嵿攻城獅', '桃園台啤永豐雲豹', '新北中信特攻',
+    '福爾摩沙夢想家', '高雄全家海神', '臺北台新戰神', '新北國王'
+}
+
 TEAM_SHORT = {
     '新竹御嵿攻城獅': '攻城獅',
     '新北中信特攻':   '特攻',
@@ -100,7 +106,16 @@ def fetch_new_games(schedule):
             stats = api_get(f"games/{g['id']}/stats")
             # 確認是 dict 格式（list 代表比賽未開始/無數據）
             if not isinstance(stats, dict):
-                log(f"  → 比賽數據格式異常（可能尚未開始），跳過")
+                log(f"  → 比賽數據格式異常，跳過")
+                continue
+            # 確認對手是 TPBL 七隊之一（過濾非正規賽）
+            opp_id = g['away_team']['id'] if g['home_team']['id'] == LION_ID else g['home_team']['id']
+            opp_name_check = (stats.get('home_team') or stats.get('away_team') or {}).get('name', '')
+            home_name = stats.get('home_team', {}).get('name', '')
+            away_name = stats.get('away_team', {}).get('name', '')
+            both_names = {home_name, away_name}
+            if not both_names.issubset(TPBL_TEAMS | {''}):
+                log(f"  → 非 TPBL 正規賽（{both_names - TPBL_TEAMS}），跳過")
                 continue
             # 確認有得分（比賽已完成）
             ht = stats.get('home_team', {})
