@@ -72,6 +72,14 @@ for fname in game_files:
         'second_chance': sc2_pts, 'ft_made': ft_made,
     })
 
+    # 全隊本場 FGA/FTA/TOV 總和（用於 USG% 計算）
+    team_poss = sum(
+        float(p.get('field_goals_attempted') or 0)
+        + 0.44 * float(p.get('free_throws_attempted') or 0)
+        + float(p.get('turnovers') or 0)
+        for p in lion['players']['total'].values()
+    )
+
     for pid, p in lion['players']['total'].items():
         pname = p['name']
         pm    = p.get('plus_minus') or 0
@@ -85,6 +93,10 @@ for fname in game_files:
         poss = fga - oreb + to_ + 0.44 * fta
         if poss > 0:
             player_vs_opp_ppp[pname][opp_name].append(round(pts / poss, 3))
+        # 計算個人 USG%（= 個人持球回合 / 全隊持球回合 × 100）
+        if team_poss > 0:
+            usg = round((fga + 0.44 * fta + to_) / team_poss * 100, 1)
+            player_stats[pname]['usg'].append(usg)
         for sk in STAT_KEYS:
             v = p.get(sk)
             if v is not None:
@@ -228,7 +240,7 @@ for pname in ppp_players_sorted:
 # 6. 球員賽季均值
 # ================================================================
 important_stats = ['score', 'rebounds', 'assists', 'steals', 'blocks',
-                   'turnovers', 'plus_minus', 'efficiency', 'tsp',
+                   'turnovers', 'plus_minus', 'efficiency', 'tsp', 'usg',
                    'three_pointers_made', 'three_pointers_attempted']
 player_season_avg = {}
 for pname, stats in player_stats.items():
@@ -457,8 +469,6 @@ for g in games:
 
     game_team_stats.append({
         'won':        int(g['won']),
-        '得分':       lt['won_score'],
-        '失分':       lt['lost_score'],
         '三分命中率': round(three_pct * 100, 1),
         '三分命中數': lt.get('three_pointers_made', 0),
         '整體命中率': round(fg_pct * 100, 1),
@@ -467,6 +477,8 @@ for g in games:
         '籃板':       lt.get('rebounds', 0),
         '抄截':       lt.get('steals', 0),
         '阻攻':       lt.get('blocks', 0),
+        '禁區得分':   g['paint'],
+        '快攻得分':   g['fast_break'],
     })
 
 labels_arr = np.array([s['won'] for s in game_team_stats])
@@ -515,11 +527,11 @@ def calc_roc(scores_arr, labels, higher_is_better=True):
 
 # 定義預測指標（higher_is_better=False 代表數字越小越好，如失誤）
 predictors = [
-    ('得分',       '得分',       True),
     ('三分命中率', '三分命中率', True),
     ('整體命中率', '整體命中率', True),
-    ('失誤數',     '失誤數',     False),   # 失誤越少越好
+    ('阻攻',       '阻攻',       True),
     ('助攻',       '助攻',       True),
+    ('失誤數',     '失誤數',     False),   # 失誤越少越好
     ('三分命中數', '三分命中數', True),
 ]
 
@@ -630,8 +642,6 @@ for label, mask in scenario_defs:
 # ================================================================
 won_mw  = np.array([g['won'] for g in games])
 mw_stats = {
-    '得分':       np.array([s['得分']       for s in game_team_stats], dtype=float),
-    '失分':       np.array([s['失分']       for s in game_team_stats], dtype=float),
     '三分命中率': np.array([s['三分命中率'] for s in game_team_stats], dtype=float),
     '三分命中數': np.array([s['三分命中數'] for s in game_team_stats], dtype=float),
     '整體命中率': np.array([s['整體命中率'] for s in game_team_stats], dtype=float),
@@ -640,6 +650,8 @@ mw_stats = {
     '籃板':       np.array([s['籃板']       for s in game_team_stats], dtype=float),
     '抄截':       np.array([s['抄截']       for s in game_team_stats], dtype=float),
     '阻攻':       np.array([s['阻攻']       for s in game_team_stats], dtype=float),
+    '禁區得分':   np.array([s['禁區得分']   for s in game_team_stats], dtype=float),
+    '快攻得分':   np.array([s['快攻得分']   for s in game_team_stats], dtype=float),
 }
 
 mann_results = []
