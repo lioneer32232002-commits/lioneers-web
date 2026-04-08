@@ -7,4 +7,4 @@ Allow: /
 User-agent: Twitterbot
 Allow: /
 
-Sitemap: https://lioneer32232002-commits.github.io/lioneers-web/
+Sitemap: https://lioneers-web.pages.dev/sitemap.xml
