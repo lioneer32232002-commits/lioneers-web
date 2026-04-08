@@ -630,15 +630,15 @@
       </div>
       <div style="margin-top:.85rem;display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;">
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(255,200,30,0.85);display:inline-block;"></span>三分球</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(255,200,50,0.88);display:inline-block;"></span>三分球</span>
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(0,229,255,0.78);display:inline-block;"></span>禁區兩分</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(255,135,60,0.88);display:inline-block;"></span>禁區兩分</span>
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(157,95,214,0.85);display:inline-block;"></span>中距離兩分</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(235,85,95,0.85);display:inline-block;"></span>中距離兩分</span>
         <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:#c5b8dc;">
-          <span style="width:14px;height:10px;border-radius:2px;background:rgba(240,120,160,0.78);display:inline-block;"></span>罰球</span>
-        <span style="font-size:.73rem;color:var(--site-gray);margin-left:.5rem;">▶ = 攻城獅</span>
+          <span style="width:14px;height:10px;border-radius:2px;background:rgba(210,70,150,0.85);display:inline-block;"></span>罰球</span>
       </div>
+      <div id="scoring-stats" style="margin-top:.75rem;font-size:.73rem;color:var(--site-gray);display:flex;flex-direction:column;gap:.3rem;"></div>
     </div>
   </div>
 
@@ -935,6 +935,12 @@ function renderScoringSources(data) {
   const LION_NAME = '新竹御嵿攻城獅';
   const axisColor = '#c5b8dc';
   const gridColor = 'rgba(255,255,255,0.08)';
+  const CATS = [
+    { key: 'three', label: '三分球',   color: 'rgba(255,200,50,0.88)' },
+    { key: 'paint', label: '禁區兩分', color: 'rgba(255,135,60,0.88)' },
+    { key: 'mid',   label: '中距離兩分',color: 'rgba(235,85,95,0.85)' },
+    { key: 'ft',    label: '罰球',     color: 'rgba(210,70,150,0.85)' },
+  ];
 
   const labels      = data.map(t => (t.name === LION_NAME ? '▶ ' : '') + t.name);
   const labelColors = data.map(t => t.name === LION_NAME ? '#00e5ff' : axisColor);
@@ -944,12 +950,11 @@ function renderScoringSources(data) {
     type: 'bar',
     data: {
       labels,
-      datasets: [
-        { label: '三分球',    data: data.map(t => t.three), backgroundColor: 'rgba(255,200,30,0.85)' },
-        { label: '禁區兩分',  data: data.map(t => t.paint), backgroundColor: 'rgba(0,229,255,0.75)'  },
-        { label: '中距離兩分',data: data.map(t => t.mid),   backgroundColor: 'rgba(157,95,214,0.85)' },
-        { label: '罰球',      data: data.map(t => t.ft),    backgroundColor: 'rgba(240,120,160,0.78)' },
-      ]
+      datasets: CATS.map(c => ({
+        label: c.label,
+        data: data.map(t => t[c.key]),
+        backgroundColor: c.color,
+      }))
     },
     options: {
       indexAxis: 'y',
@@ -965,37 +970,54 @@ function renderScoringSources(data) {
           bodyFont:  { size: 11, family: '"Noto Sans JP", sans-serif' },
           padding: 10,
           callbacks: {
-            title: items => {
-              const t = data[items[0].dataIndex];
-              return `${t.name}  均得 ${t.total} 分`;
-            },
-            label: item => {
+            title: items => { const t = data[items[0].dataIndex]; return `${t.name}  均得 ${t.total} 分`; },
+            label: item  => {
               const t = data[item.dataIndex];
-              const pct = Math.round(item.raw / t.total * 100);
-              return `  ${item.dataset.label}：${item.raw.toFixed(1)} 分（${pct}%）`;
+              return `  ${item.dataset.label}：${item.raw.toFixed(1)} 分（${Math.round(item.raw / t.total * 100)}%）`;
             }
           }
         }
       },
       scales: {
         x: {
-          stacked: true,
-          min: 0,
+          stacked: true, min: 0, max: 120,
+          ticks: { color: axisColor, font: { size: 10 }, stepSize: 20 },
+          grid:  { color: gridColor, lineWidth: .8 },
           title: { display: true, text: '平均得分 / 場', color: axisColor, font: { size: 11, weight: '700' } },
-          ticks: { color: axisColor, font: { size: 10 } },
-          grid:  { color: gridColor, lineWidth: .8 }
         },
         y: {
           stacked: true,
           ticks: {
-            color: ctx => labelColors[ctx.index] || axisColor,
-            font:  ctx => ({ size: 11, weight: labelWeights[ctx.index] || '400', family: '"Noto Sans JP", sans-serif' }),
+            color:  ctx => labelColors[ctx.index]  || axisColor,
+            font:   ctx => ({ size: 11, weight: labelWeights[ctx.index] || '400', family: '"Noto Sans JP", sans-serif' }),
           },
           grid: { display: false }
         }
       }
     }
   });
+
+  // 統計資訊：聯盟第一、攻城獅佔比、攻城獅排名
+  const lion = data.find(t => t.name === LION_NAME);
+  if (!lion) return;
+
+  const n = data.length;
+  const rows = CATS.map(c => {
+    const leader = data.reduce((a, b) => a[c.key] > b[c.key] ? a : b);
+    const pct    = Math.round(lion[c.key] / lion.total * 100);
+    const rank   = [...data].sort((a, b) => b[c.key] - a[c.key]).findIndex(t => t.name === LION_NAME) + 1;
+    return { label: c.label, leader: leader.name, pct, rank, n };
+  });
+
+  const cell = (txt, bold) =>
+    `<span style="white-space:nowrap;${bold ? 'color:#c5b8dc;font-weight:700;' : ''}">${txt}</span>`;
+
+  const statsEl = document.getElementById('scoring-stats');
+  statsEl.innerHTML = [
+    '各項最高　' + rows.map(r => cell(`${r.label}：${r.leader}`, false)).join('　'),
+    '攻城獅佔比　' + rows.map(r => cell(`${r.label}：${r.pct}%`, false)).join('　'),
+    '攻城獅排名　' + rows.map(r => cell(`${r.label}：第 ${r.rank} 名`, false)).join('　'),
+  ].map(line => `<div style="display:flex;flex-wrap:wrap;gap:.15rem .6rem;">${line}</div>`).join('');
 }
 
 // ④ 聯盟每百回合攻守效率表
