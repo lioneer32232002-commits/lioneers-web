@@ -467,6 +467,15 @@ print(f'🏆 拿下總冠軍:      {prob_champ:.1%}')
 # ================================================================
 # 從每場比賽萃取攻城獅隊伍級別數據
 game_team_stats = []   # [{'won':bool, '得分':int, '三分命中率':float, ...}]
+quarter_poss_data = {q: {'lion': [], 'opp': []} for q in [1, 2, 3, 4]}
+
+def calc_poss(t):
+    return round(
+        t.get('field_goals_attempted', 0)
+        - t.get('offensive_rebounds', 0)
+        + t.get('turnovers', 0)
+        + 0.44 * t.get('free_throws_attempted', 0), 1
+    )
 
 for g in games:
     raw_fname = None
@@ -483,12 +492,25 @@ for g in games:
         d = json.load(f)
     ht, at = d['home_team'], d['away_team']
     lion = ht if ht['name'] == LION else at
+    opp  = at if ht['name'] == LION else ht
     lt = lion['teams']['total']
+    ot = opp['teams']['total']
 
     three_att = lt.get('three_pointers_attempted', 0)
     three_pct = lt['three_pointers_made'] / three_att if three_att else 0
     fg_att = lt.get('field_goals_attempted', 0)
     fg_pct = lt['field_goals_made'] / fg_att if fg_att else 0
+
+    lion_poss = calc_poss(lt)
+    opp_poss  = calc_poss(ot)
+
+    # 每節回合數
+    for q in [1, 2, 3, 4]:
+        lr = lion['teams']['rounds'].get(str(q), {})
+        or_ = opp['teams']['rounds'].get(str(q), {})
+        if lr and or_:
+            quarter_poss_data[q]['lion'].append(calc_poss(lr))
+            quarter_poss_data[q]['opp'].append(calc_poss(or_))
 
     game_team_stats.append({
         'won':        int(g['won']),
@@ -502,6 +524,8 @@ for g in games:
         '阻攻':       lt.get('blocks', 0),
         '禁區得分':   g['paint'],
         '快攻得分':   g['fast_break'],
+        'lion_poss':  lion_poss,
+        'opp_poss':   opp_poss,
     })
 
 labels_arr = np.array([s['won'] for s in game_team_stats])
@@ -681,6 +705,8 @@ last_game_hint = {
     'opp_pred':   pred['opp_mean'],
     'lion_diff':  round(last_g['lion_score'] - pred['lion_mean'], 1),
     'opp_diff':   round(last_g['opp_score']  - pred['opp_mean'],  1),
+    'lion_poss':  game_team_stats[-1]['lion_poss'],
+    'opp_poss':   game_team_stats[-1]['opp_poss'],
     'actual_stats': {
         '3P%': last_s['三分命中率'],
         'TO':  last_s['失誤數'],
@@ -779,6 +805,8 @@ for q in [1, 2, 3, 4]:
         'win_rate':  q_wr,
         'games':     len(pairs),
         'diffs':     q_diffs,  # 每節得失分差（正=贏該節）
+        'avg_poss':     mean(quarter_poss_data[q]['lion']),
+        'avg_opp_poss': mean(quarter_poss_data[q]['opp']),
     }
     print(f"Q{q}: 均得{mean(q_lion)} 均失{mean(q_opp)} 節次勝率{q_wr:.1%}")
 

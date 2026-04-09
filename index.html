@@ -1216,6 +1216,10 @@ function renderQuarterAnalysis(qa) {
             <span class="q-stat-label">淨差</span>
             <span style="font-size:.95rem;font-weight:900;color:${diffColor}">${diffStr}</span>
           </div>
+          ${d.avg_poss != null ? `<div class="q-stat-row" style="margin-top:.4rem;border-top:1px solid rgba(255,255,255,.07);padding-top:.4rem;">
+            <span class="q-stat-label" style="font-size:.68rem;">回合</span>
+            <span style="font-size:.78rem;color:var(--site-gray2);">${d.avg_poss}<span style="color:var(--site-gray);font-size:.65rem;"> / ${d.avg_opp_poss}</span></span>
+          </div>` : ''}
         </div>
       </div>`;
   });
@@ -1768,11 +1772,16 @@ function renderLastGameHint(h) {
     <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-start;">
       <div style="flex:1;min-width:200px;">
         <div style="font-size:.78rem;color:var(--site-gray);margin-bottom:.5rem;">${date}・${ha}・vs ${h.opp}・${result}</div>
-        <div style="display:flex;align-items:baseline;gap:.5rem;margin-bottom:.75rem;">
+        <div style="display:flex;align-items:baseline;gap:.5rem;margin-bottom:.4rem;">
           <span style="font-size:2rem;font-weight:900;color:#e5e5e5;">${h.lion_score}</span>
           <span style="color:var(--site-gray);font-size:.9rem;">–</span>
           <span style="font-size:2rem;font-weight:900;color:#e5e5e5;">${h.opp_score}</span>
           <span style="font-size:.8rem;color:var(--site-gray);margin-left:.25rem;">實際比分</span>
+        </div>
+        <div style="font-size:.78rem;color:var(--site-gray2);margin-bottom:.75rem;">
+          進攻回合數：<strong style="color:#e5e5e5;">${h.lion_poss}</strong>（我）
+          <span style="color:var(--site-gray);margin:0 .25rem;">vs</span>
+          <strong style="color:#e5e5e5;">${h.opp_poss}</strong>（對手）
         </div>
         <div style="font-size:.8rem;color:var(--site-gray2);margin-bottom:.4rem;">落入情境</div>
         <span style="display:inline-block;background:${col};color:#fff;font-size:.78rem;font-weight:700;padding:.2rem .65rem;border-radius:4px;margin-bottom:.6rem;">${h.scenario}・${zh}</span>
