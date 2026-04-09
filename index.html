@@ -1852,8 +1852,8 @@ function renderMannWhitney(mwResults) {
 
   const mwuAxis   = '#c5b8dc';
   const mwuGrid   = 'rgba(255,255,255,0.08)';
-  const mwuWinBg  = 'rgba(157,95,214,.7)';
-  const mwuWinBd  = '#9d5fd6';
+  const mwuWinBg  = 'rgba(0,229,255,.7)';
+  const mwuWinBd  = '#00e5ff';
   const mwuLossBg = 'rgba(240,98,146,.6)';
   const mwuLossBd = '#f06292';
 
@@ -1898,7 +1898,7 @@ function renderMannWhitney(mwResults) {
       data: {
         datasets: [
           { label: '勝場', data: wData,
-            backgroundColor: `rgba(157,95,214,${winAlpha})`,
+            backgroundColor: `rgba(0,229,255,${winAlpha})`,
             borderColor: mwuWinBd, borderWidth: 1, pointRadius: 5 },
           { label: '敗場', data: lData,
             backgroundColor: `rgba(240,98,146,${lossAlpha})`,
@@ -1940,10 +1940,10 @@ function renderMannWhitney(mwResults) {
   const barBg = barItems.map(d => {
     const alpha = Math.min(0.2 + Math.abs(d.effect_r) * 1.5, 0.95).toFixed(2);
     return d.effect_r <= 0
-      ? `rgba(123,63,196,${alpha})`
+      ? `rgba(0,229,255,${alpha})`
       : `rgba(240,98,146,${alpha})`;
   });
-  const barBd = barItems.map(d => d.effect_r <= 0 ? '#9d5fd6' : '#f06292');
+  const barBd = barItems.map(d => d.effect_r <= 0 ? '#00e5ff' : '#f06292');
 
   // 參考線 plugin
   const refLinePlugin = {
