@@ -259,9 +259,9 @@
     .hm-p1 { background: var(--c-light); color: var(--c-dgray); }
     /* 零 */
     .hm-z  { background: #e8e0f0; color: var(--c-dgray); }
-    /* 負值：深灰→珊瑚（強負向） */
-    .hm-n1 { background: #d4cde0; color: var(--c-dgray); }
-    .hm-n2 { background: var(--c-gdark); color: #eee; }
+    /* 負值：淺粉→深粉（強負向） */
+    .hm-n1 { background: #fce4ec; color: var(--c-dgray); }
+    .hm-n2 { background: #f48fb1; color: var(--c-dgray); }
     .hm-n3 { background: var(--c-coral); color: white; }
     .hm-null{ background: rgba(59,26,110,.3); color: var(--site-gray); }
 
@@ -693,7 +693,7 @@
     <div class="card">
       <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
         <span style="white-space:nowrap">深紫 = 正向最高・中紫 = 正向・淺紫 = 略正向</span>
-        <span style="white-space:nowrap">淡灰 = 略負向・深灰 = 負向・粉紅 = 負向最大</span>
+        <span style="white-space:nowrap">淺粉 = 略負向・深粉 = 負向・粉紅 = 負向最大</span>
         <span style="white-space:nowrap">顯示上場 ≥ 3 場球員</span>
       </p>
       <div class="heatmap-wrap">
@@ -708,7 +708,7 @@
     <div class="card">
       <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
         <span style="white-space:nowrap">深紫 = 高效最高・中紫 = 高效・淺紫 = 略高於均值</span>
-        <span style="white-space:nowrap">淡灰 = 略低於均值・深灰 = 低效・珊瑚紅 = 低效最大</span>
+        <span style="white-space:nowrap">淺粉 = 略低效・深粉 = 低效・粉紅 = 低效最大</span>
         <span style="white-space:nowrap">PPP = 得分 ÷（FGA − ORB + TO + 0.44×FTA）</span>
         <span style="white-space:nowrap">聯盟均值約 1.0・顯示上場 ≥ 3 場球員</span>
       </p>
@@ -1372,8 +1372,8 @@ function renderUsgTs(playerAvg) {
       ctx.fillStyle = 'rgba(0,229,255,0.72)';
       ctx.textAlign = 'left';  ctx.fillText('▲ 核心得分手', xQ + pad, ca.top + 15);
       ctx.textAlign = 'right'; ctx.fillText('高效角色 ▲',   xQ - pad, ca.top + 15);
-      // 下排兩象限：淡紫色
-      ctx.fillStyle = 'rgba(197,152,232,0.65)';
+      // 下排兩象限：粉紅
+      ctx.fillStyle = 'rgba(240,98,146,0.75)';
       ctx.textAlign = 'left';  ctx.fillText('▽ 低效持球',   xQ + pad, ca.bottom - 7);
       ctx.textAlign = 'right'; ctx.fillText('低效替補 ▽',   xQ - pad, ca.bottom - 7);
       ctx.restore();
@@ -1420,8 +1420,8 @@ function renderUsgTs(playerAvg) {
           data: mkPts(players),
           pointRadius:      ctx => getR(ctx.raw?._games ?? minG),
           pointHoverRadius: ctx => getR(ctx.raw?._games ?? minG) + 2.5,
-          backgroundColor: ctx => (ctx.raw?.y ?? avgTs) >= avgTs ? 'rgba(0,229,255,0.72)'    : 'rgba(197,152,232,0.72)',
-          borderColor:     ctx => (ctx.raw?.y ?? avgTs) >= avgTs ? 'rgba(0,229,255,1)'        : 'rgba(197,152,232,1)',
+          backgroundColor: ctx => (ctx.raw?.y ?? avgTs) >= avgTs ? 'rgba(0,229,255,0.72)'    : 'rgba(240,98,146,0.72)',
+          borderColor:     ctx => (ctx.raw?.y ?? avgTs) >= avgTs ? 'rgba(0,229,255,1)'        : 'rgba(240,98,146,1)',
           borderWidth: 1.5,
         }
       ]
