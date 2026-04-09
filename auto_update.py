@@ -311,6 +311,7 @@ def git_push(new_count, next_info):
         log("沒有變更，不需要 commit")
         return
 
+    run_git('git pull --rebase origin main')
     push = run_git('git push origin main')
     if push.returncode == 0:
         log(f"  → ✅ 推送成功！{msg}")
