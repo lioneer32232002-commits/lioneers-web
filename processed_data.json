@@ -1943,6 +1943,31 @@
       }
     }
   ],
+  "last_game_hint": {
+    "date": "20260408",
+    "opp": "新北中信特攻",
+    "is_home": true,
+    "won": true,
+    "lion_score": 117,
+    "opp_score": 100,
+    "scenario": "Best",
+    "lion_pred": 105.4,
+    "opp_pred": 92.1,
+    "lion_diff": 11.6,
+    "opp_diff": 7.9,
+    "actual_stats": {
+      "3P%": 43.6,
+      "TO": 16,
+      "AST": 32,
+      "FG%": 55.8
+    },
+    "pred_stats": {
+      "3P%": 44.0,
+      "TO": 13.8,
+      "AST": 26.4,
+      "FG%": 48.8
+    }
+  },
   "mann_whitney": [
     {
       "stat": "三分命中率",

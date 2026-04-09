@@ -660,6 +660,36 @@ for label, mask in scenario_defs:
         'stats':      stats_summary,
     })
 
+# ── 上一場預測回顧 ─────────────────────────────────────
+last_g    = games[-1]
+last_s    = game_team_stats[-1]
+last_comp = float(composite[-1])
+if   last_comp >= q75: last_scenario_label = 'Best'
+elif last_comp >= q50: last_scenario_label = 'Ideal'
+elif last_comp >= q25: last_scenario_label = 'Fair'
+else:                  last_scenario_label = 'Low'
+pred = next(r for r in scenario_results if r['label'] == last_scenario_label)
+last_game_hint = {
+    'date':       last_g['date'],
+    'opp':        last_g['opp'],
+    'is_home':    last_g['is_home'],
+    'won':        bool(last_g['won']),
+    'lion_score': last_g['lion_score'],
+    'opp_score':  last_g['opp_score'],
+    'scenario':   last_scenario_label,
+    'lion_pred':  pred['lion_mean'],
+    'opp_pred':   pred['opp_mean'],
+    'lion_diff':  round(last_g['lion_score'] - pred['lion_mean'], 1),
+    'opp_diff':   round(last_g['opp_score']  - pred['opp_mean'],  1),
+    'actual_stats': {
+        '3P%': last_s['三分命中率'],
+        'TO':  last_s['失誤數'],
+        'AST': last_s['助攻'],
+        'FG%': last_s['整體命中率'],
+    },
+    'pred_stats': pred['stats'],
+}
+
 # ================================================================
 # 12. Mann-Whitney U 顯著差異分析（勝 vs 敗）
 # ================================================================
@@ -788,6 +818,7 @@ output = {
     },
     'roc': roc_results,
     'scenario_chart': scenario_results,
+    'last_game_hint': last_game_hint,
     'mann_whitney': mann_results,
     'next_game': {
         'opponent':          next_opp,

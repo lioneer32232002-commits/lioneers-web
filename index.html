@@ -16,6 +16,7 @@
   <meta name="twitter:title"       content="新竹攻城獅 2025-26 賽季數據分析">
   <meta name="twitter:description" content="季後賽預測・進階統計・球員評析｜新竹攻城獅非官方球迷分析站">
   <meta name="twitter:image"       content="https://lioneers-web.pages.dev/og-image.png?v=9">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -599,6 +600,12 @@
     </div>
   </div>
 
+  <!-- ①ᶜ 上一場預測回顧 -->
+  <div class="full" id="last-game-hint-section">
+    <h2 class="section-title"><span class="icon">🔍</span> 上一場預測回顧</h2>
+    <div class="card" id="last-game-hint-card"></div>
+  </div>
+
   <!-- ② 積分榜 -->
   <div class="full" id="standings">
     <h2 class="section-title"><span class="icon">🏆</span> 聯盟積分榜（<span id="gp-label">—</span> 輪後）</h2>
@@ -853,6 +860,7 @@ fetch('processed_data.json', { cache: 'no-store' })
     renderUsgTs(data.player_avg);
     renderRoc(data.roc);
     renderScenarioChart(data.scenario_chart);
+    renderLastGameHint(data.last_game_hint);
     renderMannWhitney(data.mann_whitney);
     renderUpdates(data.meta, data.games);
     addCJKSpacing();
@@ -1718,7 +1726,82 @@ function renderScenarioChart(scenarios) {
   }).join('');
 }
 
-// ⑪ Mann-Whitney U 點圖（顯著 + 趨勢指標）＋全指標效應量橫條圖
+// ⑪ 上一場預測回顧
+function renderLastGameHint(h) {
+  const card = document.getElementById('last-game-hint-card');
+  if (!card || !h) return;
+
+  const SCENARIO_COLOR = { Best:'#9d5fd6', Ideal:'#7b9fd4', Fair:'#d4a76a', Low:'#d46a6a' };
+  const SCENARIO_ZH    = { Best:'最佳', Ideal:'良好', Fair:'普通', Low:'低迷' };
+  const col = SCENARIO_COLOR[h.scenario] || '#aaa';
+  const zh  = SCENARIO_ZH[h.scenario]   || h.scenario;
+
+  const date   = `${h.date.slice(0,4)}/${h.date.slice(4,6)}/${h.date.slice(6,8)}`;
+  const ha     = h.is_home ? '主場' : '客場';
+  const result = h.won
+    ? `<span style="color:#7ddb7d;font-weight:700;">勝</span>`
+    : `<span style="color:#e05040;font-weight:700;">敗</span>`;
+
+  const fmtDiff = v => {
+    const s = v > 0 ? `+${v}` : `${v}`;
+    const c = v > 0 ? '#7ddb7d' : v < 0 ? '#e05040' : '#aaa';
+    return `<span style="color:${c};font-weight:700;">${s}</span>`;
+  };
+
+  const statKeys = [['3P%','%'],['TO',''],['AST',''],['FG%','%']];
+  const statRows = statKeys.map(([k, unit]) => {
+    const act  = h.actual_stats[k];
+    const pred = h.pred_stats[k];
+    const diff = Math.round((act - pred) * 10) / 10;
+    const better = (k === 'TO') ? diff < 0 : diff > 0;
+    const diffColor = diff === 0 ? '#aaa' : better ? '#7ddb7d' : '#e05040';
+    const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
+    return `<tr>
+      <td style="color:#c5b8dc;padding:.3rem .6rem;">${k}</td>
+      <td style="text-align:right;padding:.3rem .6rem;">${pred}${unit}</td>
+      <td style="text-align:right;padding:.3rem .6rem;color:#e5e5e5;">${act}${unit}</td>
+      <td style="text-align:right;padding:.3rem .6rem;font-weight:700;color:${diffColor};">${diffStr}</td>
+    </tr>`;
+  }).join('');
+
+  card.innerHTML = `
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-start;">
+      <div style="flex:1;min-width:200px;">
+        <div style="font-size:.78rem;color:var(--site-gray);margin-bottom:.5rem;">${date}・${ha}・vs ${h.opp}・${result}</div>
+        <div style="display:flex;align-items:baseline;gap:.5rem;margin-bottom:.75rem;">
+          <span style="font-size:2rem;font-weight:900;color:#e5e5e5;">${h.lion_score}</span>
+          <span style="color:var(--site-gray);font-size:.9rem;">–</span>
+          <span style="font-size:2rem;font-weight:900;color:#e5e5e5;">${h.opp_score}</span>
+          <span style="font-size:.8rem;color:var(--site-gray);margin-left:.25rem;">實際比分</span>
+        </div>
+        <div style="font-size:.8rem;color:var(--site-gray2);margin-bottom:.4rem;">落入情境</div>
+        <span style="display:inline-block;background:${col};color:#fff;font-size:.78rem;font-weight:700;padding:.2rem .65rem;border-radius:4px;margin-bottom:.6rem;">${h.scenario}・${zh}</span>
+        <div style="font-size:.83rem;color:#c5b8dc;margin-top:.2rem;">
+          攻城獅預測均值 <strong style="color:#e5e5e5;">${h.lion_pred}</strong>，實際偏差 ${fmtDiff(h.lion_diff)}
+        </div>
+        <div style="font-size:.83rem;color:#c5b8dc;margin-top:.2rem;">
+          對手預測均值 <strong style="color:#e5e5e5;">${h.opp_pred}</strong>，實際偏差 ${fmtDiff(h.opp_diff)}
+        </div>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-size:.78rem;color:var(--site-gray);margin-bottom:.4rem;">各指標 vs 情境均值</div>
+        <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
+          <thead>
+            <tr style="color:var(--site-gray);font-size:.72rem;border-bottom:1px solid rgba(255,255,255,.08);">
+              <th style="text-align:left;padding:.2rem .6rem;font-weight:400;">指標</th>
+              <th style="text-align:right;padding:.2rem .6rem;font-weight:400;">預測</th>
+              <th style="text-align:right;padding:.2rem .6rem;font-weight:400;">實際</th>
+              <th style="text-align:right;padding:.2rem .6rem;font-weight:400;">差值</th>
+            </tr>
+          </thead>
+          <tbody>${statRows}</tbody>
+        </table>
+        <div style="font-size:.68rem;color:var(--site-gray);margin-top:.5rem;">TO 負差值為佳（失誤減少）</div>
+      </div>
+    </div>`;
+}
+
+// ⑫ Mann-Whitney U 點圖（顯著 + 趨勢指標）＋全指標效應量橫條圖
 function renderMannWhitney(mwResults) {
   const all = mwResults || [];
 
