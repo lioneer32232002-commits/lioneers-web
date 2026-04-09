@@ -1739,12 +1739,12 @@ function renderLastGameHint(h) {
   const date   = `${h.date.slice(0,4)}/${h.date.slice(4,6)}/${h.date.slice(6,8)}`;
   const ha     = h.is_home ? '主場' : '客場';
   const result = h.won
-    ? `<span style="color:#7ddb7d;font-weight:700;">勝</span>`
+    ? `<span style="color:#00e676;font-weight:700;">勝</span>`
     : `<span style="color:#e05040;font-weight:700;">敗</span>`;
 
   const fmtDiff = v => {
     const s = v > 0 ? `+${v}` : `${v}`;
-    const c = v > 0 ? '#7ddb7d' : v < 0 ? '#e05040' : '#aaa';
+    const c = v > 0 ? '#00e676' : v < 0 ? '#e05040' : '#aaa';
     return `<span style="color:${c};font-weight:700;">${s}</span>`;
   };
 
@@ -1754,7 +1754,7 @@ function renderLastGameHint(h) {
     const pred = h.pred_stats[k];
     const diff = Math.round((act - pred) * 10) / 10;
     const better = (k === 'TO') ? diff < 0 : diff > 0;
-    const diffColor = diff === 0 ? '#aaa' : better ? '#7ddb7d' : '#e05040';
+    const diffColor = diff === 0 ? '#aaa' : better ? '#00e676' : '#e05040';
     const diffStr = diff > 0 ? `+${diff}` : `${diff}`;
     return `<tr>
       <td style="color:#c5b8dc;padding:.3rem .6rem;">${k}</td>
