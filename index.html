@@ -1218,7 +1218,7 @@ function renderQuarterAnalysis(qa) {
           </div>
           ${d.avg_poss != null ? `<div class="q-stat-row" style="margin-top:.4rem;border-top:1px solid rgba(255,255,255,.07);padding-top:.4rem;">
             <span class="q-stat-label" style="font-size:.68rem;">進攻回合</span>
-            <span style="font-size:.78rem;color:var(--site-gray2);">獅 ${d.avg_poss}<span style="color:var(--site-gray);font-size:.65rem;"> / 對 ${d.avg_opp_poss}</span></span>
+            <span style="font-size:.78rem;color:var(--site-gray2);">${d.avg_poss > d.avg_opp_poss ? `<strong>${d.avg_poss}</strong>` : d.avg_poss}<span style="color:var(--site-gray);font-size:.65rem;"> / </span>${d.avg_opp_poss > d.avg_poss ? `<strong>${d.avg_opp_poss}</strong>` : d.avg_opp_poss}</span>
           </div>` : ''}
         </div>
       </div>`;
