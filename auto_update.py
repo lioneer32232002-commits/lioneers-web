@@ -251,6 +251,12 @@ def update_og_meta(next_info):
         src
     )
 
+    # footer 數據更新日期（取最後一場比賽日期）
+    last_game = pd.get('games', [{}])[-1].get('date', '')
+    if last_game:
+        display_date = f"{last_game[:4]}/{last_game[4:6]}/{last_game[6:]}" if len(last_game) == 8 else last_game.replace('-', '/')
+        src = re.sub(r'數據更新至 \d{4}/\d{2}/\d{2}', f'數據更新至 {display_date}', src)
+
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(src)
     log(f"  → og:description 更新完成")
