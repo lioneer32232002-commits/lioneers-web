@@ -14,7 +14,8 @@ DEPARTED = {'克雷格', '李漢昇'}   # 已離隊球員（保留數據但標�
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 EXCLUDE_FILES = {'lioneer_player.txt', 'lioneer.basic.txt',
                  '20260330_allteam.txt', '20260402_allgame.txt',
-                 '20260402_allteam_update.txt', 'allteam_latest.txt'}
+                 '20260402_allteam_update.txt', 'allteam_latest.txt',
+                 '20251003.txt', '20251004.txt'}  # 季前熱身賽，不計入正式賽季
 game_files = sorted([
     f for f in os.listdir(DATA_DIR)
     if f.endswith('.txt') and f not in EXCLUDE_FILES
