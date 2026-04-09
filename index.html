@@ -1806,7 +1806,7 @@ function renderMannWhitney(mwResults) {
   const all = mwResults || [];
 
   // 散點圖：p < 0.1，按 r 值由負到正排序
-  const SCATTER_FORCE = new Set(['失誤數', '三分命中數']);
+  const SCATTER_FORCE = new Set(['失誤數', '三分命中數', '助攻']);
   const scatterItems = all
     .filter(r => r.p_value < 0.1 || SCATTER_FORCE.has(r.stat))
     .sort((a, b) => a.effect_r - b.effect_r);
