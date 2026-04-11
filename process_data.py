@@ -287,7 +287,7 @@ for pname, stats in player_stats.items():
 # 主場優勢：+5% 勝率加成
 
 np.random.seed(42)
-N = 100_000
+N = 300_000
 HOME_ADV = 0.05   # 主場優勢加成
 
 team_list  = [t['name']  for t in standings_raw]

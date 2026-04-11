@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-04-09",
+    "generated": "2026-04-11",
     "total_games": 29,
     "games_remaining": 7
   },
@@ -1560,12 +1560,12 @@
     }
   },
   "simulation": {
-    "prob_play_in": 0.1361,
-    "prob_playoff": 0.9551,
-    "prob_semif": 0.9551,
-    "prob_final": 0.4545,
-    "prob_champ": 0.2162,
-    "n_simulations": 100000,
+    "prob_play_in": 0.1371,
+    "prob_playoff": 0.9561,
+    "prob_semif": 0.9561,
+    "prob_final": 0.4524,
+    "prob_champ": 0.2137,
+    "n_simulations": 300000,
     "rules": {
       "regular_season": "36場（18主18客），前3直接進季後賽",
       "play_in": "第4 vs 第5，Bo3，第4先獲1勝",
