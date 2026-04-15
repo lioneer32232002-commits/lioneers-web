@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-04-12",
+    "generated": "2026-04-15",
     "total_games": 31,
     "games_remaining": 5
   },
@@ -1147,7 +1147,7 @@
       "player": "劉丞勳",
       "values": {
         "高雄全家海神": 1.01,
-        "臺北台新戰神": 1.03,
+        "臺北台新戰神": 1.04,
         "新北國王": 0.7,
         "新北中信特攻": 1.47,
         "福爾摩沙夢想家": 0.71,
@@ -1181,7 +1181,7 @@
       "values": {
         "高雄全家海神": 1.67,
         "臺北台新戰神": 1.09,
-        "新北國王": 1.26,
+        "新北國王": 1.25,
         "新北中信特攻": 1.17,
         "福爾摩沙夢想家": 1.18,
         "桃園台啤永豐雲豹": 1.07
@@ -1359,7 +1359,7 @@
       "turnovers": 1.18,
       "plus_minus": 6.07,
       "efficiency": 14.75,
-      "tsp": 52.93,
+      "tsp": 52.92,
       "usg": 15.07,
       "three_pointers_made": 1.79,
       "three_pointers_attempted": 4.68,
@@ -1440,7 +1440,7 @@
       "plus_minus": -0.46,
       "efficiency": 3.08,
       "tsp": 44.92,
-      "usg": 2.07,
+      "usg": 2.08,
       "three_pointers_made": 0.15,
       "three_pointers_attempted": 1.0,
       "games": 13,
