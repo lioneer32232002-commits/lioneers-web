@@ -862,6 +862,8 @@ const TEAM_SHORT = {
 // Chart.js 全域字型設定（Noto Sans JP）
 Chart.defaults.font.family = "'Noto Sans JP', 'Microsoft JhengHei', sans-serif";
 Chart.defaults.font.weight = '700';
+Chart.defaults.animation.duration = 900;
+Chart.defaults.animation.easing   = 'easeOutQuart';
 
 // ================================================================
 // 主入口
@@ -889,6 +891,7 @@ fetch('processed_data.json', { cache: 'no-store' })
     renderUpdates(data.meta, data.games);
     addCJKSpacing();
     initScrollReveal();
+    initLazyCharts();
   });
 
 // ① 統計快覽
@@ -1003,7 +1006,8 @@ function renderScoringSources(data) {
   const labelColors = data.map(t => t.name === LION_NAME ? '#f5d675' : axisColor);
   const labelWeights= data.map(t => t.name === LION_NAME ? '900' : '400');
 
-  new Chart(document.getElementById('chart-scoring'), {
+  const _cScoring = document.getElementById('chart-scoring');
+  deferChart(_cScoring, () => new Chart(_cScoring, {
     type: 'bar',
     data: {
       labels,
@@ -1052,7 +1056,7 @@ function renderScoringSources(data) {
         }
       }
     }
-  });
+  }));
 
   // 統計資訊：聯盟第一、攻城獅佔比、攻城獅排名
   const lion = data.find(t => t.name === LION_NAME);
@@ -1434,7 +1438,8 @@ function renderUsgTs(playerAvg) {
 
   const mkPts = arr => arr.map(p => ({ x: p.usg, y: p.ts, _name: p.name, _games: p.games }));
 
-  new Chart(document.getElementById('chart-usg-ts'), {
+  const _cUsg = document.getElementById('chart-usg-ts');
+  deferChart(_cUsg, () => new Chart(_cUsg, {
     type: 'scatter',
     plugins: [quadPlugin, namePlugin],
     data: {
@@ -1485,7 +1490,7 @@ function renderUsgTs(playerAvg) {
         }
       }
     }
-  });
+  }));
 
   document.getElementById('usg-ts-meta').innerHTML =
     `<span style="white-space:nowrap">點越大 = 出賽場次越多。</span>` +
@@ -1558,7 +1563,8 @@ function renderRoc(roc) {
     borderDash: [6, 5], order: 3
   });
 
-  new Chart(document.getElementById('chart-roc'), {
+  const _cRoc = document.getElementById('chart-roc');
+  deferChart(_cRoc, () => new Chart(_cRoc, {
     type: 'scatter',
     data: { datasets },
     options: {
@@ -1590,7 +1596,7 @@ function renderRoc(roc) {
         }
       }
     }
-  });
+  }));
 
   // 自訂圖例（暗色主題）
   const legendEl = document.getElementById('roc-legend');
@@ -1683,7 +1689,8 @@ function renderScenarioChart(scenarios) {
     }
   };
 
-  new Chart(document.getElementById('chart-scenario'), {
+  const _cScenario = document.getElementById('chart-scenario');
+  deferChart(_cScenario, () => new Chart(_cScenario, {
     type: 'bar',
     plugins: [errBarPlugin],
     data: {
@@ -1733,7 +1740,7 @@ function renderScenarioChart(scenarios) {
         }
       }
     }
-  });
+  }));
 
   // 情境摘要標籤
   const leg = document.getElementById('scenario-legend');
@@ -1916,7 +1923,7 @@ function renderMannWhitney(mwResults) {
     const wData = item.wins.map((v, i)   => ({ x: 0 + jitter(i,      0.14), y: v }));
     const lData = item.losses.map((v, i) => ({ x: 1 + jitter(i + 50, 0.14), y: v }));
 
-    new Chart(canvas, {
+    deferChart(canvas, () => new Chart(canvas, {
       type: 'scatter',
       plugins: [makeMedianPlugin(item.wins_median, item.losses_median)],
       data: {
@@ -1945,7 +1952,7 @@ function renderMannWhitney(mwResults) {
           y: { ticks: { color: mwuAxis, font: { size: 9 } }, grid: { color: mwuGrid, lineWidth: .8 } }
         }
       }
-    });
+    }));
   });
 
   // ── 全指標效應量橫條圖 ──────────────────────────────────────
@@ -1990,7 +1997,7 @@ function renderMannWhitney(mwResults) {
     }
   };
 
-  new Chart(barCanvas, {
+  deferChart(barCanvas, () => new Chart(barCanvas, {
     type: 'bar',
     plugins: [refLinePlugin],
     data: {
@@ -2031,7 +2038,7 @@ function renderMannWhitney(mwResults) {
         }
       }
     }
-  });
+  }));
 }
 
 // ⑫ 最新動態
@@ -2087,6 +2094,30 @@ function addCJKSpacing() {
       .replace(/([A-Za-z0-9])([\u4e00-\u9fa5\u3400-\u4dbf\u2e80-\u2eff\uff00-\uffef])/g, '$1 $2');
     if (n !== s) node.textContent = n;
   });
+}
+
+// ================================================================
+// 圖表懶加載（滾動到位才繪製，動畫自然播出）
+// ================================================================
+const _deferredCharts = [];
+function deferChart(el, fn) {
+  if (el) _deferredCharts.push({ el, fn });
+}
+
+function initLazyCharts() {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const idx = _deferredCharts.findIndex(c => c.el === entry.target);
+      if (idx !== -1) {
+        _deferredCharts[idx].fn();
+        _deferredCharts.splice(idx, 1);
+      }
+      io.unobserve(entry.target);
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  _deferredCharts.forEach(({ el }) => io.observe(el));
 }
 
 // ================================================================
