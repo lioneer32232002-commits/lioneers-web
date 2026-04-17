@@ -158,7 +158,7 @@
       border-radius: 12px; padding: 1.35rem; backdrop-filter: blur(6px);
       transition: all .25s;
     }
-    .card:hover { transform: translateY(-3px); border-color: var(--site-purple2); box-shadow: 0 8px 24px rgba(94,45,140,.25); }
+    .card:hover { transform: translateY(-4px); border-color: var(--site-purple2); box-shadow: 0 10px 36px rgba(94,45,140,.5), 0 0 0 1px rgba(157,95,214,.25); }
     .card h3 { font-size: .95rem; font-weight: 700; margin-bottom: .85rem; color: var(--site-gray2); }
 
     /* ===== 圖表面板（淺色，依規範） ===== */
@@ -467,6 +467,30 @@
     }
     @media (max-width: 640px) {
       .usg-ts-wrap { aspect-ratio: 1/1; min-height: 0; }
+    }
+
+    /* ===== 滾動浮現動畫 ===== */
+    @media (prefers-reduced-motion: no-preference) {
+      .full {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity .55s ease, transform .6s cubic-bezier(.25,.46,.45,.94);
+      }
+      .full.revealed { opacity: 1; transform: none; }
+
+      .section-title::after {
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform .7s cubic-bezier(.25,.46,.45,.94) .2s;
+      }
+      .full.revealed .section-title::after { transform: scaleX(1); }
+
+      .stats-bar, .forecast-bar {
+        opacity: 0;
+        transform: translateY(16px);
+        transition: opacity .5s ease .1s, transform .5s ease .1s;
+      }
+      .stats-bar.revealed, .forecast-bar.revealed { opacity: 1; transform: none; }
     }
 
     /* ===== 平板（641px ~ 900px） ===== */
@@ -864,32 +888,32 @@ fetch('processed_data.json', { cache: 'no-store' })
     renderMannWhitney(data.mann_whitney);
     renderUpdates(data.meta, data.games);
     addCJKSpacing();
+    initScrollReveal();
   });
 
 // ① 統計快覽
 function renderStatsBar(ts) {
-  document.getElementById('s-wins').textContent   = ts.wins;
-  document.getElementById('s-losses').textContent = ts.losses;
-  document.getElementById('s-pts').textContent    = ts.avg_pts;
-  document.getElementById('s-opp').textContent    = ts.avg_opp_pts;
-  document.getElementById('s-rem').textContent    = ts.games_remaining;
-  document.getElementById('hero-gp').textContent  = ts.games_played;
+  animateNumber(document.getElementById('s-wins'),   ts.wins,              { delay: 300 });
+  animateNumber(document.getElementById('s-losses'), ts.losses,            { delay: 360 });
+  animateNumber(document.getElementById('s-pts'),    ts.avg_pts,           { decimals: 2, delay: 420 });
+  animateNumber(document.getElementById('s-opp'),    ts.avg_opp_pts,       { decimals: 2, delay: 480 });
+  animateNumber(document.getElementById('s-rem'),    ts.games_remaining,   { delay: 540 });
+  document.getElementById('hero-gp').textContent = ts.games_played;
 }
 
 // ① 預測摘要欄
 function renderForecastBar(ts, sim) {
-  // 預測本季最終勝場：目前勝場 + 剩餘場次 × 本季勝率（四捨五入）
   const projWins = Math.round(ts.wins + ts.games_remaining * ts.win_rate);
-  document.getElementById('f-proj-wins').textContent = projWins + ' 勝';
-  document.getElementById('f-playoff').textContent   = Math.round(sim.prob_playoff * 100) + '%';
-  document.getElementById('f-champ').textContent     = Math.round(sim.prob_champ   * 100) + '%';
+  animateNumber(document.getElementById('f-proj-wins'), projWins,                           { suffix: ' 勝', delay: 550 });
+  animateNumber(document.getElementById('f-playoff'),   Math.round(sim.prob_playoff * 100), { suffix: '%',   delay: 660 });
+  animateNumber(document.getElementById('f-champ'),     Math.round(sim.prob_champ   * 100), { suffix: '%',   delay: 770 });
 }
 
 // ② 下一場
 function renderNextGame(ng) {
   const short = TEAM_SHORT[ng.opponent] || ng.opponent;
   document.getElementById('ng-opp').textContent      = short;
-  document.getElementById('ng-prob').textContent     = Math.round(ng.win_prob_adjusted * 100) + '%';
+  animateNumber(document.getElementById('ng-prob'), Math.round(ng.win_prob_adjusted * 100), { suffix: '%', delay: 620 });
   if (ng.date) document.getElementById('ng-date').textContent = ng.date;
   document.getElementById('ng-games-label').textContent =
     `歷史對戰（${ng.historical_w + ng.historical_l} 場）`;
@@ -2063,6 +2087,44 @@ function addCJKSpacing() {
       .replace(/([A-Za-z0-9])([\u4e00-\u9fa5\u3400-\u4dbf\u2e80-\u2eff\uff00-\uffef])/g, '$1 $2');
     if (n !== s) node.textContent = n;
   });
+}
+
+// ================================================================
+// 數字計數動畫
+// ================================================================
+function animateNumber(el, target, { suffix = '', decimals = 0, duration = 900, delay = 200 } = {}) {
+  if (!el) return;
+  setTimeout(() => {
+    const start = performance.now();
+    (function tick(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const val = target * (1 - Math.pow(1 - t, 3)); // ease-out cubic
+      el.textContent = (decimals > 0 ? val.toFixed(decimals) : Math.round(val)) + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+    })(performance.now());
+  }, delay);
+}
+
+// ================================================================
+// 滾動浮現 IntersectionObserver
+// ================================================================
+function initScrollReveal() {
+  // 統計快覽 / 預測摘要永遠在畫面上，直接顯示
+  setTimeout(() => {
+    document.querySelector('.stats-bar')?.classList.add('revealed');
+    document.querySelector('.forecast-bar')?.classList.add('revealed');
+  }, 60);
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('main .full').forEach(el => io.observe(el));
 }
 
 // 瀏覽次數
