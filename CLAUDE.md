@@ -56,6 +56,34 @@ lioneers-web/
 
 ## 工作流程
 - 使用者說「merge 過了」時，立即建下一個 PR 並回傳網址，不用等使用者再問。
+- PR merge 成功後，只回報 Cloudflare 部署網址，不重複複述做了什麼。有異常才說明，沒問題就安靜。
+
+## 更新後驗證清單
+每次 processed_data.json 或 index.html 有變動，commit 前必須明確列出：
+1. **哪些區塊數據有變動**（例：standings 更新、simulation 機率改變）
+2. **哪些區塊沒有異動**（明確說「其餘區塊數據不變」）
+3. **og:image 版號是否已 +1**（每次更新必做，否則 FB/LINE 不重新抓圖）
+4. **og:description 是否已更新**（index.html 第 9 行）
+
+驗證通過才 commit，不通過不送 PR。
+
+## 反模式清單（禁止事項）
+以下是常見錯誤，每次修改前自我檢查：
+- **聯盟名稱**：永遠寫 TPBL，不寫 PLG（PLG 是另一個聯盟）
+- **熱力圖顏色**：只用已定義六色階（深紫→珊瑚紅），不用漸層或其他配色
+- **數字呈現**：單一數字沒有上下文對比時不單獨呈現，需搭配排名或趨勢
+- **排序方向**：所有有強弱之分的表格圖表，強的在上，不例外
+- **og:image 版號**：更新內容卻忘記 +1 版號，視為 bug
+- **Chart.js 版本**：不得使用浮動版本引用（如 `@latest`），必須釘死版號並附 integrity hash
+
+## 技術規範
+### Chart.js CDN 引用規則
+必須釘死版號 + integrity hash，範例：
+```html
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+        integrity="sha256-..." crossorigin="anonymous"></script>
+```
+版號變更時同步更新 integrity hash，防止 CDN 污染導致圖表靜默失效。
 
 ## UI／排序規則
 - 所有表格、圖表，凡有強弱之分（數字高低或顏色深淺），一律從強到弱由上至下排序，讓使用者一眼看出最好的在最上面。
@@ -72,6 +100,6 @@ lioneers-web/
 | `--site-gold` | `#00e5ff` | 數字、標題強調（青色） |
 
 ## 備註
-- 資料來源：PLG 官方網站（手動填入）
+- 資料來源：TPBL 官方網站（手動填入）
 - 非官方粉絲製作，純數據整理用途
 - og:image 版號需隨每次更新遞增（?v=N），否則 FB 不會重新抓圖
