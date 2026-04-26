@@ -806,7 +806,7 @@
       <div style="margin-top:1.75rem;">
         <div style="font-size:.8rem;font-weight:700;color:#c5b8dc;margin-bottom:.5rem;">全指標效應量一覽（效應量 r）</div>
         <div style="font-size:.72rem;color:var(--site-gray);margin-bottom:.65rem;display:flex;flex-wrap:wrap;gap:.2rem .75rem;">
-          <span>紫色 = 勝場較高；珊瑚 = 敗場較高。深淺對應 |r| 大小。</span>
+          <span>青色 = 勝場較高；珊瑚 = 敗場較高。深淺對應 |r| 大小。</span>
           <span>虛線：|r| = 0.3 / 0.5 參考門檻。</span>
           <span>★ 顯著（p &lt; 0.05）　▲ 趨勢（p &lt; 0.10）</span>
         </div>
@@ -824,7 +824,7 @@
 </main>
 
 <footer>
-  <p>新竹攻城獅數據分析站 &nbsp;|&nbsp; 資料來源：TPBL 官方數據 &nbsp;|&nbsp; Adam Pan 製作 &nbsp;|&nbsp; 瀏覽 <span id="visit-count" style="color:var(--site-purple3);">—</span> 次</p>
+  <p>新竹攻城獅數據分析站 &nbsp;|&nbsp; 資料來源：TPBL 官方數據 &nbsp;|&nbsp; Adam Pan 製作</p>
   <p style="margin-top:.4rem">
     <a href="https://github.com/lioneer32232002-commits/lioneers-web" target="_blank">GitHub</a>
     &nbsp;·&nbsp; 數據更新至 2026/04/25
@@ -2158,14 +2158,6 @@ function initScrollReveal() {
   document.querySelectorAll('main .full').forEach(el => io.observe(el));
 }
 
-// 瀏覽次數
-fetch('https://api.counterapi.dev/v1/lioneers-web-2526/visits/up')
-  .then(r => r.json())
-  .then(d => {
-    const el = document.getElementById('visit-count');
-    if (el && d.count != null) el.textContent = Number(d.count).toLocaleString();
-  })
-  .catch(() => {});
 </script>
 </body>
 </html>
