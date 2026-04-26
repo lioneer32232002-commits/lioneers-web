@@ -57,6 +57,7 @@ lioneers-web/
 ## 工作流程
 - 使用者說「merge 過了」時，立即建下一個 PR 並回傳網址，不用等使用者再問。
 - PR merge 成功後，只回報 Cloudflare 部署網址，不重複複述做了什麼。有異常才說明，沒問題就安靜。
+- 每次修改完成後，直接 commit + push，不需停下來請使用者確認。使用者從真實網站自行驗證。
 
 ## 更新後驗證清單
 每次 processed_data.json 或 index.html 有變動，commit 前必須明確列出：
@@ -75,6 +76,8 @@ lioneers-web/
 - **排序方向**：所有有強弱之分的表格圖表，強的在上，不例外
 - **og:image 版號**：更新內容卻忘記 +1 版號，視為 bug
 - **Chart.js 版本**：不得使用浮動版本引用（如 `@latest`），必須釘死版號並附 integrity hash
+- **Mann-Whitney 效應量圖說顏色**：橫條是青色（`#00e5ff`，即 `--site-gold`），圖說必須寫「青色 = 勝場較高」，不寫「紫色」
+- **瀏覽次數功能**：已移除（counterapi.dev 停止服務），footer 不再有計數器，勿重新加入
 
 ## 技術規範
 ### Chart.js CDN 引用規則
