@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-04-25",
+    "generated": "2026-04-26",
     "total_games": 33,
     "games_remaining": 3
   },
@@ -16,15 +16,15 @@
   "standings": [
     {
       "name": "桃園台啤永豐雲豹",
-      "wins": 22,
+      "wins": 23,
       "losses": 12,
-      "gp": 34
+      "gp": 35
     },
     {
       "name": "福爾摩沙夢想家",
       "wins": 22,
-      "losses": 13,
-      "gp": 35
+      "losses": 14,
+      "gp": 36
     },
     {
       "name": "新竹御嵿攻城獅",
@@ -40,15 +40,15 @@
     },
     {
       "name": "新北中信特攻",
-      "wins": 18,
+      "wins": 19,
       "losses": 16,
-      "gp": 34
+      "gp": 35
     },
     {
       "name": "臺北台新戰神",
       "wins": 11,
-      "losses": 23,
-      "gp": 34
+      "losses": 24,
+      "gp": 35
     },
     {
       "name": "高雄全家海神",
@@ -60,30 +60,30 @@
   "league_rtg": [
     {
       "name": "桃園台啤永豐雲豹",
-      "wins": 22,
+      "wins": 23,
       "losses": 12,
-      "gp": 34,
-      "ortg": 105.9,
-      "drtg": 100.5,
+      "gp": 35,
+      "ortg": 106.1,
+      "drtg": 100.7,
       "netrtg": 5.4
     },
     {
       "name": "福爾摩沙夢想家",
       "wins": 22,
-      "losses": 13,
-      "gp": 35,
+      "losses": 14,
+      "gp": 36,
       "ortg": 108.2,
-      "drtg": 103.3,
-      "netrtg": 4.9
+      "drtg": 103.5,
+      "netrtg": 4.7
     },
     {
       "name": "新北中信特攻",
-      "wins": 18,
+      "wins": 19,
       "losses": 16,
-      "gp": 34,
-      "ortg": 105.4,
-      "drtg": 101.3,
-      "netrtg": 4.1
+      "gp": 35,
+      "ortg": 106.0,
+      "drtg": 101.8,
+      "netrtg": 4.2
     },
     {
       "name": "新竹御嵿攻城獅",
@@ -106,10 +106,10 @@
     {
       "name": "臺北台新戰神",
       "wins": 11,
-      "losses": 23,
-      "gp": 34,
-      "ortg": 103.8,
-      "drtg": 111.3,
+      "losses": 24,
+      "gp": 35,
+      "ortg": 104.1,
+      "drtg": 111.6,
       "netrtg": -7.5
     },
     {
@@ -125,10 +125,10 @@
   "scoring_sources": [
     {
       "name": "福爾摩沙夢想家",
-      "three": 35.7,
-      "mid": 6.8,
-      "paint": 39.0,
-      "ft": 18.9,
+      "three": 35.5,
+      "mid": 6.7,
+      "paint": 39.2,
+      "ft": 19.0,
       "total": 100.4
     },
     {
@@ -141,27 +141,27 @@
     },
     {
       "name": "桃園台啤永豐雲豹",
-      "three": 29.8,
-      "mid": 9.2,
+      "three": 29.6,
+      "mid": 9.3,
       "paint": 44.2,
-      "ft": 16,
-      "total": 99.2
+      "ft": 16.2,
+      "total": 99.3
     },
     {
       "name": "新北中信特攻",
       "three": 33.5,
       "mid": 4.4,
-      "paint": 46.4,
-      "ft": 14.1,
-      "total": 98.4
+      "paint": 46.5,
+      "ft": 14.3,
+      "total": 98.7
     },
     {
       "name": "臺北台新戰神",
-      "three": 33.8,
-      "mid": 8.0,
-      "paint": 36.7,
-      "ft": 18.2,
-      "total": 96.7
+      "three": 34.3,
+      "mid": 8.2,
+      "paint": 36.3,
+      "ft": 18.1,
+      "total": 96.9
     },
     {
       "name": "新竹御嵿攻城獅",
@@ -1656,11 +1656,11 @@
     }
   },
   "simulation": {
-    "prob_play_in": 0.3561,
-    "prob_playoff": 0.8675,
-    "prob_semif": 0.8675,
-    "prob_final": 0.3799,
-    "prob_champ": 0.1802,
+    "prob_play_in": 0.3932,
+    "prob_playoff": 0.8258,
+    "prob_semif": 0.8258,
+    "prob_final": 0.3727,
+    "prob_champ": 0.1761,
     "n_simulations": 300000,
     "rules": {
       "regular_season": "36場（18主18客），前3直接進季後賽",
