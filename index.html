@@ -589,9 +589,9 @@
 
 <main>
 
-  <!-- ①⁰ 季後賽系列賽分析 -->
+  <!-- ①⁰ 季後賽分析 -->
   <div class="full" id="playoff-preview">
-    <h2 class="section-title"><span class="icon">🏀</span> 季後賽系列賽分析・攻城獅 vs 福爾摩沙夢想家</h2>
+    <h2 class="section-title"><span class="icon">🏀</span> 季後賽分析・攻城獅 vs 福爾摩沙夢想家</h2>
 
     <!-- 主卡：系列賽勝率 + G1 效應 + 路徑分佈 -->
     <div class="card" style="margin-bottom:1.1rem;">
@@ -599,13 +599,13 @@
       <!-- 系列賽勝率 -->
       <div style="display:flex;justify-content:center;align-items:center;gap:2.5rem;flex-wrap:wrap;margin-bottom:1.25rem;">
         <div style="text-align:center;">
-          <div style="font-size:.72rem;color:var(--site-gray);margin-bottom:.3rem;letter-spacing:.06em;">系列賽勝率</div>
+          <div style="font-size:.72rem;color:var(--site-gray);margin-bottom:.3rem;letter-spacing:.06em;">季後賽勝率</div>
           <div style="font-size:3rem;font-weight:900;color:#f06292;line-height:1;">77%</div>
           <div style="font-size:.85rem;color:var(--site-gray2);margin-top:.3rem;">福爾摩沙夢想家</div>
         </div>
         <div style="font-size:1.4rem;color:var(--site-gray);font-weight:300;">vs</div>
         <div style="text-align:center;">
-          <div style="font-size:.72rem;color:var(--site-gray);margin-bottom:.3rem;letter-spacing:.06em;">系列賽勝率</div>
+          <div style="font-size:.72rem;color:var(--site-gray);margin-bottom:.3rem;letter-spacing:.06em;">季後賽勝率</div>
           <div style="font-size:3rem;font-weight:900;color:var(--site-gold);line-height:1;">23%</div>
           <div style="font-size:.85rem;color:var(--site-gray2);margin-top:.3rem;">新竹御嵿攻城獅</div>
         </div>
@@ -637,8 +637,10 @@
 
       <!-- 路徑機率分佈 -->
       <div>
-        <div style="font-size:.75rem;color:var(--site-gray);font-weight:700;margin-bottom:.7rem;">各種結果機率分佈</div>
-        <div style="display:flex;flex-direction:column;gap:.32rem;">
+        <div style="font-size:.75rem;color:var(--site-gray);font-weight:700;margin-bottom:.7rem;">各種結果機率分佈（各欄目互斥，同色合計＝該隊季後賽勝率）</div>
+        <!-- 夢想家奪賽 -->
+        <div style="font-size:.72rem;color:#f06292;font-weight:700;margin-bottom:.35rem;letter-spacing:.04em;">福爾摩沙夢想家奪賽　合計 77%</div>
+        <div style="display:flex;flex-direction:column;gap:.32rem;margin-bottom:.65rem;">
           <div style="display:flex;align-items:center;gap:.6rem;">
             <span style="font-size:.75rem;color:var(--site-gray2);width:52px;text-align:right;flex-shrink:0;">夢 3－0</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:4px;height:16px;overflow:hidden;">
@@ -660,7 +662,10 @@
             </div>
             <span style="font-size:.75rem;color:#f06292;width:26px;flex-shrink:0;">31%</span>
           </div>
-          <div style="height:.4rem;"></div>
+        </div>
+        <!-- 攻城獅奪賽 -->
+        <div style="font-size:.72rem;color:var(--site-gold);font-weight:700;margin-bottom:.35rem;letter-spacing:.04em;">新竹御嵿攻城獅奪賽　合計 23%</div>
+        <div style="display:flex;flex-direction:column;gap:.32rem;">
           <div style="display:flex;align-items:center;gap:.6rem;">
             <span style="font-size:.75rem;color:var(--site-gray2);width:52px;text-align:right;flex-shrink:0;">獅 3－2</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:4px;height:16px;overflow:hidden;">
@@ -687,65 +692,90 @@
 
     </div><!-- /主卡 -->
 
-    <!-- 下方兩欄 -->
-    <div class="grid-2">
-
-      <!-- 第三節定生死 -->
-      <div class="card">
-        <h3>第三節定生死</h3>
-        <p style="font-size:.75rem;color:var(--site-gray);margin-bottom:.85rem;">季賽 6 場直接對戰・Q3 得失分差</p>
-        <div style="display:flex;flex-direction:column;gap:.4rem;">
-          <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;">
-            <span style="color:var(--site-gray);width:44px;flex-shrink:0;">11/05</span>
-            <span style="color:var(--site-gray);flex:1;">客</span>
-            <span style="color:var(--site-gray2);font-weight:700;width:34px;text-align:right;">±0</span>
-            <span style="background:rgba(102,102,102,.25);color:#ccc;border-radius:4px;padding:.1rem .45rem;font-size:.72rem;">敗</span>
+    <!-- 第三節定生死（全寬） -->
+    <div class="card" style="margin-bottom:1.1rem;">
+      <h3>第三節定生死</h3>
+      <p style="font-size:.75rem;color:var(--site-gray);margin-bottom:.85rem;">季賽 6 場直接對戰・Q3 得失分差</p>
+      <div style="display:flex;flex-direction:column;gap:.4rem;">
+        <div style="display:flex;align-items:center;gap:.6rem;font-size:.82rem;">
+          <span style="color:var(--site-gray);width:52px;flex-shrink:0;">11/05</span>
+          <span style="color:var(--site-gray);width:24px;">客</span>
+          <div style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;position:relative;overflow:hidden;">
+            <div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.15);"></div>
           </div>
-          <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;">
-            <span style="color:var(--site-gray);width:44px;flex-shrink:0;">11/22</span>
-            <span style="color:var(--site-gray);flex:1;">客</span>
-            <span style="color:#f06292;font-weight:700;width:34px;text-align:right;">−6</span>
-            <span style="background:rgba(102,102,102,.25);color:#ccc;border-radius:4px;padding:.1rem .45rem;font-size:.72rem;">敗</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;">
-            <span style="color:var(--site-gray);width:44px;flex-shrink:0;">12/20</span>
-            <span style="color:var(--site-gray);flex:1;">主</span>
-            <span style="color:var(--site-gold);font-weight:700;width:34px;text-align:right;">+7</span>
-            <span style="background:rgba(94,45,140,.35);color:var(--site-purple3);border-radius:4px;padding:.1rem .45rem;font-size:.72rem;">勝</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;">
-            <span style="color:var(--site-gray);width:44px;flex-shrink:0;">1/24</span>
-            <span style="color:var(--site-gray);flex:1;">主</span>
-            <span style="color:var(--site-gold);font-weight:700;width:34px;text-align:right;">+1</span>
-            <span style="background:rgba(94,45,140,.35);color:var(--site-purple3);border-radius:4px;padding:.1rem .45rem;font-size:.72rem;">勝</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;">
-            <span style="color:var(--site-gray);width:44px;flex-shrink:0;">4/12</span>
-            <span style="color:var(--site-gray);flex:1;">主</span>
-            <span style="color:#f06292;font-weight:700;width:34px;text-align:right;">−19</span>
-            <span style="background:rgba(102,102,102,.25);color:#ccc;border-radius:4px;padding:.1rem .45rem;font-size:.72rem;">敗</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;">
-            <span style="color:var(--site-gray);width:44px;flex-shrink:0;">4/19</span>
-            <span style="color:var(--site-gray);flex:1;">客</span>
-            <span style="color:#f06292;font-weight:700;width:34px;text-align:right;">−8</span>
-            <span style="background:rgba(102,102,102,.25);color:#ccc;border-radius:4px;padding:.1rem .45rem;font-size:.72rem;">敗</span>
-          </div>
+          <span style="color:var(--site-gray2);font-weight:700;width:36px;text-align:right;">±0</span>
+          <span style="background:rgba(102,102,102,.25);color:#ccc;border-radius:4px;padding:.1rem .5rem;font-size:.72rem;width:24px;text-align:center;">敗</span>
         </div>
-        <div style="font-size:.72rem;color:var(--site-gray);margin-top:.85rem;line-height:1.55;border-top:1px solid rgba(255,255,255,.08);padding-top:.6rem;">
-          Q3 得分差為正 → 2 場全勝<br>Q3 得分差 ≤ 0 → 4 場全敗
+        <div style="display:flex;align-items:center;gap:.6rem;font-size:.82rem;">
+          <span style="color:var(--site-gray);width:52px;flex-shrink:0;">11/22</span>
+          <span style="color:var(--site-gray);width:24px;">客</span>
+          <div style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;position:relative;overflow:hidden;">
+            <div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.15);"></div>
+            <div style="position:absolute;right:50%;top:0;height:100%;width:19%;background:#f06292;opacity:.7;"></div>
+          </div>
+          <span style="color:#f06292;font-weight:700;width:36px;text-align:right;">−6</span>
+          <span style="background:rgba(102,102,102,.25);color:#ccc;border-radius:4px;padding:.1rem .5rem;font-size:.72rem;width:24px;text-align:center;">敗</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.6rem;font-size:.82rem;">
+          <span style="color:var(--site-gray);width:52px;flex-shrink:0;">12/20</span>
+          <span style="color:var(--site-gray);width:24px;">主</span>
+          <div style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;position:relative;overflow:hidden;">
+            <div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.15);"></div>
+            <div style="position:absolute;left:50%;top:0;height:100%;width:23%;background:var(--site-gold);opacity:.7;"></div>
+          </div>
+          <span style="color:var(--site-gold);font-weight:700;width:36px;text-align:right;">+7</span>
+          <span style="background:rgba(94,45,140,.35);color:var(--site-purple3);border-radius:4px;padding:.1rem .5rem;font-size:.72rem;width:24px;text-align:center;">勝</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.6rem;font-size:.82rem;">
+          <span style="color:var(--site-gray);width:52px;flex-shrink:0;">1/24</span>
+          <span style="color:var(--site-gray);width:24px;">主</span>
+          <div style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;position:relative;overflow:hidden;">
+            <div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.15);"></div>
+            <div style="position:absolute;left:50%;top:0;height:100%;width:3%;background:var(--site-gold);opacity:.7;"></div>
+          </div>
+          <span style="color:var(--site-gold);font-weight:700;width:36px;text-align:right;">+1</span>
+          <span style="background:rgba(94,45,140,.35);color:var(--site-purple3);border-radius:4px;padding:.1rem .5rem;font-size:.72rem;width:24px;text-align:center;">勝</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.6rem;font-size:.82rem;">
+          <span style="color:var(--site-gray);width:52px;flex-shrink:0;">4/12</span>
+          <span style="color:var(--site-gray);width:24px;">主</span>
+          <div style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;position:relative;overflow:hidden;">
+            <div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.15);"></div>
+            <div style="position:absolute;right:50%;top:0;height:100%;width:61%;background:#f06292;opacity:.7;"></div>
+          </div>
+          <span style="color:#f06292;font-weight:700;width:36px;text-align:right;">−19</span>
+          <span style="background:rgba(102,102,102,.25);color:#ccc;border-radius:4px;padding:.1rem .5rem;font-size:.72rem;width:24px;text-align:center;">敗</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.6rem;font-size:.82rem;">
+          <span style="color:var(--site-gray);width:52px;flex-shrink:0;">4/19</span>
+          <span style="color:var(--site-gray);width:24px;">客</span>
+          <div style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;position:relative;overflow:hidden;">
+            <div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.15);"></div>
+            <div style="position:absolute;right:50%;top:0;height:100%;width:26%;background:#f06292;opacity:.7;"></div>
+          </div>
+          <span style="color:#f06292;font-weight:700;width:36px;text-align:right;">−8</span>
+          <span style="background:rgba(102,102,102,.25);color:#ccc;border-radius:4px;padding:.1rem .5rem;font-size:.72rem;width:24px;text-align:center;">敗</span>
         </div>
       </div>
+      <div style="font-size:.72rem;color:var(--site-gray);margin-top:.85rem;line-height:1.55;border-top:1px solid rgba(255,255,255,.08);padding-top:.6rem;">
+        Q3 得分差為正 → 2 場全勝・Q3 得分差 ≤ 0 → 4 場全敗・中線左側為攻城獅落後，右側為領先
+      </div>
+    </div>
 
-      <!-- 贏球條件 -->
-      <div class="card">
-        <h3>攻城獅的贏球條件</h3>
-        <p style="font-size:.75rem;color:var(--site-gray);margin-bottom:.85rem;">季賽 6 場直接對戰・勝敗均值比較</p>
-        <div style="display:flex;flex-direction:column;gap:.8rem;">
+    <!-- 贏球條件（全寬，雙欄內容） -->
+    <div class="card">
+      <h3>攻城獅的贏球條件</h3>
+      <p style="font-size:.75rem;color:var(--site-gray);margin-bottom:1rem;">季賽 6 場直接對戰・勝敗均值比較</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem 2rem;">
+
+        <!-- 左欄：比賽紀錄可量化指標 -->
+        <div style="display:flex;flex-direction:column;gap:.85rem;">
+          <div style="font-size:.72rem;color:var(--site-gold);font-weight:700;letter-spacing:.05em;margin-bottom:.1rem;">對夢想家直接對戰數據</div>
+          <!-- 自由球 -->
           <div>
-            <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem;">
+            <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem;">
               <span style="color:var(--site-gray2);">自由球命中</span>
-              <span style="color:var(--site-gold);font-weight:700;">勝 18　敗 12</span>
+              <span style="color:var(--site-gold);font-weight:700;">勝 18　vs　敗 12</span>
             </div>
             <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px;">
               <div style="width:60%;background:var(--site-gold);opacity:.8;border-radius:4px 0 0 4px;"></div>
@@ -753,10 +783,11 @@
             </div>
             <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--site-gray);margin-top:.2rem;"><span>勝場</span><span>敗場</span></div>
           </div>
+          <!-- 二次進攻 -->
           <div>
-            <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem;">
+            <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem;">
               <span style="color:var(--site-gray2);">二次進攻得分</span>
-              <span style="color:var(--site-gold);font-weight:700;">勝 15.5　敗 8.8</span>
+              <span style="color:var(--site-gold);font-weight:700;">勝 15.5　vs　敗 8.8</span>
             </div>
             <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px;">
               <div style="width:64%;background:var(--site-gold);opacity:.8;border-radius:4px 0 0 4px;"></div>
@@ -764,10 +795,23 @@
             </div>
             <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--site-gray);margin-top:.2rem;"><span>勝場</span><span>敗場</span></div>
           </div>
+          <!-- 禁區得分 -->
           <div>
-            <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem;">
+            <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem;">
+              <span style="color:var(--site-gray2);">禁區得分</span>
+              <span style="color:#f06292;font-weight:700;">勝 34　vs　敗 38.5</span>
+            </div>
+            <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px;">
+              <div style="width:47%;background:#f06292;opacity:.8;border-radius:4px 0 0 4px;"></div>
+              <div style="width:53%;background:rgba(255,255,255,.1);border-radius:0 4px 4px 0;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--site-gray);margin-top:.2rem;"><span>勝場</span><span>敗場</span></div>
+          </div>
+          <!-- 快攻 -->
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem;">
               <span style="color:var(--site-gray2);">快攻得分</span>
-              <span style="color:#f06292;font-weight:700;">勝 9.5　敗 13.0</span>
+              <span style="color:#f06292;font-weight:700;">勝 9.5　vs　敗 13.0</span>
             </div>
             <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px;">
               <div style="width:42%;background:#f06292;opacity:.8;border-radius:4px 0 0 4px;"></div>
@@ -776,12 +820,66 @@
             <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--site-gray);margin-top:.2rem;"><span>勝場</span><span>敗場</span></div>
           </div>
         </div>
-        <div style="font-size:.72rem;color:var(--site-gray);margin-top:.85rem;line-height:1.55;border-top:1px solid rgba(255,255,255,.08);padding-top:.6rem;">
-          罰球與二次機會是勝場關鍵・快攻高反而是敗場特徵（落後追分的副產品）
-        </div>
-      </div>
 
-    </div><!-- /grid-2 -->
+        <!-- 右欄：整季 MWU 顯著指標 -->
+        <div style="display:flex;flex-direction:column;gap:.85rem;">
+          <div style="font-size:.72rem;color:var(--site-gold);font-weight:700;letter-spacing:.05em;margin-bottom:.1rem;">整季 MWU 顯著指標（p &lt; 0.05）</div>
+          <!-- 三分命中率 -->
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem;">
+              <span style="color:var(--site-gray2);">三分命中率</span>
+              <span style="color:var(--site-gold);font-weight:700;">勝 35%　vs　敗 28%</span>
+            </div>
+            <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px;">
+              <div style="width:56%;background:var(--site-gold);opacity:.8;border-radius:4px 0 0 4px;"></div>
+              <div style="width:44%;background:rgba(255,255,255,.1);border-radius:0 4px 4px 0;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--site-gray);margin-top:.2rem;"><span>勝場</span><span>敗場</span></div>
+          </div>
+          <!-- FG% -->
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem;">
+              <span style="color:var(--site-gray2);">投籃命中率</span>
+              <span style="color:var(--site-gold);font-weight:700;">勝 45%　vs　敗 41%</span>
+            </div>
+            <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px;">
+              <div style="width:52%;background:var(--site-gold);opacity:.8;border-radius:4px 0 0 4px;"></div>
+              <div style="width:48%;background:rgba(255,255,255,.1);border-radius:0 4px 4px 0;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--site-gray);margin-top:.2rem;"><span>勝場</span><span>敗場</span></div>
+          </div>
+          <!-- 助攻 -->
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem;">
+              <span style="color:var(--site-gray2);">助攻</span>
+              <span style="color:var(--site-gold);font-weight:700;">勝 4.4　vs　敗 2.5</span>
+            </div>
+            <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px;">
+              <div style="width:64%;background:var(--site-gold);opacity:.8;border-radius:4px 0 0 4px;"></div>
+              <div style="width:36%;background:rgba(255,255,255,.1);border-radius:0 4px 4px 0;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--site-gray);margin-top:.2rem;"><span>勝場</span><span>敗場</span></div>
+          </div>
+          <!-- 失誤 -->
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem;">
+              <span style="color:var(--site-gray2);">失誤（越少越好）</span>
+              <span style="color:var(--site-gold);font-weight:700;">勝 13.7　vs　敗 16.9</span>
+            </div>
+            <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px;">
+              <div style="width:55%;background:var(--site-gold);opacity:.8;border-radius:4px 0 0 4px;"></div>
+              <div style="width:45%;background:rgba(255,255,255,.1);border-radius:0 4px 4px 0;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--site-gray);margin-top:.2rem;"><span>勝場（少）</span><span>敗場（多）</span></div>
+          </div>
+        </div>
+
+      </div>
+      <div style="font-size:.72rem;color:var(--site-gray);margin-top:1rem;line-height:1.55;border-top:1px solid rgba(255,255,255,.08);padding-top:.65rem;">
+        左欄為直接對夢想家的數據・右欄為整季所有比賽 MWU 統計顯著因子（與夢想家對戰數據無法個別比較，供整體觀察）・禁區與快攻高反而出現在敗場，可能是落後時強行進攻的副產品
+      </div>
+    </div>
+
   </div><!-- /playoff-preview -->
 
   <!-- ① 下一場預測 -->
