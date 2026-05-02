@@ -9,7 +9,7 @@
   <!-- Open Graph（FB / LINE 分享縮圖） -->
   <meta property="og:title"       content="新竹攻城獅 2025-26 賽季預測">
   <meta property="og:description" content="新竹攻城獅 2025-26｜21勝14敗・季後賽 vs 夢想家・系列賽勝率 23%・G1 效應分析">
-  <meta property="og:image"       content="https://lioneers-web.pages.dev/og-image.png?v=23">
+  <meta property="og:image"       content="https://lioneers-web.pages.dev/og-image.png?v=24">
   <meta property="og:url"         content="https://lioneers-web.pages.dev/">
   <meta property="og:type"        content="website">
   <meta name="twitter:card"       content="summary_large_image">
@@ -597,7 +597,7 @@
     <h2 class="section-title"><span class="icon">🏀</span> 季後賽分析・攻城獅 vs 福爾摩沙夢想家</h2>
 
     <!-- 主卡：系列賽勝率 + G1 效應 + 路徑分佈 -->
-    <div class="card" style="margin-bottom:1.1rem;">
+    <div id="po-card-main" class="card" style="margin-bottom:1.1rem;">
 
       <!-- 系列賽勝率 -->
       <div style="display:flex;justify-content:center;align-items:center;gap:2.5rem;flex-wrap:wrap;margin-bottom:1.25rem;">
@@ -696,7 +696,7 @@
     </div><!-- /主卡 -->
 
     <!-- 第三節定生死（全寬） -->
-    <div class="card" style="margin-bottom:1.1rem;">
+    <div id="po-card-q3" class="card" style="margin-bottom:1.1rem;">
       <h3>第三節定生死</h3>
       <p style="font-size:.75rem;color:var(--site-gray);margin-bottom:.85rem;">季賽 6 場直接對戰・Q3 得失分差</p>
       <div style="display:flex;flex-direction:column;gap:.4rem;">
@@ -766,7 +766,7 @@
     </div>
 
     <!-- 贏球條件（全寬單欄） -->
-    <div class="card">
+    <div id="po-card-wc" class="card">
       <h3>攻城獅的贏球條件</h3>
       <p style="font-size:.75rem;color:var(--site-gray);margin-bottom:1rem;">季賽 6 場直接對夢想家・勝場（2場）vs 敗場（4場）均值比較</p>
 
@@ -1226,6 +1226,7 @@ fetch('processed_data.json', { cache: 'no-store' })
     addCJKSpacing();
     initScrollReveal();
     initLazyCharts();
+    initPlayoffCardAnimations();
   });
 
 // ① 統計快覽
@@ -2473,38 +2474,62 @@ function animateNumber(el, target, { suffix = '', decimals = 0, duration = 900, 
 // ================================================================
 // 季後賽區塊動畫
 // ================================================================
-function initPlayoffAnimations() {
-  // 大數字
+function animatePoMain() {
   animateNumber(document.getElementById('po-dream-pct'), 77, { suffix: '%', delay: 150 });
   animateNumber(document.getElementById('po-lion-pct'),  23, { suffix: '%', delay: 250 });
   animateNumber(document.getElementById('po-g1-win'),    54, { suffix: '%', delay: 350 });
   animateNumber(document.getElementById('po-g1-lose'),   15, { suffix: '%', delay: 450 });
-  // 路徑機率
   animateNumber(document.getElementById('po-d30'), 26, { suffix: '%', delay: 300 });
   animateNumber(document.getElementById('po-d31'), 20, { suffix: '%', delay: 360 });
   animateNumber(document.getElementById('po-d32'), 31, { suffix: '%', delay: 420 });
   animateNumber(document.getElementById('po-l32'),  8, { suffix: '%', delay: 480 });
   animateNumber(document.getElementById('po-l31'), 13, { suffix: '%', delay: 540 });
   animateNumber(document.getElementById('po-l30'),  2, { suffix: '%', delay: 600 });
-  // 贏球條件數字
-  animateNumber(document.getElementById('po-ft-w'),   18,   { delay: 300 });
-  animateNumber(document.getElementById('po-ft-l'),   12,   { delay: 360 });
-  animateNumber(document.getElementById('po-sc-w'),   15.5, { decimals: 1, delay: 300 });
-  animateNumber(document.getElementById('po-sc-l'),    8.8, { decimals: 1, delay: 360 });
-  animateNumber(document.getElementById('po-3p-w'),   38,   { suffix: '%', delay: 300 });
-  animateNumber(document.getElementById('po-3p-l'),   30,   { suffix: '%', delay: 360 });
-  animateNumber(document.getElementById('po-blk-w'),   4,   { delay: 300 });
-  animateNumber(document.getElementById('po-blk-l'),   2,   { delay: 360 });
-  animateNumber(document.getElementById('po-tov-w'),  14,   { delay: 300 });
-  animateNumber(document.getElementById('po-tov-l'),  16,   { delay: 360 });
-  animateNumber(document.getElementById('po-pip-w'),  34,   { delay: 300 });
-  animateNumber(document.getElementById('po-pip-l'),  38.5, { decimals: 1, delay: 360 });
-  animateNumber(document.getElementById('po-fb-w'),    9.5, { decimals: 1, delay: 300 });
-  animateNumber(document.getElementById('po-fb-l'),   13,   { delay: 360 });
-  // 進度條展開
-  document.querySelectorAll('#playoff-preview .po-bar').forEach(el => {
-    const w = el.dataset.w;
-    if (w) setTimeout(() => { el.style.width = w; }, 150);
+  document.querySelectorAll('#po-card-main .po-bar').forEach(el => {
+    if (el.dataset.w) setTimeout(() => { el.style.width = el.dataset.w; }, 150);
+  });
+}
+
+function animatePoQ3() {
+  document.querySelectorAll('#po-card-q3 .po-bar').forEach(el => {
+    if (el.dataset.w) setTimeout(() => { el.style.width = el.dataset.w; }, 150);
+  });
+}
+
+function animatePoWC() {
+  animateNumber(document.getElementById('po-ft-w'),   18,   { delay: 200 });
+  animateNumber(document.getElementById('po-ft-l'),   12,   { delay: 260 });
+  animateNumber(document.getElementById('po-sc-w'),   15.5, { decimals: 1, delay: 200 });
+  animateNumber(document.getElementById('po-sc-l'),    8.8, { decimals: 1, delay: 260 });
+  animateNumber(document.getElementById('po-3p-w'),   38,   { suffix: '%', delay: 200 });
+  animateNumber(document.getElementById('po-3p-l'),   30,   { suffix: '%', delay: 260 });
+  animateNumber(document.getElementById('po-blk-w'),   4,   { delay: 200 });
+  animateNumber(document.getElementById('po-blk-l'),   2,   { delay: 260 });
+  animateNumber(document.getElementById('po-tov-w'),  14,   { delay: 200 });
+  animateNumber(document.getElementById('po-tov-l'),  16,   { delay: 260 });
+  animateNumber(document.getElementById('po-pip-w'),  34,   { delay: 200 });
+  animateNumber(document.getElementById('po-pip-l'),  38.5, { decimals: 1, delay: 260 });
+  animateNumber(document.getElementById('po-fb-w'),    9.5, { decimals: 1, delay: 200 });
+  animateNumber(document.getElementById('po-fb-l'),   13,   { delay: 260 });
+  document.querySelectorAll('#po-card-wc .po-bar').forEach(el => {
+    if (el.dataset.w) setTimeout(() => { el.style.width = el.dataset.w; }, 120);
+  });
+}
+
+function initPlayoffCardAnimations() {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const id = entry.target.id;
+      if (id === 'po-card-main') animatePoMain();
+      else if (id === 'po-card-q3')  animatePoQ3();
+      else if (id === 'po-card-wc')  animatePoWC();
+      io.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  ['po-card-main', 'po-card-q3', 'po-card-wc'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) io.observe(el);
   });
 }
 
@@ -2522,7 +2547,6 @@ function initScrollReveal() {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('revealed');
-        if (entry.target.id === 'playoff-preview') setTimeout(initPlayoffAnimations, 100);
         io.unobserve(entry.target);
       }
     });
