@@ -9,7 +9,7 @@
   <!-- Open Graph（FB / LINE 分享縮圖） -->
   <meta property="og:title"       content="新竹攻城獅 2025-26 賽季預測">
   <meta property="og:description" content="新竹攻城獅 2025-26｜21勝14敗・季後賽 vs 夢想家・系列賽勝率 23%・G1 效應分析">
-  <meta property="og:image"       content="https://lioneers-web.pages.dev/og-image.png?v=22">
+  <meta property="og:image"       content="https://lioneers-web.pages.dev/og-image.png?v=23">
   <meta property="og:url"         content="https://lioneers-web.pages.dev/">
   <meta property="og:type"        content="website">
   <meta name="twitter:card"       content="summary_large_image">
@@ -469,6 +469,9 @@
       .usg-ts-wrap { aspect-ratio: 1/1; min-height: 0; }
     }
 
+    /* ===== 季後賽進度條動畫 ===== */
+    .po-bar { transition: width .75s cubic-bezier(.25,.46,.45,.94) .12s; }
+
     /* ===== 滾動浮現動畫 ===== */
     @media (prefers-reduced-motion: no-preference) {
       .full {
@@ -600,13 +603,13 @@
       <div style="display:flex;justify-content:center;align-items:center;gap:2.5rem;flex-wrap:wrap;margin-bottom:1.25rem;">
         <div style="text-align:center;">
           <div style="font-size:.72rem;color:var(--site-gray);margin-bottom:.3rem;letter-spacing:.06em;">季後賽勝率</div>
-          <div style="font-size:3rem;font-weight:900;color:#f06292;line-height:1;">77%</div>
+          <div id="po-dream-pct" style="font-size:3rem;font-weight:900;color:#f06292;line-height:1;">77%</div>
           <div style="font-size:.85rem;color:var(--site-gray2);margin-top:.3rem;">福爾摩沙夢想家</div>
         </div>
         <div style="font-size:1.4rem;color:var(--site-gray);font-weight:300;">vs</div>
         <div style="text-align:center;">
           <div style="font-size:.72rem;color:var(--site-gray);margin-bottom:.3rem;letter-spacing:.06em;">季後賽勝率</div>
-          <div style="font-size:3rem;font-weight:900;color:var(--site-gold);line-height:1;">23%</div>
+          <div id="po-lion-pct" style="font-size:3rem;font-weight:900;color:var(--site-gold);line-height:1;">23%</div>
           <div style="font-size:.85rem;color:var(--site-gray2);margin-top:.3rem;">新竹御嵿攻城獅</div>
         </div>
       </div>
@@ -619,13 +622,13 @@
         <div style="font-size:.75rem;color:var(--site-gold);font-weight:700;letter-spacing:.06em;margin-bottom:.8rem;">G1 效應・系列賽最關鍵的一場</div>
         <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;justify-content:center;">
           <div style="text-align:center;flex:1;min-width:90px;">
-            <div style="font-size:2.2rem;font-weight:900;color:var(--site-gold);line-height:1;">54%</div>
+            <div id="po-g1-win" style="font-size:2.2rem;font-weight:900;color:var(--site-gold);line-height:1;">54%</div>
             <div style="font-size:.8rem;color:var(--site-gray2);margin-top:.2rem;">贏得 G1</div>
             <div style="font-size:.72rem;color:var(--site-gray);">後續系列賽勝率</div>
           </div>
           <div style="color:var(--site-gray);font-size:1.2rem;">⟶</div>
           <div style="text-align:center;flex:1;min-width:90px;">
-            <div style="font-size:2.2rem;font-weight:900;color:#f06292;line-height:1;">15%</div>
+            <div id="po-g1-lose" style="font-size:2.2rem;font-weight:900;color:#f06292;line-height:1;">15%</div>
             <div style="font-size:.8rem;color:var(--site-gray2);margin-top:.2rem;">輸掉 G1</div>
             <div style="font-size:.72rem;color:var(--site-gray);">後續系列賽勝率</div>
           </div>
@@ -644,23 +647,23 @@
           <div style="display:flex;align-items:center;gap:.6rem;">
             <span style="font-size:.75rem;color:var(--site-gray2);width:52px;text-align:right;flex-shrink:0;">夢 3－0</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:4px;height:16px;overflow:hidden;">
-              <div style="width:84%;height:100%;background:#f06292;border-radius:4px;opacity:.85;"></div>
+              <div class="po-bar" data-w="84%" style="width:0;height:100%;background:#f06292;border-radius:4px;opacity:.85;"></div>
             </div>
-            <span style="font-size:.75rem;color:#f06292;width:26px;flex-shrink:0;">26%</span>
+            <span id="po-d30" style="font-size:.75rem;color:#f06292;width:26px;flex-shrink:0;">26%</span>
           </div>
           <div style="display:flex;align-items:center;gap:.6rem;">
             <span style="font-size:.75rem;color:var(--site-gray2);width:52px;text-align:right;flex-shrink:0;">夢 3－1</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:4px;height:16px;overflow:hidden;">
-              <div style="width:65%;height:100%;background:#f06292;border-radius:4px;opacity:.85;"></div>
+              <div class="po-bar" data-w="65%" style="width:0;height:100%;background:#f06292;border-radius:4px;opacity:.85;"></div>
             </div>
-            <span style="font-size:.75rem;color:#f06292;width:26px;flex-shrink:0;">20%</span>
+            <span id="po-d31" style="font-size:.75rem;color:#f06292;width:26px;flex-shrink:0;">20%</span>
           </div>
           <div style="display:flex;align-items:center;gap:.6rem;">
             <span style="font-size:.75rem;color:var(--site-gray2);width:52px;text-align:right;flex-shrink:0;">夢 3－2</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:4px;height:16px;overflow:hidden;">
-              <div style="width:100%;height:100%;background:#f06292;border-radius:4px;opacity:.85;"></div>
+              <div class="po-bar" data-w="100%" style="width:0;height:100%;background:#f06292;border-radius:4px;opacity:.85;"></div>
             </div>
-            <span style="font-size:.75rem;color:#f06292;width:26px;flex-shrink:0;">31%</span>
+            <span id="po-d32" style="font-size:.75rem;color:#f06292;width:26px;flex-shrink:0;">31%</span>
           </div>
         </div>
         <!-- 攻城獅奪賽 -->
@@ -669,23 +672,23 @@
           <div style="display:flex;align-items:center;gap:.6rem;">
             <span style="font-size:.75rem;color:var(--site-gray2);width:52px;text-align:right;flex-shrink:0;">獅 3－2</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:4px;height:16px;overflow:hidden;">
-              <div style="width:26%;height:100%;background:var(--site-gold);border-radius:4px;opacity:.8;"></div>
+              <div class="po-bar" data-w="26%" style="width:0;height:100%;background:var(--site-gold);border-radius:4px;opacity:.8;"></div>
             </div>
-            <span style="font-size:.75rem;color:var(--site-gold);width:26px;flex-shrink:0;">8%</span>
+            <span id="po-l32" style="font-size:.75rem;color:var(--site-gold);width:26px;flex-shrink:0;">8%</span>
           </div>
           <div style="display:flex;align-items:center;gap:.6rem;">
             <span style="font-size:.75rem;color:var(--site-gray2);width:52px;text-align:right;flex-shrink:0;">獅 3－1</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:4px;height:16px;overflow:hidden;">
-              <div style="width:42%;height:100%;background:var(--site-gold);border-radius:4px;opacity:.8;"></div>
+              <div class="po-bar" data-w="42%" style="width:0;height:100%;background:var(--site-gold);border-radius:4px;opacity:.8;"></div>
             </div>
-            <span style="font-size:.75rem;color:var(--site-gold);width:26px;flex-shrink:0;">13%</span>
+            <span id="po-l31" style="font-size:.75rem;color:var(--site-gold);width:26px;flex-shrink:0;">13%</span>
           </div>
           <div style="display:flex;align-items:center;gap:.6rem;">
             <span style="font-size:.75rem;color:var(--site-gray2);width:52px;text-align:right;flex-shrink:0;">獅 3－0</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:4px;height:16px;overflow:hidden;">
-              <div style="width:7%;height:100%;background:var(--site-gold);border-radius:4px;opacity:.8;"></div>
+              <div class="po-bar" data-w="7%" style="width:0;height:100%;background:var(--site-gold);border-radius:4px;opacity:.8;"></div>
             </div>
-            <span style="font-size:.75rem;color:var(--site-gold);width:26px;flex-shrink:0;">2%</span>
+            <span id="po-l30" style="font-size:.75rem;color:var(--site-gold);width:26px;flex-shrink:0;">2%</span>
           </div>
         </div>
       </div>
@@ -711,7 +714,7 @@
           <span style="color:var(--site-gray);width:24px;">客</span>
           <div style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;position:relative;overflow:hidden;">
             <div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.15);"></div>
-            <div style="position:absolute;right:50%;top:0;height:100%;width:19%;background:#f06292;opacity:.7;"></div>
+            <div class="po-bar" data-w="19%" style="position:absolute;right:50%;top:0;height:100%;width:0;background:#f06292;opacity:.7;"></div>
           </div>
           <span style="color:#f06292;font-weight:700;width:36px;text-align:right;">−6</span>
           <span style="background:rgba(102,102,102,.25);color:#ccc;border-radius:4px;padding:.1rem .5rem;font-size:.72rem;width:24px;text-align:center;">敗</span>
@@ -721,7 +724,7 @@
           <span style="color:var(--site-gray);width:24px;">主</span>
           <div style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;position:relative;overflow:hidden;">
             <div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.15);"></div>
-            <div style="position:absolute;left:50%;top:0;height:100%;width:23%;background:var(--site-gold);opacity:.7;"></div>
+            <div class="po-bar" data-w="23%" style="position:absolute;left:50%;top:0;height:100%;width:0;background:var(--site-gold);opacity:.7;"></div>
           </div>
           <span style="color:var(--site-gold);font-weight:700;width:36px;text-align:right;">+7</span>
           <span style="background:rgba(94,45,140,.35);color:var(--site-purple3);border-radius:4px;padding:.1rem .5rem;font-size:.72rem;width:24px;text-align:center;">勝</span>
@@ -731,7 +734,7 @@
           <span style="color:var(--site-gray);width:24px;">主</span>
           <div style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;position:relative;overflow:hidden;">
             <div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.15);"></div>
-            <div style="position:absolute;left:50%;top:0;height:100%;width:3%;background:var(--site-gold);opacity:.7;"></div>
+            <div class="po-bar" data-w="3%" style="position:absolute;left:50%;top:0;height:100%;width:0;background:var(--site-gold);opacity:.7;"></div>
           </div>
           <span style="color:var(--site-gold);font-weight:700;width:36px;text-align:right;">+1</span>
           <span style="background:rgba(94,45,140,.35);color:var(--site-purple3);border-radius:4px;padding:.1rem .5rem;font-size:.72rem;width:24px;text-align:center;">勝</span>
@@ -741,7 +744,7 @@
           <span style="color:var(--site-gray);width:24px;">主</span>
           <div style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;position:relative;overflow:hidden;">
             <div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.15);"></div>
-            <div style="position:absolute;right:50%;top:0;height:100%;width:61%;background:#f06292;opacity:.7;"></div>
+            <div class="po-bar" data-w="61%" style="position:absolute;right:50%;top:0;height:100%;width:0;background:#f06292;opacity:.7;"></div>
           </div>
           <span style="color:#f06292;font-weight:700;width:36px;text-align:right;">−19</span>
           <span style="background:rgba(102,102,102,.25);color:#ccc;border-radius:4px;padding:.1rem .5rem;font-size:.72rem;width:24px;text-align:center;">敗</span>
@@ -751,7 +754,7 @@
           <span style="color:var(--site-gray);width:24px;">客</span>
           <div style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:14px;position:relative;overflow:hidden;">
             <div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.15);"></div>
-            <div style="position:absolute;right:50%;top:0;height:100%;width:26%;background:#f06292;opacity:.7;"></div>
+            <div class="po-bar" data-w="26%" style="position:absolute;right:50%;top:0;height:100%;width:0;background:#f06292;opacity:.7;"></div>
           </div>
           <span style="color:#f06292;font-weight:700;width:36px;text-align:right;">−8</span>
           <span style="background:rgba(102,102,102,.25);color:#ccc;border-radius:4px;padding:.1rem .5rem;font-size:.72rem;width:24px;text-align:center;">敗</span>
@@ -777,16 +780,16 @@
           <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;">
             <span style="font-size:.65rem;color:var(--site-gold);font-weight:700;width:22px;flex-shrink:0;">勝</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:90%;height:100%;background:var(--site-gold);opacity:.8;border-radius:3px;"></div>
+              <div class="po-bar" data-w="90%" style="width:0;height:100%;background:var(--site-gold);opacity:.8;border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gold);font-weight:700;width:38px;text-align:right;">18</span>
+            <span id="po-ft-w" style="font-size:.8rem;color:var(--site-gold);font-weight:700;width:38px;text-align:right;">18</span>
           </div>
           <div style="display:flex;align-items:center;gap:.5rem;">
             <span style="font-size:.65rem;color:var(--site-gray);width:22px;flex-shrink:0;">敗</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:60%;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
+              <div class="po-bar" data-w="60%" style="width:0;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">12</span>
+            <span id="po-ft-l" style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">12</span>
           </div>
         </div>
 
@@ -796,16 +799,16 @@
           <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;">
             <span style="font-size:.65rem;color:var(--site-gold);font-weight:700;width:22px;flex-shrink:0;">勝</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:90%;height:100%;background:var(--site-gold);opacity:.8;border-radius:3px;"></div>
+              <div class="po-bar" data-w="90%" style="width:0;height:100%;background:var(--site-gold);opacity:.8;border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gold);font-weight:700;width:38px;text-align:right;">15.5</span>
+            <span id="po-sc-w" style="font-size:.8rem;color:var(--site-gold);font-weight:700;width:38px;text-align:right;">15.5</span>
           </div>
           <div style="display:flex;align-items:center;gap:.5rem;">
             <span style="font-size:.65rem;color:var(--site-gray);width:22px;flex-shrink:0;">敗</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:51%;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
+              <div class="po-bar" data-w="51%" style="width:0;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">8.8</span>
+            <span id="po-sc-l" style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">8.8</span>
           </div>
         </div>
 
@@ -815,16 +818,16 @@
           <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;">
             <span style="font-size:.65rem;color:var(--site-gold);font-weight:700;width:22px;flex-shrink:0;">勝</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:90%;height:100%;background:var(--site-gold);opacity:.8;border-radius:3px;"></div>
+              <div class="po-bar" data-w="90%" style="width:0;height:100%;background:var(--site-gold);opacity:.8;border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gold);font-weight:700;width:38px;text-align:right;">38%</span>
+            <span id="po-3p-w" style="font-size:.8rem;color:var(--site-gold);font-weight:700;width:38px;text-align:right;">38%</span>
           </div>
           <div style="display:flex;align-items:center;gap:.5rem;">
             <span style="font-size:.65rem;color:var(--site-gray);width:22px;flex-shrink:0;">敗</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:71%;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
+              <div class="po-bar" data-w="71%" style="width:0;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">30%</span>
+            <span id="po-3p-l" style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">30%</span>
           </div>
         </div>
 
@@ -834,16 +837,16 @@
           <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;">
             <span style="font-size:.65rem;color:var(--site-gold);font-weight:700;width:22px;flex-shrink:0;">勝</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:90%;height:100%;background:var(--site-gold);opacity:.8;border-radius:3px;"></div>
+              <div class="po-bar" data-w="90%" style="width:0;height:100%;background:var(--site-gold);opacity:.8;border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gold);font-weight:700;width:38px;text-align:right;">4</span>
+            <span id="po-blk-w" style="font-size:.8rem;color:var(--site-gold);font-weight:700;width:38px;text-align:right;">4</span>
           </div>
           <div style="display:flex;align-items:center;gap:.5rem;">
             <span style="font-size:.65rem;color:var(--site-gray);width:22px;flex-shrink:0;">敗</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:45%;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
+              <div class="po-bar" data-w="45%" style="width:0;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">2</span>
+            <span id="po-blk-l" style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">2</span>
           </div>
         </div>
 
@@ -853,16 +856,16 @@
           <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;">
             <span style="font-size:.65rem;color:var(--site-gold);font-weight:700;width:22px;flex-shrink:0;">勝</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:78%;height:100%;background:var(--site-gold);opacity:.8;border-radius:3px;"></div>
+              <div class="po-bar" data-w="78%" style="width:0;height:100%;background:var(--site-gold);opacity:.8;border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gold);font-weight:700;width:38px;text-align:right;">14</span>
+            <span id="po-tov-w" style="font-size:.8rem;color:var(--site-gold);font-weight:700;width:38px;text-align:right;">14</span>
           </div>
           <div style="display:flex;align-items:center;gap:.5rem;">
             <span style="font-size:.65rem;color:var(--site-gray);width:22px;flex-shrink:0;">敗</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:90%;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
+              <div class="po-bar" data-w="90%" style="width:0;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">16</span>
+            <span id="po-tov-l" style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">16</span>
           </div>
         </div>
 
@@ -878,16 +881,16 @@
           <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;">
             <span style="font-size:.65rem;color:var(--site-gray);width:22px;flex-shrink:0;">勝</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:79%;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
+              <div class="po-bar" data-w="79%" style="width:0;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">34</span>
+            <span id="po-pip-w" style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">34</span>
           </div>
           <div style="display:flex;align-items:center;gap:.5rem;">
             <span style="font-size:.65rem;color:#f06292;font-weight:700;width:22px;flex-shrink:0;">敗</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:90%;height:100%;background:#f06292;opacity:.75;border-radius:3px;"></div>
+              <div class="po-bar" data-w="90%" style="width:0;height:100%;background:#f06292;opacity:.75;border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:#f06292;font-weight:700;width:38px;text-align:right;">38.5</span>
+            <span id="po-pip-l" style="font-size:.8rem;color:#f06292;font-weight:700;width:38px;text-align:right;">38.5</span>
           </div>
         </div>
 
@@ -897,16 +900,16 @@
           <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;">
             <span style="font-size:.65rem;color:var(--site-gray);width:22px;flex-shrink:0;">勝</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:66%;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
+              <div class="po-bar" data-w="66%" style="width:0;height:100%;background:rgba(255,255,255,.22);border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">9.5</span>
+            <span id="po-fb-w" style="font-size:.8rem;color:var(--site-gray);width:38px;text-align:right;">9.5</span>
           </div>
           <div style="display:flex;align-items:center;gap:.5rem;">
             <span style="font-size:.65rem;color:#f06292;font-weight:700;width:22px;flex-shrink:0;">敗</span>
             <div style="flex:1;background:rgba(255,255,255,.07);border-radius:3px;height:8px;overflow:hidden;">
-              <div style="width:90%;height:100%;background:#f06292;opacity:.75;border-radius:3px;"></div>
+              <div class="po-bar" data-w="90%" style="width:0;height:100%;background:#f06292;opacity:.75;border-radius:3px;"></div>
             </div>
-            <span style="font-size:.8rem;color:#f06292;font-weight:700;width:38px;text-align:right;">13</span>
+            <span id="po-fb-l" style="font-size:.8rem;color:#f06292;font-weight:700;width:38px;text-align:right;">13</span>
           </div>
         </div>
 
@@ -2468,6 +2471,44 @@ function animateNumber(el, target, { suffix = '', decimals = 0, duration = 900, 
 }
 
 // ================================================================
+// 季後賽區塊動畫
+// ================================================================
+function initPlayoffAnimations() {
+  // 大數字
+  animateNumber(document.getElementById('po-dream-pct'), 77, { suffix: '%', delay: 150 });
+  animateNumber(document.getElementById('po-lion-pct'),  23, { suffix: '%', delay: 250 });
+  animateNumber(document.getElementById('po-g1-win'),    54, { suffix: '%', delay: 350 });
+  animateNumber(document.getElementById('po-g1-lose'),   15, { suffix: '%', delay: 450 });
+  // 路徑機率
+  animateNumber(document.getElementById('po-d30'), 26, { suffix: '%', delay: 300 });
+  animateNumber(document.getElementById('po-d31'), 20, { suffix: '%', delay: 360 });
+  animateNumber(document.getElementById('po-d32'), 31, { suffix: '%', delay: 420 });
+  animateNumber(document.getElementById('po-l32'),  8, { suffix: '%', delay: 480 });
+  animateNumber(document.getElementById('po-l31'), 13, { suffix: '%', delay: 540 });
+  animateNumber(document.getElementById('po-l30'),  2, { suffix: '%', delay: 600 });
+  // 贏球條件數字
+  animateNumber(document.getElementById('po-ft-w'),   18,   { delay: 300 });
+  animateNumber(document.getElementById('po-ft-l'),   12,   { delay: 360 });
+  animateNumber(document.getElementById('po-sc-w'),   15.5, { decimals: 1, delay: 300 });
+  animateNumber(document.getElementById('po-sc-l'),    8.8, { decimals: 1, delay: 360 });
+  animateNumber(document.getElementById('po-3p-w'),   38,   { suffix: '%', delay: 300 });
+  animateNumber(document.getElementById('po-3p-l'),   30,   { suffix: '%', delay: 360 });
+  animateNumber(document.getElementById('po-blk-w'),   4,   { delay: 300 });
+  animateNumber(document.getElementById('po-blk-l'),   2,   { delay: 360 });
+  animateNumber(document.getElementById('po-tov-w'),  14,   { delay: 300 });
+  animateNumber(document.getElementById('po-tov-l'),  16,   { delay: 360 });
+  animateNumber(document.getElementById('po-pip-w'),  34,   { delay: 300 });
+  animateNumber(document.getElementById('po-pip-l'),  38.5, { decimals: 1, delay: 360 });
+  animateNumber(document.getElementById('po-fb-w'),    9.5, { decimals: 1, delay: 300 });
+  animateNumber(document.getElementById('po-fb-l'),   13,   { delay: 360 });
+  // 進度條展開
+  document.querySelectorAll('#playoff-preview .po-bar').forEach(el => {
+    const w = el.dataset.w;
+    if (w) setTimeout(() => { el.style.width = w; }, 150);
+  });
+}
+
+// ================================================================
 // 滾動浮現 IntersectionObserver
 // ================================================================
 function initScrollReveal() {
@@ -2481,6 +2522,7 @@ function initScrollReveal() {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('revealed');
+        if (entry.target.id === 'playoff-preview') setTimeout(initPlayoffAnimations, 100);
         io.unobserve(entry.target);
       }
     });
