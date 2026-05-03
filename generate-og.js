@@ -6,10 +6,22 @@ const { createCanvas, GlobalFonts } = require('@napi-rs/canvas');
 const fs = require('fs');
 const path = require('path');
 
-// 載入 CJK 字體
-GlobalFonts.loadFontsFromDir('/usr/share/fonts/truetype/');
-GlobalFonts.loadFontsFromDir('/usr/share/fonts/opentype/');
-const CJK = '"WenQuanYi Zen Hei"';
+// 載入 CJK 字體（Linux / Windows 雙路徑）
+const fontDirs = [
+  '/usr/share/fonts/truetype/',
+  '/usr/share/fonts/opentype/',
+  'C:\\Windows\\Fonts',
+  process.env.LOCALAPPDATA ? path.join(process.env.LOCALAPPDATA, 'Microsoft', 'Windows', 'Fonts') : '',
+].filter(Boolean);
+fontDirs.forEach(d => { try { GlobalFonts.loadFontsFromDir(d); } catch(_) {} });
+// 偵測可用 CJK 字體名稱
+const CJK_CANDIDATES = [
+  'WenQuanYi Zen Hei', 'Noto Sans CJK TC', 'Microsoft JhengHei',
+  'Microsoft YaHei', 'PingFang TC', 'Heiti TC',
+];
+const loadedFamilies = GlobalFonts.families.map(f => f.family);
+const CJK_NAME = CJK_CANDIDATES.find(n => loadedFamilies.includes(n)) || 'sans-serif';
+const CJK = `"${CJK_NAME}"`;
 
 const data = JSON.parse(fs.readFileSync(path.join(__dirname, 'processed_data.json'), 'utf8'));
 
