@@ -2665,13 +2665,13 @@
     }
   ],
   "next_game": {
-    "opponent": "新北中信特攻",
-    "date": "4/8（三）主場",
-    "is_home": true,
-    "win_prob_model": 0.5238,
-    "win_prob_adjusted": 0.631,
-    "historical_w": 4,
-    "historical_l": 2
+    "opponent": "福爾摩沙夢想家",
+    "date": "5/9（六）客場・台中",
+    "is_home": false,
+    "win_prob_model": 0.5,
+    "win_prob_adjusted": 0.3833,
+    "historical_w": 2,
+    "historical_l": 4
   },
   "home_away": {
     "home": {
