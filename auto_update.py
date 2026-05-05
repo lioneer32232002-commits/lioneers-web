@@ -4,6 +4,12 @@ auto_update.py - 新竹攻城獅賽後自動數據更新
   爬取新比賽數據 → 更新球隊統計 → 重算分析 → 更新 OG 圖 → commit & push
 """
 import json, os, sys, subprocess, re
+
+# 例行賽結束時設為 False，避免 cron-job.org 誤觸發；季後賽要更新時改回 True
+SEASON_ACTIVE = False
+if not SEASON_ACTIVE:
+    print("例行賽已結束，自動更新已暫停。需要更新時請將 SEASON_ACTIVE 設為 True。")
+    sys.exit(0)
 from datetime import datetime, date, timedelta
 
 # Windows 終端強制 UTF-8 輸出
