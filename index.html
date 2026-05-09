@@ -1373,7 +1373,8 @@ function renderNextGame(ng) {
 function renderStandings(standings) {
   const lion = standings.find(t => t.name === '新竹御嵿攻城獅');
   const rank = standings.indexOf(lion) + 1;
-  document.getElementById('s-rank').textContent    = rank + '名';
+  const sRankEl = document.getElementById('s-rank');
+  if (sRankEl) sRankEl.textContent = rank + '名';
   document.getElementById('gp-label').textContent  = lion ? lion.gp : '—';
 
   const tbody = document.getElementById('standings-body');
