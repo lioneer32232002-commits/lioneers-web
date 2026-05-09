@@ -2162,31 +2162,30 @@
     }
   ],
   "last_game_hint": {
-    "date": "20260503",
-    "opp": "高雄全家海神",
-    "is_home": true,
+    "date": "20260509",
+    "opp": "福爾摩沙夢想家",
+    "is_home": false,
     "won": true,
-    "lion_score": 102,
-    "opp_score": 99,
-    "scenario": "Best",
-    "lion_pred": 105.0,
-    "opp_pred": 92.9,
-    "lion_diff": -3.0,
-    "opp_diff": 6.1,
-    "lion_poss": 89.8,
-    "opp_poss": 92.5,
-    "actual_stats": {
-      "3P%": 37.5,
-      "TO": 16,
-      "AST": 38,
-      "FG%": 46.1
-    },
-    "pred_stats": {
-      "3P%": 43.3,
-      "TO": 14.0,
-      "AST": 27.7,
-      "FG%": 48.5
-    }
+    "lion_score": 97,
+    "opp_score": 94,
+    "is_playoff": true,
+    "playoff_label": "四強 G1",
+    "win_prob_pre": 0.3833,
+    "lion_poss": null,
+    "opp_poss": null,
+    "scenario": null,
+    "lion_pred": null,
+    "opp_pred": null,
+    "lion_diff": null,
+    "opp_diff": null,
+    "actual_stats": null,
+    "pred_stats": null,
+    "po_top": [
+      {"name": "帕塞獅", "pts": 12, "reb": 5,  "ast": 3, "pm": 11},
+      {"name": "蔡宸綱", "pts": 13, "reb": 7,  "ast": 5, "pm": 6},
+      {"name": "盧冠軒", "pts": 18, "reb": 0,  "ast": 3, "pm": 6},
+      {"name": "馬力",   "pts": 21, "reb": 11, "ast": 2, "pm": 3}
+    ]
   },
   "mann_whitney": [
     {
@@ -2905,6 +2904,22 @@
       "avg_opp_poss": 22.14
     }
   },
+  "playoff_series": {
+    "round": "四強",
+    "opponent": "福爾摩沙夢想家",
+    "format": 5,
+    "need_to_win": 3,
+    "lion_wins": 1,
+    "opp_wins": 0,
+    "series_win_prob": 0.52,
+    "games": [
+      {"label": "G1", "result": "W", "score": "97-94", "date": "5/9"},
+      {"label": "G2", "result": null, "date": "5/12"},
+      {"label": "G3", "result": null, "date": "5/14"},
+      {"label": "G4", "result": null, "date": "5/16"},
+      {"label": "G5", "result": null, "date": "5/18"}
+    ]
+  },
   "playoff_box_scores": [
     {
       "date": "20260509",
@@ -2915,14 +2930,14 @@
       "won": true,
       "is_home": false,
       "players": [
-        {"player": "高國豪",  "pts": 6,  "fgm": 2, "fga": 6,  "pm3": 1, "pa3": 3, "ftm": 1, "fta": 4,  "reb": 1,  "ast": 2, "stl": 1, "blk": 0, "tov": 3, "pm": 3},
-        {"player": "曾柏喻",  "pts": 5,  "fgm": 1, "fga": 8,  "pm3": 0, "pa3": 1, "ftm": 3, "fta": 4,  "reb": 4,  "ast": 7, "stl": 0, "blk": 0, "tov": 2, "pm": -3},
-        {"player": "劉丞勳",  "pts": 14, "fgm": 5, "fga": 6,  "pm3": 2, "pa3": 3, "ftm": 2, "fta": 3,  "reb": 6,  "ast": 1, "stl": 0, "blk": 0, "tov": 3, "pm": -3},
-        {"player": "德魯",    "pts": 8,  "fgm": 3, "fga": 9,  "pm3": 2, "pa3": 7, "ftm": 0, "fta": 0,  "reb": 6,  "ast": 1, "stl": 1, "blk": 1, "tov": 0, "pm": -8},
-        {"player": "帕塞獅",  "pts": 12, "fgm": 6, "fga": 10, "pm3": 0, "pa3": 0, "ftm": 0, "fta": 0,  "reb": 5,  "ast": 3, "stl": 0, "blk": 2, "tov": 0, "pm": 11},
-        {"player": "蔡宸綱",  "pts": 13, "fgm": 6, "fga": 7,  "pm3": 1, "pa3": 2, "ftm": 0, "fta": 0,  "reb": 7,  "ast": 5, "stl": 0, "blk": 0, "tov": 0, "pm": 6},
-        {"player": "盧冠軒",  "pts": 18, "fgm": 6, "fga": 13, "pm3": 2, "pa3": 7, "ftm": 4, "fta": 4,  "reb": 0,  "ast": 3, "stl": 2, "blk": 0, "tov": 2, "pm": 6},
-        {"player": "馬力",    "pts": 21, "fgm": 6, "fga": 13, "pm3": 2, "pa3": 6, "ftm": 7, "fta": 9,  "reb": 11, "ast": 2, "stl": 0, "blk": 0, "tov": 4, "pm": 3}
+        {"player": "高國豪",  "pts": 6,  "fgm": 2, "fga": 6,  "pm3": 1, "pa3": 3, "ftm": 1, "fta": 4,  "reb": 1,  "ast": 2, "stl": 1, "blk": 0, "tov": 3, "pm": 3,  "min": 33.18},
+        {"player": "曾柏喻",  "pts": 5,  "fgm": 1, "fga": 8,  "pm3": 0, "pa3": 1, "ftm": 3, "fta": 4,  "reb": 4,  "ast": 7, "stl": 0, "blk": 0, "tov": 2, "pm": -3, "min": 32.23},
+        {"player": "劉丞勳",  "pts": 14, "fgm": 5, "fga": 6,  "pm3": 2, "pa3": 3, "ftm": 2, "fta": 3,  "reb": 6,  "ast": 1, "stl": 0, "blk": 0, "tov": 3, "pm": -3, "min": 23.75},
+        {"player": "德魯",    "pts": 8,  "fgm": 3, "fga": 9,  "pm3": 2, "pa3": 7, "ftm": 0, "fta": 0,  "reb": 6,  "ast": 1, "stl": 1, "blk": 1, "tov": 0, "pm": -8, "min": 29.40},
+        {"player": "帕塞獅",  "pts": 12, "fgm": 6, "fga": 10, "pm3": 0, "pa3": 0, "ftm": 0, "fta": 0,  "reb": 5,  "ast": 3, "stl": 0, "blk": 2, "tov": 0, "pm": 11, "min": 28.90},
+        {"player": "蔡宸綱",  "pts": 13, "fgm": 6, "fga": 7,  "pm3": 1, "pa3": 2, "ftm": 0, "fta": 0,  "reb": 7,  "ast": 5, "stl": 0, "blk": 0, "tov": 0, "pm": 6,  "min": 24.48},
+        {"player": "盧冠軒",  "pts": 18, "fgm": 6, "fga": 13, "pm3": 2, "pa3": 7, "ftm": 4, "fta": 4,  "reb": 0,  "ast": 3, "stl": 2, "blk": 0, "tov": 2, "pm": 6,  "min": 30.23},
+        {"player": "馬力",    "pts": 21, "fgm": 6, "fga": 13, "pm3": 2, "pa3": 6, "ftm": 7, "fta": 9,  "reb": 11, "ast": 2, "stl": 0, "blk": 0, "tov": 4, "pm": 3,  "min": 37.70}
       ]
     }
   ]

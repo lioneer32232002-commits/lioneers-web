@@ -126,6 +126,37 @@
     .stat-item .number { font-size: 1.9rem; font-weight: 900; color: var(--site-gold); line-height: 1; }
     .stat-item .label  { font-size: .75rem; color: var(--site-gray); margin-top: .2rem; }
 
+    /* 季後賽系列賽進度條 */
+    .po-series-wrap {
+      max-width: 820px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .8rem 2.5rem;
+    }
+    .po-series-score {
+      display: flex; align-items: center; gap: .65rem;
+    }
+    .po-series-num { font-size: 2.2rem; font-weight: 900; line-height: 1; }
+    .po-series-colon { font-size: 1.5rem; color: var(--site-gray); font-weight: 700; }
+    .po-series-team { font-size: .72rem; color: var(--site-gray2); font-weight: 700; margin-top: .2rem; text-align: center; }
+    .po-series-games { display: flex; gap: .45rem; align-items: center; }
+    .po-game-dot {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-size: .6rem; font-weight: 700; line-height: 1.25;
+    }
+    .po-game-dot.won  { background: rgba(0,229,255,.12); border: 2px solid var(--site-gold); color: var(--site-gold); }
+    .po-game-dot.lost { background: rgba(240,98,146,.12); border: 2px solid #f06292; color: #f06292; }
+    .po-game-dot.tbd  { background: rgba(157,95,214,.08); border: 1px dashed var(--site-border); color: var(--site-gray); }
+    .po-prob-wrap { text-align: center; min-width: 110px; }
+    .po-prob-bar {
+      height: 7px; background: rgba(157,95,214,.2); border-radius: 4px;
+      margin: .35rem 0; position: relative; overflow: hidden;
+    }
+    .po-prob-fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: linear-gradient(90deg, var(--site-purple), var(--site-gold));
+      border-radius: 4px; transition: width 1.4s ease;
+    }
+
     /* 預測摘要卡 */
     .forecast-bar {
       background: linear-gradient(135deg, rgba(94,45,140,.5), rgba(59,26,110,.6));
@@ -549,19 +580,33 @@
   <p>本季已出賽 <span id="hero-gp">—</span> 場 · 季後賽模擬 · 進階統計分析</p>
 </section>
 
-<!-- 統計快覽（第一行：勝場｜敗場｜排名 / 第二行：均得分｜均失分｜剩餘） -->
+<!-- 季後賽系列賽進度條 -->
 <div class="stats-bar">
-  <div class="stats-bar-inner">
-    <!-- 第一行 -->
-    <div class="stat-item"><div class="number" id="s-wins">—</div><div class="label">勝場</div></div>
-    <div class="stat-item"><div class="number" id="s-losses">—</div><div class="label">敗場</div></div>
-    <div class="stat-item"><div class="number" id="s-rank">—</div><div class="label">目前排名</div></div>
-    <!-- 分隔線 -->
-    <div class="stats-bar-divider"></div>
-    <!-- 第二行 -->
-    <div class="stat-item"><div class="number" id="s-pts">—</div><div class="label">場均得分</div></div>
-    <div class="stat-item"><div class="number" id="s-opp">—</div><div class="label">場均失分</div></div>
-    <div class="stat-item"><div class="number" id="s-rem">—</div><div class="label">剩餘場次</div></div>
+  <div class="po-series-wrap">
+    <!-- 比分 -->
+    <div style="text-align:center;">
+      <div style="font-size:.68rem;color:var(--site-gray);letter-spacing:.07em;margin-bottom:.4rem;">季後賽四強 Bo5・攻城獅 vs 夢想家</div>
+      <div class="po-series-score">
+        <div>
+          <div class="po-series-num" style="color:var(--site-gold);" id="po-sw">—</div>
+          <div class="po-series-team">攻城獅</div>
+        </div>
+        <div class="po-series-colon">:</div>
+        <div>
+          <div class="po-series-num" style="color:#f06292;" id="po-sl">—</div>
+          <div class="po-series-team">夢想家</div>
+        </div>
+      </div>
+    </div>
+    <!-- 場次圓點 -->
+    <div id="po-game-dots" class="po-series-games"></div>
+    <!-- 晉級率進度條 -->
+    <div class="po-prob-wrap">
+      <div style="font-size:.68rem;color:var(--site-gray);margin-bottom:.2rem;">系列賽晉級率</div>
+      <div style="font-size:2rem;font-weight:900;color:var(--site-gold);" id="po-prob-num">—</div>
+      <div class="po-prob-bar"><div class="po-prob-fill" id="po-prob-fill" style="width:0%"></div></div>
+      <div style="font-size:.68rem;color:var(--site-gray);" id="po-prob-sub">—</div>
+    </div>
   </div>
 </div>
 
@@ -984,12 +1029,12 @@
       </div>
     </div>
 
-    <!-- 球員真實命中率分布 -->
+    <!-- 使用率 vs 真實命中率分布圖 -->
     <div class="card">
-      <h3 style="font-size:.88rem;font-weight:700;color:var(--site-purple3);margin-bottom:.6rem;">球員真實命中率 TS%（各場次累計）</h3>
+      <h3 style="font-size:.88rem;font-weight:700;color:var(--site-purple3);margin-bottom:.6rem;">使用率 vs 真實命中率（各場次累計）</h3>
       <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:.9rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
-        <span style="white-space:nowrap">TS% = 得分 ÷ (2 × (FGA + 0.44 × FTA))</span>
-        <span style="white-space:nowrap">深紫 ≥ 70%・中紫 ≥ 55%・淺紫 ≥ 45%・珊瑚 &lt; 45%</span>
+        <span style="white-space:nowrap">X軸 USG% = 個人出手佔隊伍進攻回合比率</span>
+        <span style="white-space:nowrap">Y軸 TS% = 得分 ÷ (2 × (FGA + 0.44 × FTA))</span>
       </p>
       <div class="chart-panel chart-panel-dark">
         <div class="chart-panel-bg chart-panel-dark-bg" style="position:relative;height:280px;">
@@ -1239,8 +1284,7 @@ Chart.defaults.animation.easing   = 'easeOutQuart';
 fetch('processed_data.json', { cache: 'no-store' })
   .then(r => r.json())
   .then(data => {
-    renderStatsBar(data.team_stats);
-    renderForecastBar(data.team_stats, data.simulation);
+    renderPlayoffSeries(data.playoff_series);
     renderNextGame(data.next_game);
     renderStandings(data.standings);
     renderLeagueRtg(data.league_rtg, data.standings);
@@ -1263,6 +1307,30 @@ fetch('processed_data.json', { cache: 'no-store' })
     initLazyCharts();
     initPlayoffCardAnimations();
   });
+
+// 季後賽系列賽進度條
+function renderPlayoffSeries(ps) {
+  if (!ps) return;
+  document.getElementById('po-sw').textContent = ps.lion_wins;
+  document.getElementById('po-sl').textContent = ps.opp_wins;
+  const pct = Math.round(ps.series_win_prob * 100);
+  animateNumber(document.getElementById('po-prob-num'), pct, { suffix: '%', delay: 350 });
+  setTimeout(() => {
+    document.getElementById('po-prob-fill').style.width = pct + '%';
+  }, 250);
+  const need = ps.need_to_win - ps.lion_wins;
+  document.getElementById('po-prob-sub').textContent =
+    need > 0 ? `再贏 ${need} 場即晉級` : '已晉級！';
+  const dots = document.getElementById('po-game-dots');
+  dots.innerHTML = ps.games.map(g => {
+    const cls   = g.result === 'W' ? 'won' : g.result === 'L' ? 'lost' : 'tbd';
+    const top   = g.result ? g.result : g.label;
+    const bot   = g.result ? g.label : g.date;
+    return `<div class="po-game-dot ${cls}" title="${g.date}${g.score ? '・' + g.score : ''}">
+      <span>${top}</span><span style="font-size:.55rem;opacity:.7;">${bot}</span>
+    </div>`;
+  }).join('');
+}
 
 // ① 統計快覽
 function renderStatsBar(ts) {
@@ -2136,16 +2204,66 @@ function renderLastGameHint(h) {
   const card = document.getElementById('last-game-hint-card');
   if (!card || !h) return;
 
-  const SCENARIO_COLOR = { Best:'#9d5fd6', Ideal:'#7b9fd4', Fair:'#d4a76a', Low:'#d46a6a' };
-  const SCENARIO_ZH    = { Best:'最佳', Ideal:'良好', Fair:'普通', Low:'低迷' };
-  const col = SCENARIO_COLOR[h.scenario] || '#aaa';
-  const zh  = SCENARIO_ZH[h.scenario]   || h.scenario;
-
   const date   = `${h.date.slice(0,4)}/${h.date.slice(4,6)}/${h.date.slice(6,8)}`;
   const ha     = h.is_home ? '主場' : '客場';
   const result = h.won
     ? `<span style="color:var(--site-gold);font-weight:700;">勝</span>`
     : `<span style="color:#f06292;font-weight:700;">敗</span>`;
+
+  if (h.is_playoff) {
+    const probPct = h.win_prob_pre != null ? Math.round(h.win_prob_pre * 100) : null;
+    const label   = h.playoff_label ? `<span style="display:inline-block;background:var(--site-purple);color:#fff;font-size:.72rem;font-weight:700;padding:.15rem .5rem;border-radius:3px;margin-right:.4rem;">${h.playoff_label}</span>` : '';
+    const topRows = (h.po_top || []).map(p => {
+      const pmC = p.pm > 0 ? 'var(--site-gold)' : p.pm < 0 ? '#f06292' : '#aaa';
+      const pmS = p.pm > 0 ? `+${p.pm}` : `${p.pm}`;
+      return `<tr>
+        <td style="padding:.3rem .6rem;color:#e5e5e5;font-weight:600;">${p.name}</td>
+        <td style="text-align:right;padding:.3rem .6rem;color:#c5b8dc;">${p.pts}分</td>
+        <td style="text-align:right;padding:.3rem .6rem;color:#c5b8dc;">${p.reb}籃</td>
+        <td style="text-align:right;padding:.3rem .6rem;color:#c5b8dc;">${p.ast}助</td>
+        <td style="text-align:right;padding:.3rem .6rem;font-weight:700;color:${pmC};">${pmS}</td>
+      </tr>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-start;">
+        <div style="flex:1;min-width:200px;">
+          <div style="font-size:.78rem;color:var(--site-gray);margin-bottom:.5rem;">${label}${date}・${ha}・vs ${h.opp}・${result}</div>
+          <div style="display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.75rem;">
+            <div style="text-align:center;">
+              <div style="font-size:2rem;font-weight:900;color:#e5e5e5;">${h.lion_score}</div>
+            </div>
+            <span style="color:var(--site-gray);font-size:.9rem;margin-top:.4rem;">–</span>
+            <div style="text-align:center;">
+              <div style="font-size:2rem;font-weight:900;color:#e5e5e5;">${h.opp_score}</div>
+            </div>
+            <span style="font-size:.8rem;color:var(--site-gray);margin-left:.25rem;margin-top:.5rem;">最終比分</span>
+          </div>
+          ${probPct != null ? `<div style="font-size:.82rem;color:var(--site-gray2);">賽前勝率預測 <strong style="color:#c5b8dc;">${probPct}%</strong>，實際${h.won ? '贏球' : '落敗'}</div>` : ''}
+        </div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-size:.78rem;color:var(--site-gray);margin-bottom:.4rem;">本場關鍵球員</div>
+          <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
+            <thead>
+              <tr style="color:var(--site-gray);font-size:.72rem;border-bottom:1px solid rgba(255,255,255,.08);">
+                <th style="text-align:left;padding:.2rem .6rem;font-weight:400;">球員</th>
+                <th style="text-align:right;padding:.2rem .6rem;font-weight:400;">得分</th>
+                <th style="text-align:right;padding:.2rem .6rem;font-weight:400;">籃板</th>
+                <th style="text-align:right;padding:.2rem .6rem;font-weight:400;">助攻</th>
+                <th style="text-align:right;padding:.2rem .6rem;font-weight:400;">±</th>
+              </tr>
+            </thead>
+            <tbody>${topRows}</tbody>
+          </table>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const SCENARIO_COLOR = { Best:'#9d5fd6', Ideal:'#7b9fd4', Fair:'#d4a76a', Low:'#d46a6a' };
+  const SCENARIO_ZH    = { Best:'最佳', Ideal:'良好', Fair:'普通', Low:'低迷' };
+  const col = SCENARIO_COLOR[h.scenario] || '#aaa';
+  const zh  = SCENARIO_ZH[h.scenario]   || h.scenario;
 
   const fmtDiff = v => {
     const s = v > 0 ? `+${v}` : `${v}`;
@@ -2454,35 +2572,64 @@ function renderPlayoffData(boxScores) {
     pmTable.innerHTML = html + '</tbody>';
   }
 
-  // — TS% 橫條圖 —
-  const tsData = allPlayers.map(player => {
-    let pts = 0, fga = 0, fta = 0;
+  // — USG% vs TS% 散點圖 —
+  const teamTotals = {};
+  boxScores.forEach(g => {
+    g.players.forEach(p => {
+      if (!teamTotals[g.game_label]) teamTotals[g.game_label] = 0;
+      teamTotals[g.game_label] += p.fga + 0.44 * p.fta + p.tov;
+    });
+  });
+
+  const scatterData = allPlayers.map(player => {
+    let pts = 0, fga = 0, fta = 0, tov = 0, usgNum = 0, usgDen = 0;
     boxScores.forEach(g => {
       const p = g.players.find(p => p.player === player);
-      if (p) { pts += p.pts; fga += p.fga; fta += p.fta; }
+      if (p) {
+        pts += p.pts; fga += p.fga; fta += p.fta; tov += p.tov;
+        usgNum += p.fga + 0.44 * p.fta + p.tov;
+        usgDen += teamTotals[g.game_label] || 0;
+      }
     });
-    const tsp = (fga + fta) === 0 ? null : 100 * pts / (2 * (fga + 0.44 * fta));
-    return { player, tsp, pts, fga, fta };
-  }).filter(d => d.tsp !== null && d.fga > 0);
-  tsData.sort((a, b) => b.tsp - a.tsp);
+    if (fga === 0 && fta === 0) return null;
+    const tsp = 100 * pts / (2 * (fga + 0.44 * fta));
+    const usg = usgDen > 0 ? 100 * usgNum / usgDen : 0;
+    return { player, tsp: +tsp.toFixed(1), usg: +usg.toFixed(1), pts, fga, fta };
+  }).filter(Boolean);
+
+  const labelPlugin = {
+    id: 'scatterLabels',
+    afterDatasetsDraw(chart) {
+      const { ctx, data, scales } = chart;
+      ctx.save();
+      ctx.font = '600 11px system-ui, sans-serif';
+      ctx.fillStyle = '#c5b8dc';
+      ctx.textAlign = 'left';
+      data.datasets[0].data.forEach((pt, i) => {
+        const x = scales.x.getPixelForValue(pt.x);
+        const y = scales.y.getPixelForValue(pt.y);
+        ctx.fillText(scatterData[i].player, x + 6, y + 4);
+      });
+      ctx.restore();
+    }
+  };
 
   const tsCanvas = document.getElementById('chart-po-ts');
   if (tsCanvas) {
     new Chart(tsCanvas.getContext('2d'), {
-      type: 'bar',
+      type: 'scatter',
+      plugins: [labelPlugin],
       data: {
-        labels: tsData.map(d => d.player),
         datasets: [{
-          data: tsData.map(d => +d.tsp.toFixed(1)),
-          backgroundColor: tsData.map(d =>
+          data: scatterData.map(d => ({ x: d.usg, y: d.tsp })),
+          pointBackgroundColor: scatterData.map(d =>
             d.tsp >= 70 ? C.dark : d.tsp >= 55 ? C.mid : d.tsp >= 45 ? C.light : C.coral
           ),
-          borderRadius: 3,
-          barPercentage: 0.62
+          pointRadius: 7,
+          pointHoverRadius: 9
         }]
       },
       options: {
-        indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -2490,21 +2637,22 @@ function renderPlayoffData(boxScores) {
           tooltip: {
             callbacks: {
               label: ctx => {
-                const d = tsData[ctx.dataIndex];
-                return ` TS% ${ctx.raw}%・${d.pts}分 / ${d.fga}投${d.fta > 0 ? ' ' + d.fta + '罰' : ''}`;
+                const d = scatterData[ctx.dataIndex];
+                return ` ${d.player}  USG ${d.usg}%・TS% ${d.tsp}%（${d.pts}分 / ${d.fga}投${d.fta > 0 ? ' ' + d.fta + '罰' : ''}）`;
               }
             }
           }
         },
         scales: {
           x: {
-            min: 0, max: 100,
+            title: { display: true, text: 'USG%（使用率）', color: '#a088c0', font: { size: 11 } },
             ticks: { color: '#a088c0', callback: v => v + '%' },
             grid: { color: 'rgba(157,95,214,.15)' }
           },
           y: {
-            ticks: { color: '#c5b8dc' },
-            grid: { display: false }
+            title: { display: true, text: 'TS%', color: '#a088c0', font: { size: 11 } },
+            ticks: { color: '#a088c0', callback: v => v + '%' },
+            grid: { color: 'rgba(157,95,214,.15)' }
           }
         }
       }
