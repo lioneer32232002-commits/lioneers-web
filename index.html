@@ -2,14 +2,14 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="description" content="新竹攻城獅 2025-26｜22勝14敗・進季後賽・季後賽四強 vs 夢想家 G1 5/9">
+  <meta name="description" content="新竹攻城獅 2025-26｜22勝14敗・季後賽四強G1 ✓97:94・G2 5/12 vs 夢想家">
   <link rel="canonical" href="https://lioneers-web.pages.dev/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>新竹攻城獅 2025-26 賽季統計分析｜季後賽預測・進階數據・球員評析</title>
   <!-- Open Graph（FB / LINE 分享縮圖） -->
   <meta property="og:title"       content="新竹攻城獅 2025-26 賽季預測">
-  <meta property="og:description" content="新竹攻城獅 2025-26｜22勝14敗・進季後賽・季後賽四強 vs 夢想家 G1 5/9">
-  <meta property="og:image"       content="https://lioneers-web.pages.dev/og-image.png?v=27">
+  <meta property="og:description" content="新竹攻城獅 2025-26｜22勝14敗・季後賽四強G1 ✓97:94・G2 5/12 vs 夢想家">
+  <meta property="og:image"       content="https://lioneers-web.pages.dev/og-image.png?v=28">
   <meta property="og:url"         content="https://lioneers-web.pages.dev/">
   <meta property="og:type"        content="website">
   <meta name="twitter:card"       content="summary_large_image">
@@ -530,6 +530,7 @@
     <ul>
       <li><a href="#playoff-preview">季後賽分析</a></li>
       <li><a href="#next-game" class="active">下一場預測</a></li>
+      <li><a href="#playoff-data">季後賽實況</a></li>
       <li><a href="#standings">聯盟積分榜</a></li>
       <li><a href="#vs-section">對各隊戰績</a></li>
       <li><a href="#heatmap">球員±熱力圖</a></li>
@@ -926,7 +927,7 @@
 
   <!-- ① 下一場預測 -->
   <div class="full" id="next-game">
-    <h2 class="section-title"><span class="icon">🎯</span> 下一場勝率預測 <span style="font-size:.7em;color:var(--site-gold);font-weight:600;">季後賽四強 G1</span></h2>
+    <h2 class="section-title"><span class="icon">🎯</span> 下一場勝率預測 <span style="font-size:.7em;color:var(--site-gold);font-weight:600;">季後賽四強 G2</span></h2>
     <div class="next-card">
       <div class="ng-info">
         <p class="ng-date" id="ng-date">—</p>
@@ -967,6 +968,37 @@
   </div>
 
   <!-- ② 積分榜 -->
+  <!-- 季後賽實況數據 -->
+  <div class="full" id="playoff-data">
+    <h2 class="section-title"><span class="icon">🏆</span> 季後賽實況數據・攻城獅 vs 夢想家</h2>
+
+    <!-- 球員正負值熱力圖 -->
+    <div class="card" style="margin-bottom:1.1rem;">
+      <h3 style="font-size:.88rem;font-weight:700;color:var(--site-purple3);margin-bottom:.6rem;">球員正負值（各場次）</h3>
+      <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:.9rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
+        <span style="white-space:nowrap">深紫 = 正向最高・中紫 = 正向・淺紫 = 略正向</span>
+        <span style="white-space:nowrap">淺粉 = 略負向・深粉 = 負向・粉紅 = 負向最大</span>
+      </p>
+      <div class="heatmap-wrap">
+        <table class="heatmap-table" id="po-pm-table"></table>
+      </div>
+    </div>
+
+    <!-- 球員真實命中率分布 -->
+    <div class="card">
+      <h3 style="font-size:.88rem;font-weight:700;color:var(--site-purple3);margin-bottom:.6rem;">球員真實命中率 TS%（各場次累計）</h3>
+      <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:.9rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
+        <span style="white-space:nowrap">TS% = 得分 ÷ (2 × (FGA + 0.44 × FTA))</span>
+        <span style="white-space:nowrap">深紫 ≥ 70%・中紫 ≥ 55%・淺紫 ≥ 45%・珊瑚 &lt; 45%</span>
+      </p>
+      <div class="chart-panel chart-panel-dark">
+        <div class="chart-panel-bg chart-panel-dark-bg" style="position:relative;height:280px;">
+          <canvas id="chart-po-ts" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="full" id="standings">
     <h2 class="section-title"><span class="icon">🏆</span> 聯盟積分榜（<span id="gp-label">—</span> 輪後）</h2>
     <div class="card">
@@ -1163,7 +1195,7 @@
   <p>新竹攻城獅數據分析站 &nbsp;|&nbsp; 資料來源：TPBL 官方數據 &nbsp;|&nbsp; Adam Pan 製作</p>
   <p style="margin-top:.4rem">
     <a href="https://github.com/lioneer32232002-commits/lioneers-web" target="_blank">GitHub</a>
-    &nbsp;·&nbsp; 數據更新至 2026/05/03
+    &nbsp;·&nbsp; 數據更新至 2026/05/09
   </p>
 </footer>
 
@@ -1224,6 +1256,7 @@ fetch('processed_data.json', { cache: 'no-store' })
     renderScenarioChart(data.scenario_chart);
     renderLastGameHint(data.last_game_hint);
     renderMannWhitney(data.mann_whitney);
+    renderPlayoffData(data.playoff_box_scores);
     renderUpdates(data.meta, data.games);
     addCJKSpacing();
     initScrollReveal();
@@ -2379,6 +2412,106 @@ function renderMannWhitney(mwResults) {
 }
 
 // ⑫ 最新動態
+// 季後賽實況：+/- 熱力圖 + TS% 橫條圖
+function renderPlayoffData(boxScores) {
+  if (!boxScores || boxScores.length === 0) return;
+
+  const gameLabels = boxScores.map(g => g.game_label);
+  const allPlayers = [...new Set(boxScores.flatMap(g => g.players.map(p => p.player)))];
+
+  // — +/- 熱力圖 —
+  const pmScore = v => v >= 8 ? 3 : v >= 3 ? 2 : v > 0 ? 1 : v === 0 ? 0 : v > -3 ? -1 : v > -8 ? -2 : -3;
+  const pmData = allPlayers.map(player => {
+    const values = {};
+    boxScores.forEach(g => {
+      const p = g.players.find(p => p.player === player);
+      values[g.game_label] = p != null ? p.pm : null;
+    });
+    return { player, values };
+  });
+  const colorSum = r => Object.values(r.values).filter(x => x !== null).reduce((a, v) => a + pmScore(v), 0);
+  pmData.sort((a, b) => colorSum(b) - colorSum(a));
+
+  const pmTable = document.getElementById('po-pm-table');
+  if (pmTable) {
+    let html = '<thead><tr><th>球員</th>';
+    gameLabels.forEach(lbl => { html += `<th>${lbl}</th>`; });
+    html += '</tr></thead><tbody>';
+    pmData.forEach(row => {
+      html += `<tr><td class="hm-name">${row.player}</td>`;
+      gameLabels.forEach(lbl => {
+        const val = row.values[lbl];
+        if (val === null || val === undefined) {
+          html += `<td class="hm-cell hm-null">—</td>`;
+        } else {
+          const cls = val >= 8  ? 'hm-p3' : val >= 3  ? 'hm-p2' : val > 0   ? 'hm-p1' :
+                      val === 0 ? 'hm-z'  : val > -3  ? 'hm-n1' : val > -8  ? 'hm-n2' : 'hm-n3';
+          html += `<td class="hm-cell ${cls}">${val > 0 ? '+' : ''}${val}</td>`;
+        }
+      });
+      html += '</tr>';
+    });
+    pmTable.innerHTML = html + '</tbody>';
+  }
+
+  // — TS% 橫條圖 —
+  const tsData = allPlayers.map(player => {
+    let pts = 0, fga = 0, fta = 0;
+    boxScores.forEach(g => {
+      const p = g.players.find(p => p.player === player);
+      if (p) { pts += p.pts; fga += p.fga; fta += p.fta; }
+    });
+    const tsp = (fga + fta) === 0 ? null : 100 * pts / (2 * (fga + 0.44 * fta));
+    return { player, tsp, pts, fga, fta };
+  }).filter(d => d.tsp !== null && d.fga > 0);
+  tsData.sort((a, b) => b.tsp - a.tsp);
+
+  const tsCanvas = document.getElementById('chart-po-ts');
+  if (tsCanvas) {
+    new Chart(tsCanvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: tsData.map(d => d.player),
+        datasets: [{
+          data: tsData.map(d => +d.tsp.toFixed(1)),
+          backgroundColor: tsData.map(d =>
+            d.tsp >= 70 ? C.dark : d.tsp >= 55 ? C.mid : d.tsp >= 45 ? C.light : C.coral
+          ),
+          borderRadius: 3,
+          barPercentage: 0.62
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const d = tsData[ctx.dataIndex];
+                return ` TS% ${ctx.raw}%・${d.pts}分 / ${d.fga}投${d.fta > 0 ? ' ' + d.fta + '罰' : ''}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            min: 0, max: 100,
+            ticks: { color: '#a088c0', callback: v => v + '%' },
+            grid: { color: 'rgba(157,95,214,.15)' }
+          },
+          y: {
+            ticks: { color: '#c5b8dc' },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  }
+}
+
 function renderUpdates(meta, games) {
   const list = document.getElementById('updates');
   const entries = [];
@@ -2400,12 +2533,15 @@ function renderUpdates(meta, games) {
     const ds = `${g.date.slice(0,4)}/${g.date.slice(4,6)}/${g.date.slice(6,8)}`;
     const short = TEAM_SHORT[g.opp] || g.opp;
     const loc = g.is_home ? '主' : '客';
+    const poTag = g.is_playoff
+      ? `<span class="upd-tag" style="background:#7b3fc4;color:#fff;">${g.playoff_label || '季後賽'}</span> `
+      : '';
     entries.push({
       sortKey: g.date + '_game',
       html: `<div class="update-item">
         <span class="upd-date">${ds}</span>
         <span class="upd-tag ${g.won ? 'tag-w' : 'tag-l'}">${g.won ? 'Win' : 'Loss'}</span>
-        <span class="upd-text">（${loc}）vs ${short}：${g.lion_score} - ${g.opp_score}</span>
+        ${poTag}<span class="upd-text">（${loc}）vs ${short}：${g.lion_score} - ${g.opp_score}</span>
       </div>`
     });
   });
