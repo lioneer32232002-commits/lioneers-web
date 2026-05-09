@@ -610,31 +610,6 @@
   </div>
 </div>
 
-<!-- 預測摘要：本季預估勝場 + 奪冠機率 -->
-<div class="forecast-bar">
-  <div class="forecast-bar-inner">
-    <div class="forecast-item">
-      <div class="f-num" id="f-proj-wins">—</div>
-      <div class="f-label">預測本季最終勝場</div>
-    </div>
-    <div class="forecast-divider"></div>
-    <div class="forecast-item">
-      <div class="f-num" id="f-playoff">—</div>
-      <div class="f-label">進季後賽機率</div>
-    </div>
-    <div class="forecast-divider"></div>
-    <div class="forecast-item">
-      <div class="f-num" id="f-champ">—</div>
-      <div class="f-label">🏆 奪冠機率</div>
-    </div>
-  </div>
-  <div class="forecast-note" id="f-note" style="display:flex;flex-wrap:wrap;justify-content:center;gap:.1rem .2rem;">
-    <span style="white-space:nowrap">Monte Carlo 模擬 300,000 次</span><span>｜</span>
-    <span style="white-space:nowrap">Pythagorean 勝率 ^13.91</span><span>｜</span>
-    <span style="white-space:nowrap">依各隊效率差推算剩餘賽程</span><span>｜</span>
-    <span style="white-space:nowrap">季後賽採 TPBL 正式賽制</span>
-  </div>
-</div>
 
 <main>
 
@@ -1031,7 +1006,7 @@
 
     <!-- 使用率 vs 真實命中率分布圖 -->
     <div class="card">
-      <h3 style="font-size:.88rem;font-weight:700;color:var(--site-purple3);margin-bottom:.6rem;">使用率 vs 真實命中率（各場次累計）</h3>
+      <h3 style="font-size:.88rem;font-weight:700;color:var(--site-purple3);margin-bottom:.6rem;">季後賽・使用率 vs 真實命中率（各場次累計）</h3>
       <p style="font-size:.78rem;color:var(--site-gray);margin-bottom:.9rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;">
         <span style="white-space:nowrap">X軸 USG% = 個人出手佔隊伍進攻回合比率</span>
         <span style="white-space:nowrap">Y軸 TS% = 得分 ÷ (2 × (FGA + 0.44 × FTA))</span>
@@ -2598,18 +2573,21 @@ function renderPlayoffData(boxScores) {
     return { player, tsp: +tsp.toFixed(1), usg: +usg.toFixed(1), pts, fga, fta };
   }).filter(Boolean);
 
+  const avgTsp = scatterData.length ? scatterData.reduce((s, d) => s + d.tsp, 0) / scatterData.length : 50;
+
   const labelPlugin = {
     id: 'scatterLabels',
     afterDatasetsDraw(chart) {
-      const { ctx, data, scales } = chart;
+      const { ctx, data, scales, chartArea: ca } = chart;
       ctx.save();
       ctx.font = '600 11px system-ui, sans-serif';
-      ctx.fillStyle = '#c5b8dc';
-      ctx.textAlign = 'left';
+      ctx.fillStyle = 'rgba(197,184,220,0.88)';
       data.datasets[0].data.forEach((pt, i) => {
         const x = scales.x.getPixelForValue(pt.x);
         const y = scales.y.getPixelForValue(pt.y);
-        ctx.fillText(scatterData[i].player, x + 6, y + 4);
+        const onRight = x > (ca.left + ca.right) / 2;
+        ctx.textAlign = onRight ? 'right' : 'left';
+        ctx.fillText(scatterData[i].player, onRight ? x - 10 : x + 10, y - 8);
       });
       ctx.restore();
     }
@@ -2624,8 +2602,12 @@ function renderPlayoffData(boxScores) {
         datasets: [{
           data: scatterData.map(d => ({ x: d.usg, y: d.tsp })),
           pointBackgroundColor: scatterData.map(d =>
-            d.tsp >= 70 ? C.dark : d.tsp >= 55 ? C.mid : d.tsp >= 45 ? C.light : C.coral
+            d.tsp >= avgTsp ? 'rgba(0,229,255,0.72)' : 'rgba(240,98,146,0.72)'
           ),
+          pointBorderColor: scatterData.map(d =>
+            d.tsp >= avgTsp ? 'rgba(0,229,255,1)' : 'rgba(240,98,146,1)'
+          ),
+          pointBorderWidth: 1.5,
           pointRadius: 7,
           pointHoverRadius: 9
         }]
