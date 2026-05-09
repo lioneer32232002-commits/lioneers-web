@@ -138,6 +138,9 @@
     .po-series-colon { font-size: 1.5rem; color: var(--site-gray); font-weight: 700; }
     .po-series-team { font-size: .72rem; color: var(--site-gray2); font-weight: 700; margin-top: .2rem; text-align: center; }
     .po-series-games { display: flex; gap: .45rem; align-items: center; }
+    @media (max-width: 640px) {
+      .po-score-block { width: 100%; display: flex; flex-direction: column; align-items: center; }
+    }
     .po-game-dot {
       width: 38px; height: 38px; border-radius: 50%;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -584,7 +587,7 @@
 <div class="stats-bar">
   <div class="po-series-wrap">
     <!-- 比分 -->
-    <div style="text-align:center;">
+    <div class="po-score-block" style="text-align:center;">
       <div style="font-size:.68rem;color:var(--site-gray);letter-spacing:.07em;margin-bottom:.4rem;">季後賽四強 Bo5・攻城獅 vs 夢想家</div>
       <div class="po-series-score">
         <div>
