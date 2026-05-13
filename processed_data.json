@@ -2210,30 +2210,30 @@
       {
         "name": "盧冠軒",
         "pts": 13,
-        "reb": null,
-        "ast": null,
-        "pm": null
+        "reb": 0,
+        "ast": 1,
+        "pm": -17
       },
       {
         "name": "德魯",
         "pts": 12,
         "reb": 14,
-        "ast": null,
-        "pm": null
+        "ast": 1,
+        "pm": -14
       },
       {
         "name": "高國豪",
         "pts": 5,
-        "reb": null,
-        "ast": null,
-        "pm": null
+        "reb": 3,
+        "ast": 1,
+        "pm": -17
       }
     ],
     "game_stats": {
       "fg_pct": 24.7,
-      "tp_pct": null,
-      "ast": null,
-      "tov": null,
+      "tp_pct": 20.0,
+      "ast": 12,
+      "tov": 15,
       "sea_tp_pct": 32.2,
       "sea_ast": 21.7,
       "sea_tov": 13.8
