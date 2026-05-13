@@ -9,7 +9,7 @@
   <!-- Open Graph（FB / LINE 分享縮圖） -->
   <meta property="og:title"       content="新竹攻城獅 2025-26 賽季預測">
   <meta property="og:description" content="新竹攻城獅 2025-26｜22勝14敗・季後賽四強G1 ✓97:94・G2 ✗61:83・G3 5/14 主場 vs 夢想家">
-  <meta property="og:image"       content="https://lioneers-web.pages.dev/og-image.png?v=31">
+  <meta property="og:image"       content="https://lioneers-web.pages.dev/og-image.png?v=32">
   <meta property="og:url"         content="https://lioneers-web.pages.dev/">
   <meta property="og:type"        content="website">
   <meta name="twitter:card"       content="summary_large_image">
@@ -2192,33 +2192,44 @@ function renderLastGameHint(h) {
     const probPct = h.win_prob_pre != null ? Math.round(h.win_prob_pre * 100) : null;
     const label   = h.playoff_label ? `<span style="display:inline-block;background:var(--site-purple);color:#fff;font-size:.72rem;font-weight:700;padding:.15rem .5rem;border-radius:3px;margin-right:.4rem;">${h.playoff_label}</span>` : '';
 
-    const topRows = (h.po_top || []).map(p => {
+    const topRows = (h.po_top || []).map((p, i) => {
       const pmC = p.pm > 0 ? 'var(--site-gold)' : p.pm < 0 ? '#f06292' : '#aaa';
       const pmS = p.pm > 0 ? `+${p.pm}` : `${p.pm}`;
-      return `<tr>
-        <td style="padding:.3rem .6rem;color:#e5e5e5;font-weight:600;">${p.name}</td>
-        <td style="text-align:right;padding:.3rem .6rem;color:#c5b8dc;">${p.pts}</td>
-        <td style="text-align:right;padding:.3rem .6rem;color:#c5b8dc;">${p.reb}</td>
-        <td style="text-align:right;padding:.3rem .6rem;color:#c5b8dc;">${p.ast}</td>
-        <td style="text-align:right;padding:.3rem .6rem;font-weight:700;color:${pmC};">${pmS}</td>
+      const nameColor = i < 3 ? '#e5e5e5' : '#a898c0';
+      const nameW = i < 3 ? '600' : '400';
+      const sep = i === 2 ? 'border-bottom:1px solid rgba(255,255,255,.08);' : '';
+      return `<tr style="${sep}">
+        <td style="padding:.25rem .5rem;color:${nameColor};font-weight:${nameW};">${p.name}</td>
+        <td style="text-align:right;padding:.25rem .5rem;color:#c5b8dc;">${p.pts}</td>
+        <td style="text-align:right;padding:.25rem .5rem;color:#c5b8dc;">${p.reb ?? '—'}</td>
+        <td style="text-align:right;padding:.25rem .5rem;color:#c5b8dc;">${p.ast ?? '—'}</td>
+        <td style="text-align:right;padding:.25rem .5rem;color:#c5b8dc;">${p.stl ?? '—'}</td>
+        <td style="text-align:right;padding:.25rem .5rem;color:#c5b8dc;">${p.blk ?? '—'}</td>
+        <td style="text-align:right;padding:.25rem .5rem;font-weight:700;color:${pmC};">${pmS}</td>
       </tr>`;
     }).join('');
 
     const gs = h.game_stats;
+    const fmtD = diff => {
+      const v = typeof diff === 'number' && diff % 1 !== 0 ? diff.toFixed(1) : diff;
+      return diff > 0 ? `+${v}` : `${v}`;
+    };
     const teamRows = gs ? [
-      ['3P%', gs.sea_tp_pct + '%', gs.tp_pct + '%', gs.tp_pct - gs.sea_tp_pct, false],
-      ['助攻', gs.sea_ast,          gs.ast,           gs.ast - gs.sea_ast,        false],
-      ['失誤', gs.sea_tov,          gs.tov,           gs.tov - gs.sea_tov,        true ],
+      ['得分', gs.sea_pts,        gs.pts,        gs.pts - gs.sea_pts,        false],
+      ['3P%', gs.sea_tp_pct+'%', gs.tp_pct+'%', gs.tp_pct - gs.sea_tp_pct, false],
+      ['助攻', gs.sea_ast,        gs.ast,         gs.ast - gs.sea_ast,        false],
+      ['失誤', gs.sea_tov,        gs.tov,         gs.tov - gs.sea_tov,        true ],
+      ['抄截', gs.sea_stl,        gs.stl,         gs.stl - gs.sea_stl,        false],
+      ['阻攻', gs.sea_blk,        gs.blk,         gs.blk - gs.sea_blk,        false],
+      ['罰球', gs.sea_ftm,        gs.ftm,         gs.ftm - gs.sea_ftm,        false],
     ].map(([k, sea, act, diff, lowerBetter]) => {
       const better = lowerBetter ? diff < 0 : diff > 0;
       const diffColor = Math.abs(diff) < 0.3 ? '#aaa' : better ? 'var(--site-gold)' : '#f06292';
-      const diffStr = diff > 0 ? `+${typeof diff === 'number' && diff % 1 !== 0 ? diff.toFixed(1) : diff}` :
-                      `${typeof diff === 'number' && diff % 1 !== 0 ? diff.toFixed(1) : diff}`;
       return `<tr>
-        <td style="color:#c5b8dc;padding:.3rem .5rem;">${k}</td>
-        <td style="text-align:right;padding:.3rem .5rem;">${sea}</td>
-        <td style="text-align:right;padding:.3rem .5rem;color:#e5e5e5;">${act}</td>
-        <td style="text-align:right;padding:.3rem .5rem;font-weight:700;color:${diffColor};">${diffStr}</td>
+        <td style="color:#c5b8dc;padding:.25rem .5rem;">${k}</td>
+        <td style="text-align:right;padding:.25rem .5rem;">${sea}</td>
+        <td style="text-align:right;padding:.25rem .5rem;color:#e5e5e5;">${act}</td>
+        <td style="text-align:right;padding:.25rem .5rem;font-weight:700;color:${diffColor};">${fmtD(diff)}</td>
       </tr>`;
     }).join('') : '';
 
@@ -2259,11 +2270,13 @@ function renderLastGameHint(h) {
           <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
             <thead>
               <tr style="color:var(--site-gray);font-size:.72rem;border-bottom:1px solid rgba(255,255,255,.08);">
-                <th style="text-align:left;padding:.2rem .6rem;font-weight:400;">球員</th>
-                <th style="text-align:right;padding:.2rem .6rem;font-weight:400;">分</th>
-                <th style="text-align:right;padding:.2rem .6rem;font-weight:400;">籃</th>
-                <th style="text-align:right;padding:.2rem .6rem;font-weight:400;">助</th>
-                <th style="text-align:right;padding:.2rem .6rem;font-weight:400;">±</th>
+                <th style="text-align:left;padding:.2rem .5rem;font-weight:400;">球員</th>
+                <th style="text-align:right;padding:.2rem .5rem;font-weight:400;">分</th>
+                <th style="text-align:right;padding:.2rem .5rem;font-weight:400;">籃</th>
+                <th style="text-align:right;padding:.2rem .5rem;font-weight:400;">助</th>
+                <th style="text-align:right;padding:.2rem .5rem;font-weight:400;">抄</th>
+                <th style="text-align:right;padding:.2rem .5rem;font-weight:400;">火</th>
+                <th style="text-align:right;padding:.2rem .5rem;font-weight:400;">±</th>
               </tr>
             </thead>
             <tbody>${topRows}</tbody>
