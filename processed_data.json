@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-05-09",
+    "generated": "2026-05-13",
     "total_games": 36,
     "games_remaining": 0
   },
@@ -1070,6 +1070,32 @@
       "fast_break": null,
       "second_chance": null,
       "ft_made": 17
+    },
+    {
+      "date": "20260512",
+      "opp": "福爾摩沙夢想家",
+      "lion_score": 61,
+      "opp_score": 83,
+      "won": false,
+      "is_home": false,
+      "is_playoff": true,
+      "playoff_label": "四強 G2",
+      "rounds": {
+        "1": 22,
+        "2": 14,
+        "3": 16,
+        "4": 9
+      },
+      "opp_rounds": {
+        "1": 23,
+        "2": 23,
+        "3": 18,
+        "4": 19
+      },
+      "paint": null,
+      "fast_break": null,
+      "second_chance": null,
+      "ft_made": null
     }
   ],
   "vs_summary": {
@@ -2162,15 +2188,15 @@
     }
   ],
   "last_game_hint": {
-    "date": "20260509",
+    "date": "20260512",
     "opp": "福爾摩沙夢想家",
     "is_home": false,
-    "won": true,
-    "lion_score": 97,
-    "opp_score": 94,
+    "won": false,
+    "lion_score": 61,
+    "opp_score": 83,
     "is_playoff": true,
-    "playoff_label": "四強 G1",
-    "win_prob_pre": 0.3833,
+    "playoff_label": "四強 G2",
+    "win_prob_pre": 0.42,
     "lion_poss": null,
     "opp_poss": null,
     "scenario": null,
@@ -2182,39 +2208,32 @@
     "pred_stats": null,
     "po_top": [
       {
-        "name": "帕塞獅",
-        "pts": 12,
-        "reb": 5,
-        "ast": 3,
-        "pm": 11
-      },
-      {
-        "name": "蔡宸綱",
-        "pts": 13,
-        "reb": 7,
-        "ast": 5,
-        "pm": 6
-      },
-      {
         "name": "盧冠軒",
-        "pts": 18,
-        "reb": 0,
-        "ast": 3,
-        "pm": 6
+        "pts": 13,
+        "reb": null,
+        "ast": null,
+        "pm": null
       },
       {
-        "name": "馬力",
-        "pts": 21,
-        "reb": 11,
-        "ast": 2,
-        "pm": 3
+        "name": "德魯",
+        "pts": 12,
+        "reb": 14,
+        "ast": null,
+        "pm": null
+      },
+      {
+        "name": "高國豪",
+        "pts": 5,
+        "reb": null,
+        "ast": null,
+        "pm": null
       }
     ],
     "game_stats": {
-      "fg_pct": 48.6,
-      "tp_pct": 34.5,
-      "ast": 24,
-      "tov": 14,
+      "fg_pct": 24.7,
+      "tp_pct": null,
+      "ast": null,
+      "tov": null,
       "sea_tp_pct": 32.2,
       "sea_ast": 21.7,
       "sea_tov": 13.8
@@ -2724,10 +2743,10 @@
   ],
   "next_game": {
     "opponent": "福爾摩沙夢想家",
-    "date": "5/12（二）客場・台中 G2",
-    "is_home": false,
+    "date": "5/14（四）主場・新竹 G3",
+    "is_home": true,
     "win_prob_model": 0.5,
-    "win_prob_adjusted": 0.42,
+    "win_prob_adjusted": 0.60,
     "historical_w": 2,
     "historical_l": 4
   },
@@ -2943,8 +2962,8 @@
     "format": 5,
     "need_to_win": 3,
     "lion_wins": 1,
-    "opp_wins": 0,
-    "series_win_prob": 0.52,
+    "opp_wins": 1,
+    "series_win_prob": 0.54,
     "games": [
       {
         "label": "G1",
@@ -2954,7 +2973,8 @@
       },
       {
         "label": "G2",
-        "result": null,
+        "result": "L",
+        "score": "61-83",
         "date": "5/12"
       },
       {
