@@ -1783,8 +1783,8 @@
     "prob_play_in": 0,
     "prob_playoff": 1,
     "prob_semif": 1,
-    "prob_final": 0.5221,
-    "prob_champ": 0.2637,
+    "prob_final": 0,
+    "prob_champ": 0,
     "n_simulations": 300000,
     "rules": {
       "regular_season": "36場（18主18客），前3直接進季後賽",
@@ -3669,6 +3669,16 @@
           "min": 23.37
         }
       ]
+    },
+    {
+      "date": "20260516",
+      "opp": "福爾摩沙夢想家",
+      "game_label": "G4",
+      "lion_score": 93,
+      "opp_score": 104,
+      "won": false,
+      "is_home": true,
+      "players": []
     }
   ]
 }

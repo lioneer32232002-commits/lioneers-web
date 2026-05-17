@@ -579,7 +579,7 @@
 <section class="hero">
   <div class="hero-badge">2025–26 TPBL 賽季</div>
   <h1>新竹攻城獅<br><em>數據分析中心</em></h1>
-  <p>2025-26 季後賽四強 · 攻城獅 vs 夢想家 · 進階統計分析</p>
+  <p>2025-26 賽季結束・季後賽四強 1:3 止步・感謝球迷支持</p>
 </section>
 
 <!-- 季後賽系列賽進度條 -->
@@ -949,7 +949,7 @@
 
   <!-- ① 下一場預測 -->
   <div class="full" id="next-game">
-    <h2 class="section-title"><span class="icon">🎯</span> 下一場勝率預測 <span style="font-size:.7em;color:var(--site-gold);font-weight:600;">季後賽四強 G3</span></h2>
+    <h2 class="section-title"><span class="icon">🎯</span> 下一場勝率預測 <span style="font-size:.7em;color:var(--site-gray);font-weight:600;">賽季已結束</span></h2>
     <div class="next-card">
       <div class="ng-info">
         <p class="ng-date" id="ng-date">—</p>
@@ -1296,8 +1296,9 @@ function renderPlayoffSeries(ps) {
     document.getElementById('po-prob-fill').style.width = pct + '%';
   }, 250);
   const need = ps.need_to_win - ps.lion_wins;
+  const eliminated = ps.opp_wins >= ps.need_to_win;
   document.getElementById('po-prob-sub').textContent =
-    need > 0 ? `再贏 ${need} 場即晉級` : '已晉級！';
+    eliminated ? '已遭淘汰' : need > 0 ? `再贏 ${need} 場即晉級` : '已晉級！';
   const dots = document.getElementById('po-game-dots');
   dots.innerHTML = ps.games.map(g => {
     const cls   = g.result === 'W' ? 'won' : g.result === 'L' ? 'lost' : 'tbd';
